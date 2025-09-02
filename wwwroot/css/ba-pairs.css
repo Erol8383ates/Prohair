@@ -1,0 +1,54 @@
+/* Scoped pairs gallery — safe for all pages */
+#baPairs .pairs-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+@media(max-width:1100px){ #baPairs .pairs-grid{ grid-template-columns:repeat(2,1fr) } }
+@media(max-width:680px){  #baPairs .pairs-grid{ grid-template-columns:1fr } }
+
+#baPairs .pair{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  overflow:hidden;
+  border:1px solid #222838;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  aspect-ratio:16/9;
+}
+#baPairs .pair img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+#baPairs .pair .divider{
+  position:absolute; left:50%; top:0; bottom:0;
+  width:1px; background:rgba(255,255,255,.08); transform:translateX(-.5px);
+}
+
+/* pill */
+#baPairs .pill{
+  position:absolute; left:50%; bottom:10px; transform:translateX(-50%);
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px; border-radius:999px;
+  background:#0f1219; border:1px solid #2a2f3f; box-shadow:var(--shadow);
+  font-weight:700;
+}
+#baPairs .pill .seg{ padding:6px 10px; border-radius:10px; }
+#baPairs .pill .seg.before{ background:#efe7d2; color:#222; }
+#baPairs .pill .seg.after{  background:#000;    color:#fff; }
+#baPairs .pill .arrow{ width:14px; height:14px; opacity:.9 }
+
+/* Lightbox (for pairs) */
+.ba-modal{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:70 }
+.ba-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.65) }
+.ba-dialog{
+  position:relative; z-index:1; background:#0f1219; border:1px solid #222838;
+  border-radius:18px; box-shadow:var(--shadow); padding:10px; width:min(1100px,96vw);
+}
+.ba-close{
+  position:absolute; right:6px; top:6px; width:36px; height:36px; border-radius:10px;
+  border:1px solid #2a2f3f; background:#141827; color:#e9eefc; cursor:pointer
+}
+.ba-compare{ display:grid; grid-template-columns:1fr 1fr; aspect-ratio:16/9; overflow:hidden; border-radius:12px }
+.ba-compare img{ width:100%; height:100%; object-fit:cover; display:block }

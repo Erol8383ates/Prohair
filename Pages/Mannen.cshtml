@@ -1,0 +1,219 @@
+@page
+@{
+    ViewData["Title"] = "Voor Mannen – Haarprotheses, re-bonding, knippen";
+}
+
+<!-- HERO -->
+<section class="hero-men">
+  <div class="bg" aria-hidden="true"></div>
+  <div class="container inner">
+    <h1 data-aos="fade-up">Heren haarprotheses: actief, natuurlijk, zorgeloos</h1>
+    <p data-aos="fade-up" data-aos-delay="80" style="color:var(--muted)">
+      Lace front of skin base met medische hechting. Sporten, douchen en slapen mogelijk — met barber-grade finish.
+    </p>
+    <div data-aos="fade-up" data-aos-delay="140" style="display:flex;gap:12px;margin-top:12px">
+      <a class="btn btn-primary" asp-page="/Reserveren">Plan heren-consult</a>
+      <a class="btn btn-ghost" asp-page="/Prijzen">Bekijk prijzen</a>
+    </div>
+  </div>
+</section>
+
+<section class="container section">
+
+    <!-- Kisa özellikler (ikon yok) -->
+    <div class="chips" data-aos="fade-up">
+        <span class="chip">Sport-proof hechting</span>
+        <span class="chip">Douchen & slapen</span>
+        <span class="chip">Onzichtbare haarlijn</span>
+        <span class="chip">Barber-finish</span>
+    </div>
+
+    <!-- Hizli Hizmet Kartlari -->
+    <div class="svc-grid" data-aos="fade-up">
+        <div class="svc-card">
+            <h3>Haar-systeem (lace/skin)</h3>
+            <p class="muted">Plaatsing + knippen & styling — natuurlijk resultaat.</p>
+            <div class="price">vanaf € 990</div>
+            <a class="btn btn-primary" asp-page="/Reserveren">Consult plannen</a>
+        </div>
+        <div class="svc-card">
+            <h3>Onderhoud (re-bonding)</h3>
+            <p class="muted">Schoonmaken, opnieuw bevestigen en touch-up.</p>
+            <div class="price">€ 80 – € 160</div>
+            <a class="btn btn-primary" asp-page="/Reserveren">Onderhoud boeken</a>
+        </div>
+        <div class="svc-card">
+            <h3>Knippen & styling</h3>
+            <p class="muted">Fade/shape afgestemd op jouw systeem.</p>
+            <div class="price">€ 35 – € 55</div>
+            <a class="btn btn-primary" asp-page="/Reserveren">Afspraak</a>
+        </div>
+    </div>
+
+    <!-- Systemen (tabs) -->
+    <div class="tabs" data-aos="fade-up">
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="tab-lace">Lace front</button>
+            <button class="tab-btn" data-tab="tab-skin">Skin (poly)</button>
+            <button class="tab-btn" data-tab="tab-hybrid">Hybrid</button>
+        </div>
+
+        <div class="tab-content show" id="tab-lace">
+            <div class="card">
+                <h2>Lace front — onzichtbare haarlijn</h2>
+                <ul style="margin:8px 0 0 18px">
+                    <li>Natuurlijkste hairline; close-up onzichtbaar</li>
+                    <li>Ideaal voor korte/fade modellen</li>
+                    <li>Re-bonding elke 3–4 weken</li>
+                </ul>
+                <div style="margin-top:12px;display:flex;gap:10px">
+                    <a class="btn btn-primary" asp-page="/Reserveren">Proefplaatsing</a>
+                    <a class="btn btn-ghost" asp-page="/Faq">Veelgestelde vragen</a>
+                </div>
+            </div>
+            <div class="media">
+                <img src="~/images/four.jpg" alt="Lace front" asp-append-version="true" />
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-skin">
+            <div class="card">
+                <h2>Skin (poly) — strak & eenvoudig onderhoud</h2>
+                <ul style="margin:8px 0 0 18px">
+                    <li>Ultradunne poly basis; strak/glanzend uiterlijk</li>
+                    <li>Schoonmaken zeer eenvoudig</li>
+                    <li>Re-bonding elke 3–4 weken</li>
+                </ul>
+                <div style="margin-top:12px;display:flex;gap:10px">
+                    <a class="btn btn-primary" asp-page="/Reserveren">Consult plannen</a>
+                    <a class="btn btn-ghost" asp-page="/Prijzen">Prijsindicatie</a>
+                </div>
+            </div>
+            <div class="media">
+
+                <img src="~/images/two.jpg" alt="Lace front" asp-append-version="true" />
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-hybrid">
+            <div class="card">
+                <h2>Hybrid — all-round balans</h2>
+                <ul style="margin:8px 0 0 18px">
+                    <li>Lace-haarlijn + gemak van skin</li>
+                    <li>Gebalanceerde oplossing voor een actief leven</li>
+                    <li>Re-bonding elke 3–4 weken</li>
+                </ul>
+                <div style="margin-top:12px;display:flex;gap:10px">
+                    <a class="btn btn-primary" asp-page="/Reserveren">Gratis consult</a>
+                    <a class="btn btn-ghost" asp-page="/Contact">Vraag advies</a>
+                </div>
+            </div>
+            <div class="media">
+
+                <img src="~/images/three.jpg" alt="Lace front" asp-append-version="true" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Vergelijkingsmatrix -->
+    <partial name="_MenFeatureMatrix" />
+
+    <!-- Onderhoud split -->
+    <div class="section split" data-aos="fade-up">
+        <div class="card">
+            <h2>Onderhoud & re-bonding</h2>
+            <p class="muted">Verwijderen, reinigen, opnieuw bevestigen en barber touch-up. Gemiddeld 45–60 min.</p>
+            <ul style="margin:8px 0 0 18px">
+                <li>Wekelijkse care-set & uitleg</li>
+                <li>Tips voor sauna/zwemmen/sport</li>
+                <li>Garantiecheck</li>
+            </ul>
+            <div style="margin-top:12px"><a class="btn btn-primary" asp-page="/Reserveren">Onderhoud boeken</a></div>
+        </div>
+        <div class="media">
+            <img src="~/images/four.jpg" alt="Lace front" asp-append-version="true" />
+        </div>
+    </div>
+
+    <!-- Barber promo -->
+    <section class="container section barber-focus" aria-labelledby="barber-title">
+        <div class="barber-wrap">
+            <!-- LINKS: content -->
+            <div class="barber-copy" data-aos="fade-up">
+                <h2 id="barber-title" style="margin:0 0 8px">Knippen, föhnen & styling — prothese-vriendelijk</h2>
+                <p class="muted" style="margin:0 0 10px">
+                    We knippen rond <strong>lace/skin bases</strong> zonder trekken of liften en föhnen met de juiste warmte en richting
+                    voor volume en natuurlijke textuur. Afwerking naar keuze: mat, natuurlijk of glans.
+                </p>
+
+                <div class="chips">
+                    <span class="chip">Skin/Lace-safe techniek</span>
+                    <span class="chip">Föhn & volume</span>
+                    <span class="chip">Fade & line-up</span>
+                    <span class="chip">Productadvies</span>
+                </div>
+
+                <!-- Snelle services -->
+                <div class="svc-grid svc-compact" style="margin-top:12px">
+                    <div class="svc-card">
+                        <h3>Knippen + föhnen</h3>
+                        <p class="muted">Vorm, textuur & volume afgestemd op jouw systeem.</p>
+                        <div class="price">€ 45 – € 65</div>
+                        <a class="btn btn-primary" asp-page="/Reserveren">Boek nu</a>
+                    </div>
+                    <div class="svc-card">
+                        <h3>Föhnen & styling</h3>
+                        <p class="muted">Snelle brush/föhn + finish voor meeting of avond uit.</p>
+                        <div class="price">€ 25 – € 35</div>
+                        <a class="btn btn-primary" asp-page="/Reserveren">Boek styling</a>
+                    </div>
+                    <div class="svc-card">
+                        <h3>Baard & contour</h3>
+                        <p class="muted">Strakke lijnen, afgestemd op je hairline.</p>
+                        <div class="price">€ 20 – € 30</div>
+                        <a class="btn btn-primary" asp-page="/Reserveren">Baardservice</a>
+                    </div>
+                </div>
+
+                <!-- Info bullets -->
+                <ul class="list-plain muted tight" style="margin-top:10px">
+                    <li>• Knippen rond lace/skin zonder de basis te liften.</li>
+                    <li>• Föhn: warmte & richting volgens dichtheid/groeirichting.</li>
+                    <li>• Styling: geen residu aan de basis; prothese-proof producten.</li>
+                </ul>
+
+                <div class="badge-row" style="margin-top:8px">
+                    <span class="badge">Snel: 30–40 min</span>
+                    <span class="badge">Te combineren met onderhoud</span>
+                    <span class="badge">Klantvriendelijk advies</span>
+                </div>
+
+                <div style="display:flex;gap:10px;margin-top:12px">
+                    <a class="btn btn-primary" asp-page="/Reserveren">Plan knip & föhn</a>
+                    <a class="btn btn-ghost" asp-page="/Prijzen">Bekijk prijzen</a>
+                </div>
+            </div>
+
+            <!-- RECHTS: mozaïek visuals (compact) -->
+            <div class="barber-media" data-aos="zoom-in">
+                <div class="mosaic-2">
+                    <figure class="tile big">
+                        <img src="~/images/two.jpg" alt="Lace front" asp-append-version="true" />
+                      
+                        <figcaption class="float-card">Knippen + föhnen</figcaption>
+                    </figure>
+                    <figure class="tile">
+                        <img src="~/images/three.jpg" alt="Lace front" asp-append-version="true" />
+                        <figcaption class="float-card">Fade & line-up</figcaption>
+                    </figure>
+                    <figure class="tile">
+                        <img src="~/images/two.jpg" alt="Lace front" asp-append-version="true" />
+                        <figcaption class="float-card">Styling & productadvies</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Sticky bottom CTA KALDIRILDI -->

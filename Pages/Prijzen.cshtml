@@ -1,0 +1,29 @@
+@page
+@{
+    ViewData["Title"] = "Prijzen – ProHair Studio";
+}
+<section class="container section">
+    <h1>Prijzen</h1>
+    <div class="grid grid-3" style="margin-top:14px">
+        <div class="card" data-aos="fade-up">
+            <h3>Maatwerk prothese</h3>
+            <p style="color:var(--muted)">Inclusief advies & styling</p>
+            <p><strong>€ 1.490 – € 2.990</strong></p>
+            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Topper / partial</h3>
+            <p style="color:var(--muted)">Lichtgewicht oplossing</p>
+            <p><strong>€ 690 – € 1.590</strong></p>
+            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Onderhoud</h3>
+            <p style="color:var(--muted)">Re-bonding & verzorging</p>
+            <p><strong>€ 80 – € 160</strong></p>
+            <a class="btn btn-primary" asp-page="/Reserveren">Afspraak</a>
+        </div>
+    </div>
+
+    <partial name="_PromoStrip" />
+</section>

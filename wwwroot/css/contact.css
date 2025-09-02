@@ -1,0 +1,61 @@
+/* Contact page (scoped) */
+.contact-wrap { max-width: 1200px; margin: 48px auto; padding: 0 20px; }
+.contact-wrap h1 { margin: 0 0 6px; }
+.contact-sub { color: var(--muted); margin: 0 0 18px; }
+
+.contact-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+.contact-card h3 { margin: 0 0 10px; }
+
+/* Form */
+.field { display: grid; gap: 6px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.input, .select, .textarea {
+  width: 100%; border-radius: 12px; border: 1px solid #2a2f3f;
+  background: #0f1219; color: #e9eefc; padding: 10px 12px; height: 44px;
+}
+.textarea { min-height: 130px; height: auto; resize: vertical; }
+.input:focus, .select:focus, .textarea:focus { outline: 2px solid var(--brand-2); outline-offset: 2px; }
+.help { font-size: 12px; color: var(--muted); }
+.contact-submit { width: 100%; }
+
+/* Quick contact chips */
+.contact-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.contact-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 999px;
+  border: 1px solid #2a2f3f; background: #0f1219;
+  font-weight: 600; color: #e9eefc;
+}
+
+/* Map */
+.map-frame { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; border: 1px solid #222838; }
+.map-frame iframe { width: 100%; height: 100%; border: 0; }
+
+/* Extra info row */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+.hours { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.hours li { display: flex; justify-content: space-between; border-bottom: 1px dashed #2a2f3f; padding-bottom: 6px; }
+.faq-mini details { border: 1px solid #2a2f3f; border-radius: 12px; padding: 10px 12px; background: #0f1219; }
+.faq-mini summary { cursor: pointer; font-weight: 600; list-style: none; }
+.faq-mini summary::-webkit-details-marker { display: none; }
+.faq-mini p { margin: 8px 0 0; color: var(--muted); }
+
+/* Keep bottom space so floating WhatsApp/Bel-ons don’t cover content */
+.contact-safe-bottom { padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+
+/* Mobile */
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: 1fr; }
+}
+
+
+.hp {
+    position: absolute;
+    left: -5000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}

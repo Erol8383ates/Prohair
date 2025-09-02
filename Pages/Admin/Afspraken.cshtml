@@ -1,0 +1,261 @@
+@page "/admin/afspraken"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Policy = "AdminOnly")]
+@model ProHair.NL.Pages.Admin.AfsprakenModel
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Afspraken";
+}
+
+
+<h1 style="margin:24px 0;">Afspraken (laatste 200)</h1>
+
+<div style="margin:12px 0; display:flex; gap:8px;">
+    <button id="deleteSelected" class="resv-btn-primary" style="height:38px;">Verwijder geselecteerde</button>
+    <button id="refresh" class="resv-btn-ghost" style="height:38px;">Vernieuwen</button>
+</div>
+
+<table style="width:100%; border-collapse:collapse; border:1px solid #333;">
+    <thead>
+        <tr style="background:#161a20;">
+            <th style="padding:10px; border-bottom:1px solid #333;">
+                <input type="checkbox" id="chkAll" />
+            </th>
+            <th style="text-align:left; padding:10px; border-bottom:1px solid #333;">Datum</th>
+            <th style="text-align:left; padding:10px; border-bottom:1px solid #333;">Behandeling</th>
+            <th style="text-align:left; padding:10px; border-bottom:1px solid #333;">Naam</th>
+            <th style="text-align:left; padding:10px; border-bottom:1px solid #333;">E-mail</th>
+            <th style="text-align:left; padding:10px; border-bottom:1px solid #333;">Telefoon</th>
+            <th style="text-align:left; padding:10px; border-bottom:1px solid #333;">Status</th>
+            <th style="padding:10px; border-bottom:1px solid #333;">Acties</th>
+        </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+</table>
+
+<style>
+    /* confirm modal */
+    .admin-confirm-backdrop[hidden] {
+        display: none;
+    }
+
+    .admin-confirm-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+
+    .admin-confirm {
+        background: #0f1115;
+        color: #fff;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 16px;
+        width: min(420px,90vw);
+    }
+
+        .admin-confirm h3 {
+            margin: 0 0 8px;
+        }
+
+        .admin-confirm .actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+    .admin-btn {
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 1px solid #2a2a2a;
+    }
+
+        .admin-btn.primary {
+            background: #73DC52;
+            color: #0f1b0f;
+            border-color: #316a2f;
+            font-weight: 800;
+        }
+
+        .admin-btn.ghost {
+            background: transparent;
+            color: #fff;
+        }
+</style>
+
+<!-- ARIA-safe confirm modal (no aria-hidden here) -->
+<div id="confirmBackdrop" class="admin-confirm-backdrop" hidden>
+    <div class="admin-confirm" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <h3 id="confirmTitle">Bevestigen</h3>
+        <p id="confirmText" style="opacity:.9;"></p>
+        <div class="actions">
+            <button id="confirmNo" class="admin-btn ghost" type="button">Annuleer</button>
+            <button id="confirmYes" class="admin-btn primary" type="button">Verwijder</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script>
+    let conn;
+
+    function rowHtml(a) {
+        return `
+    <tr>
+      <td style="padding:10px; border-bottom:1px solid #222;">
+        <input type="checkbox" class="rowChk" data-id="${a.id}" />
+      </td>
+      <td style="padding:10px; border-bottom:1px solid #222;">${a.startLocal}</td>
+      <td style="padding:10px; border-bottom:1px solid #222;">${a.serviceName}</td>
+      <td style="padding:10px; border-bottom:1px solid #222;">${a.clientName ?? ''}</td>
+      <td style="padding:10px; border-bottom:1px solid #222;">${a.clientEmail ?? ''}</td>
+      <td style="padding:10px; border-bottom:1px solid #222;">${a.clientPhone ?? ''}</td>
+      <td style="padding:10px; border-bottom:1px solid #222;">${a.status}</td>
+      <td style="padding:10px; border-bottom:1px solid #222;">
+        <button data-id="${a.id}" class="btnDelOne" style="height:28px;padding:0 10px;">Verwijder</button>
+      </td>
+    </tr>`;
+    }
+
+    async function loadLatest() {
+        const tb = document.getElementById('rows');
+        tb.innerHTML = `<tr><td colspan="8" style="padding:12px;opacity:.7;">Laden…</td></tr>`;
+        try {
+            const res = await fetch('/api/admin/appointments/latest?includeCancelled=false', { cache: 'no-store' });
+            if (!res.ok) throw new Error(await res.text().catch(() => 'Laden mislukt'));
+            const list = await res.json();
+            tb.innerHTML = list.map(rowHtml).join('');
+        } catch (err) {
+            tb.innerHTML = `<tr><td colspan="8" style="padding:12px;color:#c55;">${err.message || 'Laden mislukt'}</td></tr>`;
+        }
+    }
+
+    /* Confirm modal */
+    function askConfirm(text, yesLabel = 'Verwijder', openerEl = document.activeElement) {
+        const backdrop = document.getElementById('confirmBackdrop');
+        const title = document.getElementById('confirmTitle');
+        const txt = document.getElementById('confirmText');
+        const yes = document.getElementById('confirmYes');
+        const no = document.getElementById('confirmNo');
+
+        title.textContent = 'Bevestigen';
+        txt.textContent = text;
+        yes.textContent = yesLabel;
+
+        return new Promise(resolve => {
+            function close(answer) {
+                yes.removeEventListener('click', onYes);
+                no.removeEventListener('click', onNo);
+                document.removeEventListener('keydown', onKey);
+                backdrop.removeEventListener('click', onBackdrop);
+                backdrop.hidden = true; // hide safely
+                if (openerEl && typeof openerEl.focus === 'function') { setTimeout(() => openerEl.focus(), 0); }
+                resolve(answer);
+            }
+            function onYes() { close(true); }
+            function onNo() { close(false); }
+            function onKey(e) { if (e.key === 'Escape') close(false); }
+            function onBackdrop(e) { if (e.target === backdrop) close(false); }
+
+            backdrop.hidden = false; // show
+            document.documentElement.style.overflow = 'hidden';
+            setTimeout(() => yes.focus(), 0);
+
+            yes.addEventListener('click', onYes);
+            no.addEventListener('click', onNo);
+            document.addEventListener('keydown', onKey);
+            backdrop.addEventListener('click', onBackdrop);
+        }).finally(() => { document.documentElement.style.overflow = ''; });
+    }
+
+    /* Single delete (event delegation) */
+    document.getElementById('rows').addEventListener('click', (e) => {
+        const btn = e.target.closest('.btnDelOne');
+        if (!btn) return;
+        e.preventDefault();
+
+        setTimeout(async () => {
+            const id = Number(btn.getAttribute('data-id'));
+            const ok = await askConfirm('Weet je zeker dat je deze afspraak wil verwijderen?');
+            if (!ok) return;
+
+            btn.disabled = true;
+            try {
+                const res = await fetch(`/api/admin/appointments/${id}?hard=true`, { method: 'DELETE' });
+                if (!res.ok) throw new Error(await res.text().catch(() => 'Mislukt'));
+
+                // remove row immediately
+                const tr = btn.closest('tr');
+                if (tr) tr.remove();
+                // also uncheck “select all” if it was checked
+                document.getElementById('chkAll').checked = false;
+            } catch (err) {
+                alert('Verwijderen mislukt: ' + (err.message || ''));
+            } finally {
+                btn.disabled = false;
+            }
+        }, 0);
+    });
+
+    /* Select all */
+    document.getElementById('chkAll').addEventListener('change', e => {
+        const checked = e.target.checked;
+        requestAnimationFrame(() => {
+            const boxes = document.getElementsByClassName('rowChk');
+            for (let i = 0; i < boxes.length; i++) boxes[i].checked = checked;
+        });
+    });
+
+    /* Bulk delete */
+    document.getElementById('deleteSelected').addEventListener('click', (e) => {
+        const btn = e.currentTarget;
+        setTimeout(async () => {
+            const ids = Array.from(document.querySelectorAll('.rowChk:checked')).map(c => Number(c.dataset.id));
+            if (!ids.length) { alert('Niets geselecteerd.'); return; }
+
+            const ok = await askConfirm(`Verwijder ${ids.length} afspraak/afspraken?`);
+            if (!ok) return;
+
+            btn.disabled = true;
+            try {
+                const res = await fetch('/api/admin/appointments/bulk-cancel?hard=true', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids })
+                });
+                if (!res.ok) throw new Error(await res.text().catch(() => 'Mislukt'));
+
+                // remove selected rows immediately
+                ids.forEach(id => {
+                    const box = document.querySelector(`.rowChk[data-id="${id}"]`);
+                    if (box) box.closest('tr')?.remove();
+                });
+                document.getElementById('chkAll').checked = false;
+            } catch (err) {
+                alert('Bulk verwijderen mislukt: ' + (err.message || ''));
+            } finally {
+                btn.disabled = false;
+            }
+        }, 0);
+    });
+
+    /* Manual refresh */
+    document.getElementById('refresh').addEventListener('click', () => setTimeout(loadLatest, 0));
+
+    /* SignalR realtime */
+    function bindHub() {
+        conn = new signalR.HubConnectionBuilder().withUrl('/hubs/booking').withAutomaticReconnect().build();
+        const reload = () => setTimeout(loadLatest, 0);
+        conn.on('bookingCreated', reload);
+        conn.on('bookingCancelled', reload);
+        conn.on('slotReleased', reload);
+        conn.start().then(loadLatest).catch(() => setTimeout(bindHub, 1500));
+    }
+    bindHub();
+</script>

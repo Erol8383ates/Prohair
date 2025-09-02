@@ -1,0 +1,31 @@
+@page
+@{
+    ViewData["Title"] = "Voor Vrouwen – ProHair Studio";
+}
+<section class="container section">
+    <h1 data-aos="fade-up">Haaroplossingen voor vrouwen</h1>
+    <p data-aos="fade-up" style="color:var(--muted)">Van dunner wordend haar tot volledige haarprothese: natuurlijk resultaat op maat.</p>
+
+    <partial name="_PromoStrip" />
+
+    <div class="grid grid-3" style="margin-top:18px">
+        <div class="card" data-aos="fade-up">
+            <h3>Volledige prothese</h3>
+            <p>Onzichtbare front lace, kleur & textuur op maat. 100% maatwerk.</p>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Topper / partial</h3>
+            <p>Ideaal bij haaruitval op de kruin. Lichtgewicht en ademend.</p>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <h3>Medische opties</h3>
+            <p>Huidvriendelijke bevestiging en nazorg. Vergoeding mogelijk.</p>
+        </div>
+    </div>
+
+    <div class="hero-card" style="margin-top:18px" data-aos="zoom-in">
+        <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1200&auto=format&fit=crop" alt="Vrouwen protheses" />
+    </div>
+
+    <partial name="_TestimonialSlider" />
+</section>

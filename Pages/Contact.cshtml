@@ -1,0 +1,128 @@
+﻿@page
+@model ProHair.NL.Pages.ContactModel
+@{
+    ViewData["Title"] = "Contact – ProHair Studio";
+}
+<link rel="stylesheet" href="~/css/contact.css" asp-append-version="true" />
+
+<section class="container section contact-wrap contact-safe-bottom">
+    <h1 data-aos="fade-up">Contact</h1>
+    <p class="contact-sub" data-aos="fade-up" data-aos-delay="60">
+        Vragen, een offerte of snel een afspraak plannen? Stuur ons een bericht – we antwoorden meestal binnen <strong>1 werkdag</strong>.
+    </p>
+
+    <div class="contact-grid">
+        <!-- Left: form -->
+        <div class="card contact-card" data-aos="fade-up">
+            <h3>Stuur ons een bericht</h3>
+
+            @if (Model.Sent)
+            {
+            <div class="card" style="border-color:#2b6c35;background:#11391b;margin-top:10px">
+                <strong>Bedankt!</strong> We hebben je bericht ontvangen en reageren zo snel mogelijk.
+            </div>
+            }
+            else
+            {
+            <form method="post" asp-antiforgery="true" style="display:grid; gap:12px; margin-top:10px">
+                <!-- honeypot (must remain empty) -->
+                <input type="text" name="Website" class="hp" autocomplete="off" tabindex="-1" aria-hidden="true" />
+
+                <div class="field-row">
+                    <label class="field">
+                        <span>Naam</span>
+                        <input class="input" asp-for="Input.Name" placeholder="Jouw naam" />
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </label>
+                    <label class="field">
+                        <span>E-mail</span>
+                        <input class="input" asp-for="Input.Email" placeholder="jij@voorbeeld.be" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </label>
+                </div>
+
+                <label class="field">
+                    <span>Onderwerp</span>
+                    <select class="select" asp-for="Input.Subject">
+                        <option>Algemene vraag</option>
+                        <option>Consult – hairprothese</option>
+                        <option>Onderhoud / re-bonding</option>
+                        <option>Prijzen & beschikbaarheid</option>
+                    </select>
+                    <span asp-validation-for="Input.Subject" class="text-danger"></span>
+                </label>
+
+                <label class="field">
+                    <span>Bericht</span>
+                    <textarea class="textarea" asp-for="Input.Message" rows="6" placeholder="Vertel ons kort wat je zoekt…"></textarea>
+                    <span asp-validation-for="Input.Message" class="text-danger"></span>
+                </label>
+
+                <span class="help">Door te verzenden ga je akkoord met onze privacyverklaring. We gebruiken je gegevens uitsluitend om op je bericht te reageren.</span>
+
+                <button class="btn btn-primary contact-submit" type="submit">Versturen</button>
+            </form>
+            }
+        </div>
+
+        <!-- Right: studio info -->
+        <div class="card contact-card" data-aos="fade-up" data-aos-delay="80">
+            <h3>Onze studio</h3>
+            <p>
+                Straatnaam 123, 1000 Brussel<br>
+                <span class="muted">Ma–Za 09:00–19:00</span>
+            </p>
+
+            <div class="contact-chips">
+                <a class="contact-chip" href="tel:+32000000000">📞 Bel ons</a>
+                <a class="contact-chip" href="mailto:info@prohair.be">✉️ info@prohair.be</a>
+                <a class="contact-chip" href="https://wa.me/32000000000" target="_blank" rel="noopener">🟢 WhatsApp</a>
+            </div>
+
+            <div class="map-frame" style="margin-top:12px">
+                <iframe src="https://maps.google.com/maps?q=Brussels&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                        loading="lazy"
+                        title="Kaart – ProHair Studio">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra info row -->
+    <div class="info-grid">
+        <div class="card" data-aos="fade-up">
+            <h3>Openingstijden</h3>
+            <ul class="hours">
+                <li><span>Maandag</span><span>09:00–19:00</span></li>
+                <li><span>Dinsdag</span><span>09:00–19:00</span></li>
+                <li><span>Woensdag</span><span>09:00–19:00</span></li>
+                <li><span>Donderdag</span><span>09:00–19:00</span></li>
+                <li><span>Vrijdag</span><span>09:00–19:00</span></li>
+                <li><span>Zaterdag</span><span>09:00–17:00</span></li>
+                <li><span>Zondag</span><span>Gesloten</span></li>
+            </ul>
+        </div>
+
+        <div class="card faq-mini" data-aos="fade-up" data-aos-delay="80">
+            <h3>Veelgestelde vragen</h3>
+            <details>
+                <summary>Hoe snel krijg ik antwoord?</summary>
+                <p>Meestal binnen 1 werkdag. Via WhatsApp reageren we vaak dezelfde dag.</p>
+            </details>
+            <details>
+                <summary>Kan ik gratis een consult plannen?</summary>
+                <p>Ja. Plan via <a href="/Reserveren">Reserveren</a> of laat je beschikbare momenten weten.</p>
+            </details>
+            <details>
+                <summary>Is er parkeergelegenheid?</summary>
+                <p>Gratis parkeren in de straat; er is ook een betaalde parking op 200 m.</p>
+            </details>
+        </div>
+    </div>
+
+    <partial name="_PromoStrip" />
+</section>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

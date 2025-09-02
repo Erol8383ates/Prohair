@@ -1,0 +1,49 @@
+/* Voor & Na – yalnız #vn2 alanı */
+#vn2 .muted{color:var(--muted)}
+#vn2 .vn2-hero{display:grid;grid-template-columns:1fr 1.1fr;gap:18px;align-items:center}
+#vn2 .vn2-left h1{margin:0 0 8px;font-size:clamp(28px,3vw,48px)}
+#vn2 .vn2-cta{display:flex;gap:12px;margin:10px 0}
+#vn2 .vn2-chips{display:flex;flex-wrap:wrap;gap:8px}
+#vn2 .vn2-chips span{font-size:12px;border:1px solid #2a2f3f;border-radius:999px;padding:6px 10px;background:#0f1219}
+
+#vn2 .vn2-compare{--pos:50%;position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/10;border:1px solid #222838;background:#0e1016}
+#vn2 .vn2-compare.big{aspect-ratio:16/9;box-shadow:var(--shadow)}
+#vn2 .vn2-compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#vn2 .vn2-compare .after{clip-path:inset(0 0 0 var(--pos))}
+#vn2 .vn2-compare .slider{position:absolute;inset:0;opacity:0;cursor:ew-resize}
+#vn2 .vn2-compare .handle{position:absolute;top:50%;left:var(--pos);transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#c7a667,#e4d2a2);box-shadow:0 0 0 3px rgba(0,0,0,.45)}
+#vn2 .vn2-compare .labels{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.6);pointer-events:none}
+
+#vn2 .vn2-filters{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 10px}
+#vn2 .pill{padding:8px 12px;border-radius:999px;border:1px solid #2a2f3f;background:#0f1219;cursor:pointer}
+#vn2 .pill.active{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#141414}
+
+#vn2 .vn2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:18px}
+#vn2 .vn2-card{display:grid;gap:12px;background:var(--card);border:1px solid #222838;border-radius:16px;box-shadow:var(--shadow);padding:14px;transform:translateZ(0)}
+#vn2 .vn2-card:hover{transform:translateY(-2px)}
+#vn2 .vn2-media{perspective:900px}
+#vn2 .vn2-media .vn2-compare{transition:transform .25s}
+#vn2 .vn2-media:hover .vn2-compare{transform:rotateX(2deg)}
+#vn2 .vn2-body h3{margin:2px 0 6px}
+#vn2 .tags{display:flex;gap:8px;flex-wrap:wrap}
+#vn2 .tags span{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid #2a2f3f;background:#0f1219}
+#vn2 .actions{display:flex;gap:10px;flex-wrap:wrap}
+#vn2 .btn-dark{background:#0f1219;border:1px solid #2a2f3f;color:#e9eefc}
+
+@media (max-width:980px){#vn2 .vn2-hero{grid-template-columns:1fr}}
+
+
+#vn2 .vn2-compare .slider{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  background:transparent;
+  opacity:0; cursor:ew-resize;
+  -webkit-appearance:none; appearance:none;
+}
+
+#vn2 .vn2-compare .handle{ z-index:2; pointer-events:none; }
+#vn2 .vn2-compare .labels{ pointer-events:none; z-index:2; }
+
+/* Görünürlük için (isteğe bağlı) */
+#vn2 .vn2-compare.big{ width:100%; max-width:min(1100px,96vw); margin-inline:auto; }
+

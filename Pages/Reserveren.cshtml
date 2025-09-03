@@ -469,9 +469,14 @@
 
         const svcSel = byId('service');
         svcSel.innerHTML = '';
+
+        // 👉 Only show minutes when > 0 (hide "0m")
         (cfg.services ?? [])
             .sort((a, b) => a.name.localeCompare(b.name))
-            .forEach(s => svcSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name} (${s.durationMinutes}m)</option>`));
+            .forEach(s => {
+                const mins = (Number(s.durationMinutes) || 0) > 0 ? ` (${s.durationMinutes}m)` : '';
+                svcSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}${mins}</option>`);
+            });
 
         if (cfg.stylists?.length) defaultStylistId = cfg.stylists[0].id;
         else toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err');
@@ -482,6 +487,7 @@
         dateEl.addEventListener('change', debouncedLoadSlots);
         svcSel.addEventListener('change', debouncedLoadSlots);
     }
+
 
     let loadTimer = null;
     function debouncedLoadSlots() { clearTimeout(loadTimer); loadTimer = setTimeout(loadSlots, 150); }

@@ -52,15 +52,17 @@ a {
 
 /* ====== HEADER ====== */
 .header {
-    position: sticky;
+    position: fixed; /* was: sticky */
     top: 0;
-    z-index: 50;
+    left: 0;
+    right: 0;
+    z-index: 120; /* above content */
     backdrop-filter: blur(10px);
-    background: rgba(15,17,21,.6);
-    border-bottom: 1px solid rgba(255,255,255,.06);
-    padding: 6px 0;
+    background: rgba(15,17,21,.92);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    /* keep your vertical padding but protect for iOS notch */
+    padding: calc(6px + env(safe-area-inset-top,0px)) 0 6px;
 }
-
 .nav {
     display: flex;
     align-items: center;
@@ -77,8 +79,8 @@ a {
 }
 
     .logo img {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
     }
 
 .menu {
@@ -1589,7 +1591,7 @@ body.no-scroll {
 .mobile-links a {
     display: block;
     padding: 12px 2px;
-    color: #f5f7ff;
+    color: #cbd5e1;
     font-weight: 700;
     letter-spacing: .2px;
     text-shadow: 0 1px 2px rgba(0,0,0,.5);
@@ -1601,4 +1603,120 @@ body.no-scroll {
 
     .mobile-links a.active {
         color: var(--brand);
+    }
+
+
+
+
+
+
+/* Drawer'ı diğer her şeyin üstüne al + animasyonlu görünürlük */
+.mobile-drawer {
+    z-index: 120; /* header/fab üstünde */
+    opacity: 0;
+    visibility: hidden; /* .show gelene kadar gizli */
+    transition: opacity .25s ease;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,.55);
+    /* JS zaten display: block yapıyor; burada dokunmuyoruz */
+}
+
+    .mobile-drawer.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+/* Panel sağdan kayarak gelsin ve güvenli alanı hesaba katsın */
+.mobile-panel {
+    width: min(86vw, 360px);
+    padding: 18px calc(18px + env(safe-area-inset-right,0px)) 18px 18px;
+    transform: translateX(100%);
+    transition: transform .28s ease;
+}
+
+.mobile-drawer.show .mobile-panel {
+    transform: translateX(0);
+}
+
+/* Linkleri daha tok ve dokunması kolay yapalım */
+.mobile-links {
+    gap: 12px;
+    margin: 12px 0 16px;
+}
+
+    .mobile-links a {
+        display: block;
+        padding: 12px 10px;
+        border-radius: 12px;
+        border: 1px solid #2a2f3f;
+        background: #1a2130;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+        .mobile-links a:hover {
+            background: #243048;
+            border-color: #4a5670;
+        }
+
+
+
+
+
+/* Make videos/iframes fill the existing .media box */
+.media iframe,
+.media video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+}
+
+/* Text line under each video */
+.media-note {
+    margin: 6px 2px 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+    .media-note a {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+
+
+
+
+
+/* 1) Put header back in the flow */
+.header {
+    position: sticky; /* was: fixed */
+    top: 0;
+    z-index: 120;
+}
+
+/* 2) We no longer need any global top padding for <main> */
+main {
+    padding-top: 0 !important;
+}
+
+    /* 3) Remove the negative pull-up that was added for the fullbleed hero */
+    main > .hero-slider.fullbleed {
+        margin-top: 0 !important;
+    }
+
+@media (max-width:980px) {
+    main > .hero-slider.fullbleed {
+        margin-top: 0 !important;
+    }
+}
+
+/* 4) Keep the mobile drawer above the header */
+.mobile-drawer {
+    z-index: 120;
+}
+
+    .mobile-drawer.show {
+        z-index: 120;
     }

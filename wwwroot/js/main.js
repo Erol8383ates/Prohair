@@ -8,28 +8,59 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* -------------------------------
    Mobile drawer (burger menu)
+   - iOS scroll lock + ARIA + restore scroll
 -------------------------------- */
 (function () {
     const burger = $('.burger');
     const drawer = $('.mobile-drawer');
     if (!burger || !drawer) return;
 
-    // SHOW/HIDE + state classes for CSS
+    let lastScrollY = 0;
+
     const open = () => {
+        lastScrollY = window.scrollY || 0;
+
+        // Görünür yap + class’lar
         drawer.style.display = 'block';
-        drawer.classList.add('show');                    // added
-        document.body.classList.add('drawer-open', 'no-scroll'); // added
-    };
-    const close = () => {
-        drawer.classList.remove('show');                 // added
-        drawer.style.display = 'none';
-        document.body.classList.remove('drawer-open', 'no-scroll'); // added
+        drawer.classList.add('show');
+        document.body.classList.add('drawer-open', 'no-scroll');
+
+        // iOS/Android: sayfayı sabitle, mevcut konumu koru
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${lastScrollY}px`;
+        document.body.style.width = '100%';
+
+        // Erişilebilirlik
+        burger.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
     };
 
+    const close = () => {
+        drawer.classList.remove('show');
+        drawer.style.display = 'none';
+        document.body.classList.remove('drawer-open', 'no-scroll');
+
+        // Kilidi kaldır ve aynı konuma dön
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, lastScrollY);
+
+        // Erişilebilirlik
+        burger.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+        burger.focus();
+    };
+
+    // Tetikleyiciler
     burger.addEventListener('click', open);
     drawer.addEventListener('click', (e) => { if (e.target === drawer) close(); });
     $$('.mobile-links a', drawer).forEach(a => a.addEventListener('click', close));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+    // (opsiyonel) kapatma butonu varsa
+    const x = drawer.querySelector('.mnav-close');
+    if (x) x.addEventListener('click', close);
 })();
 
 /* -------------------------------
@@ -125,8 +156,8 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* -------------------------------
    Before/After sliders
-   - Works for .before-after (legacy)
-   - Works for .vn2-compare (new) using CSS --pos
+   - .before-after (legacy)
+   - .vn2-compare (new, CSS --pos)
 -------------------------------- */
 (function () {
     const initCompare = (w) => {
@@ -186,7 +217,9 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
         const close = () => m.remove();
         $('.backdrop', m).addEventListener('click', close);
         $('.close', m).addEventListener('click', close);
-        document.addEventListener('keydown', function esc(e) { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); } });
+        document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') { close(); document.removeEventListener('keydown', esc); }
+        });
     }
 
     $$('.zoom', root).forEach(btn => {

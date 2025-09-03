@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "NPFTVSmnHZS4Tz2xWrXA8FT9pMmp2gWDIw802iGOSgs=",
+  "Hash": "wBNAlXta4QL8VM9dfuWCs/VXjh5KmvTmwPuUxGPACHU=",
   "Source": "ProHair.NL",
   "BasePath": "_content/ProHair.NL",
   "Mode": "Default",
@@ -199,8 +199,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "53om9smgti",
-      "Integrity": "cRzl7rcIShYQeuV1TdJ05Vp2q775V0VAadoxJR97yNc=",
+      "Fingerprint": "dvhqn7hceh",
+      "Integrity": "ByDYjxMhGlynbcIUoFiT+rHHUz6gYzymAoUTwCxK9pc=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\style.css"
@@ -598,8 +598,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "at6dcuct2g",
-      "Integrity": "vidgrYr7DrsU47Of62UsTcshpM7AVZZwXPGR7C8+MlU=",
+      "Fingerprint": "z984f955wz",
+      "Integrity": "GTo+SY21k965cCdHGDrlNOnw4M14QkAqHhiyz9ZEKqs=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\main.js"
@@ -2359,51 +2359,6 @@
       ]
     },
     {
-      "Route": "css/style.53om9smgti.css",
-      "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\style.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "29982"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"cRzl7rcIShYQeuV1TdJ05Vp2q775V0VAadoxJR97yNc=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Wed, 03 Sep 2025 12:16:15 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "53om9smgti"
-        },
-        {
-          "Name": "label",
-          "Value": "css/style.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-cRzl7rcIShYQeuV1TdJ05Vp2q775V0VAadoxJR97yNc="
-        }
-      ]
-    },
-    {
       "Route": "css/style.css",
       "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\style.css",
       "Selectors": [],
@@ -2414,7 +2369,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "29982"
+          "Value": "32518"
         },
         {
           "Name": "Content-Type",
@@ -2422,11 +2377,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"cRzl7rcIShYQeuV1TdJ05Vp2q775V0VAadoxJR97yNc=\""
+          "Value": "\"ByDYjxMhGlynbcIUoFiT+rHHUz6gYzymAoUTwCxK9pc=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 03 Sep 2025 12:16:15 GMT"
+          "Value": "Wed, 03 Sep 2025 16:29:09 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2436,7 +2391,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-cRzl7rcIShYQeuV1TdJ05Vp2q775V0VAadoxJR97yNc="
+          "Value": "sha256-ByDYjxMhGlynbcIUoFiT+rHHUz6gYzymAoUTwCxK9pc="
+        }
+      ]
+    },
+    {
+      "Route": "css/style.dvhqn7hceh.css",
+      "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\style.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "32518"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"ByDYjxMhGlynbcIUoFiT+rHHUz6gYzymAoUTwCxK9pc=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:29:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "dvhqn7hceh"
+        },
+        {
+          "Name": "label",
+          "Value": "css/style.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-ByDYjxMhGlynbcIUoFiT+rHHUz6gYzymAoUTwCxK9pc="
         }
       ]
     },
@@ -3917,51 +3917,6 @@
       ]
     },
     {
-      "Route": "js/main.at6dcuct2g.js",
-      "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\js\\main.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "7636"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"vidgrYr7DrsU47Of62UsTcshpM7AVZZwXPGR7C8+MlU=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Wed, 03 Sep 2025 10:49:05 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "at6dcuct2g"
-        },
-        {
-          "Name": "label",
-          "Value": "js/main.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-vidgrYr7DrsU47Of62UsTcshpM7AVZZwXPGR7C8+MlU="
-        }
-      ]
-    },
-    {
       "Route": "js/main.js",
       "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\js\\main.js",
       "Selectors": [],
@@ -3972,7 +3927,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "7636"
+          "Value": "8334"
         },
         {
           "Name": "Content-Type",
@@ -3980,11 +3935,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"vidgrYr7DrsU47Of62UsTcshpM7AVZZwXPGR7C8+MlU=\""
+          "Value": "\"GTo+SY21k965cCdHGDrlNOnw4M14QkAqHhiyz9ZEKqs=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 03 Sep 2025 10:49:05 GMT"
+          "Value": "Wed, 03 Sep 2025 15:52:57 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -3994,7 +3949,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-vidgrYr7DrsU47Of62UsTcshpM7AVZZwXPGR7C8+MlU="
+          "Value": "sha256-GTo+SY21k965cCdHGDrlNOnw4M14QkAqHhiyz9ZEKqs="
+        }
+      ]
+    },
+    {
+      "Route": "js/main.z984f955wz.js",
+      "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\js\\main.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "8334"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GTo+SY21k965cCdHGDrlNOnw4M14QkAqHhiyz9ZEKqs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 15:52:57 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "z984f955wz"
+        },
+        {
+          "Name": "label",
+          "Value": "js/main.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-GTo+SY21k965cCdHGDrlNOnw4M14QkAqHhiyz9ZEKqs="
         }
       ]
     },

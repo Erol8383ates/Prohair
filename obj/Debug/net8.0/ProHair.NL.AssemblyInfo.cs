@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProHair.NL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b9457dec7133d95030019188cc2bb2deaf65e730")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f43f01989f176ccc1118561a58111964e846d6a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProHair.NL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProHair.NL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -2,8 +2,9 @@
 :root {
     /* === Site-wide theme variables ===
      Tweak --bg to make the page lighter/darker */
-    --bg: #171d28; /* page background */
-    --card: #121826; /* card background */
+    --bg: #374151;
+    --bg: #2c3442;
+    /* card background */
     --text: #e7ebf5; /* primary text color */
     --muted: #9aa3b8; /* secondary text */
     --brand: #c7a667; /* gold */
@@ -1347,3 +1348,323 @@ body.drawer-open .fab-wrap {
     transform: translateY(20px);
     transition: opacity .15s ease, transform .15s ease;
 }
+
+
+
+
+
+/* === HERO SLIDER === */
+.hero-slider {
+    padding-top: 8px;
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid #222838;
+    box-shadow: var(--shadow);
+    background: var(--card);
+    height: clamp(240px, 42vw, 520px);
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity .8s ease;
+}
+
+    .slide.active {
+        opacity: 1;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* nav buttons */
+.slider .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #2a2f3f;
+    background: rgba(15,17,21,.75);
+    color: #e9eefc;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+    .slider .nav:hover {
+        background: rgba(15,17,21,.95);
+    }
+
+.slider .prev {
+    left: 12px;
+}
+
+.slider .next {
+    right: 12px;
+}
+
+/* dots */
+.slider-dots {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+    .slider-dots .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        border: 1px solid #2a2f3f;
+        background: rgba(255,255,255,.35);
+        cursor: pointer;
+    }
+
+        .slider-dots .dot.on {
+            background: var(--brand);
+            border-color: transparent;
+        }
+
+
+
+
+
+
+
+
+/* Header ve logo için temiz ayarlar */
+.header {
+    background: rgba(15,17,21,.92)
+}
+
+.nav {
+    height: 92px
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px
+}
+
+    /* Eski 30x30 kuralını iptal et */
+    .logo img {
+        width: auto;
+        height: auto
+    }
+
+/* Rozet ve logo boyutları */
+.brand-badge {
+    display: inline-flex;
+    width: 88px;
+    height: 88px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(199,166,103,.45);
+    box-shadow: 0 6px 24px rgba(0,0,0,.35);
+}
+
+.brand-mark {
+    height: 76px; /* ekranda görünen yükseklik */
+    width: auto; /* oran korunsun */
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 24px;
+    font-weight: 900
+}
+
+@media (max-width:980px) {
+    .nav {
+        height: 78px
+    }
+
+    .brand-badge {
+        width: 72px;
+        height: 72px
+    }
+
+    .brand-mark {
+        height: 60px
+    }
+
+    .brand-text {
+        font-size: 20px
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ===== HERO FULL-BLEED + CAPTION ===== */
+.hero-slider.fullbleed {
+    padding-top: 0;
+}
+
+    .hero-slider.fullbleed .container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+/* Kenardan kenara ve ekran yüksekliğine göre */
+.slider.fullbleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    height: clamp(420px, 78vh, 860px);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    position: relative;
+    overflow: hidden;
+}
+
+    /* Slide ve görsel */
+    .slider.fullbleed .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity .6s ease;
+    }
+
+        .slider.fullbleed .slide.active {
+            opacity: 1;
+        }
+
+        .slider.fullbleed .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Üstte okunurluk için yumuşak degrade */
+        .slider.fullbleed .slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.20) 45%, rgba(0,0,0,.55) 100%);
+            pointer-events: none;
+        }
+
+/* Başlık/CTA */
+.caption {
+    position: absolute;
+    left: max(24px, calc(50% - 560px));
+    bottom: clamp(24px, 8vh, 96px);
+    z-index: 1;
+    max-width: min(600px, 92vw);
+    display: grid;
+    gap: 12px;
+}
+
+    .caption h1 {
+        margin: 0;
+        font-size: clamp(24px, 3.4vw, 48px);
+        line-height: 1.1;
+        text-shadow: 0 2px 12px rgba(0,0,0,.5);
+    }
+
+    .caption p {
+        margin: 0;
+        color: #e9eefc;
+        opacity: .95;
+        text-shadow: 0 1px 6px rgba(0,0,0,.5);
+    }
+
+    .caption .cta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+/* Navigasyon/dotlar görünür kalsın */
+.slider.fullbleed .nav {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.slider-dots {
+    bottom: 16px;
+}
+
+/* Sticky header’a karşı içerik tamponu (gerekliyse) */
+main {
+    padding-top: calc(var(--nav-h, 86px) + 8px);
+}
+
+@media (max-width:980px) {
+    main {
+        padding-top: calc(var(--nav-h-mobile, 68px) + 6px);
+    }
+}
+
+
+/* 3) Tüm sayfalarda içerik header’ın altında başlasın
+      (nav yüksekliği + header’ın 6px üst + 6px alt padding’i = 12px) */
+main {
+    padding-top: calc(var(--nav-h) + 12px);
+}
+
+@media (max-width:980px) {
+    main {
+        padding-top: calc(var(--nav-h-mobile) + 12px);
+    }
+}
+
+/* 4) Hero slider kendi padding’ini almasın */
+.section.hero-slider,
+.hero-slider.section {
+    padding: 0 !important;
+}
+/* Eski artığı kapat: */
+.hero-slider {
+    padding-top: 0 !important;
+}
+
+/* 5) Sadece ana sayfadaki full-bleed hero header boşluğunu geri alsın */
+main > .hero-slider.fullbleed {
+    margin-top: calc(-1 * (var(--nav-h) + 12px));
+}
+
+@media (max-width:980px) {
+    main > .hero-slider.fullbleed {
+        margin-top: calc(-1 * (var(--nav-h-mobile) + 12px));
+    }
+}
+
+/* 6) (kozmetik) header sınır çizgisi biraz yumuşak kalsın */
+.header {
+    border-bottom-color: rgba(255,255,255,.08);
+}
+
+
+
+
+

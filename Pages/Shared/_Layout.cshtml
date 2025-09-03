@@ -8,46 +8,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@title</title>
     <meta name="description" content="Premium haarprotheses voor vrouwen en mannen. Natuurlijk resultaat, maatwerk en discreet advies.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
-    @RenderSection("Styles", required: false)   <!-- add this -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css">
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true">
+    <meta name="theme-color" content="#2c3442" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+
+    <!-- AOS (animations) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+    <!-- Page-specific head extras (e.g., preloads) -->
+    @RenderSection("Head", required: false)
+
+    <!-- Page-specific styles -->
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <header class="header">
-        <div class="container nav">
+        <div class="container nav" role="navigation" aria-label="Hoofdmenu">
             <div class="nav-left">
-                <a class="logo" asp-page="/Index">
-                    <img src="/assets/logo.svg" alt="ProHair Studio" style="width:30px;height:30px;object-fit:contain;" /> ProHair Studio
+                <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
+                    <span class="brand-badge">
+                        <img class="brand-mark"
+                             src="@Url.Content("~/images/osman-mark-512.png")"
+                             alt="ProHair Studio"
+                             width="512" height="512" />
+                    </span>
+                    <span class="brand-text">ProHair Studio</span>
                 </a>
+
             </div>
+
             <nav class="menu">
                 <a class="@(Context.Request.Path == "/" ? "active" : null)" asp-page="/Index">Home</a>
                 <a asp-page="/Vrouwen">Voor Vrouwen</a>
-               <a asp-page="/Mannen">Voor Mannen</a>
-                <a asp-page="/VoorNa">Voor & Na</a>
+                <a asp-page="/Mannen">Voor Mannen</a>
+                <a asp-page="/VoorNa">Voor &amp; Na</a>
                 <a asp-page="/Prijzen">Prijzen</a>
-                <a href="/Reserveren">Reserveren</a>  <!-- point directly to the page -->
+                <a href="/Reserveren">Reserveren</a>
                 <a asp-page="/OverOns">Over ons</a>
                 <a asp-page="/Contact">Contact</a>
-               
             </nav>
+
             <button class="burger" aria-label="Menu">☰</button>
         </div>
-        <div class="mobile-drawer">
+
+        <!-- Mobile drawer -->
+        <div class="mobile-drawer" aria-hidden="true">
             <div class="mobile-panel">
-                <a class="logo" asp-page="/Index"><img src="/assets/logo.svg" alt=""> ProHair Studio</a>
+                <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
+                    <span class="brand-badge">
+                        <img class="brand-mark"
+                             src="@Url.Content("~/images/osman-mark-512.png")"
+                             alt="ProHair Studio"
+                             width="512" height="512" />
+                    </span>
+                    <span class="brand-text">ProHair Studio</span>
+                </a>
+
                 <div class="mobile-links">
                     <a asp-page="/Index">Home</a>
                     <a asp-page="/Vrouwen">Voor Vrouwen</a>
                     <a asp-page="/Mannen">Voor Mannen</a>
-                    <a asp-page="/VoorNa">Voor & Na</a>
+                    <a asp-page="/VoorNa">Voor &amp; Na</a>
                     <a asp-page="/Prijzen">Prijzen</a>
-                    <a href="/Reserveren">Reserveren</a> <!-- same here -->
+                    <a href="/Reserveren">Reserveren</a>
                     <a asp-page="/OverOns">Over ons</a>
                     <a asp-page="/Contact">Contact</a>
                     <a asp-page="/Faq">FAQ</a>
@@ -69,9 +98,16 @@
         </div>
     </footer>
 
+    <!-- JS: AOS + site -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Safe init even if AOS is included elsewhere
+        try { AOS.init({ once: true }); } catch (e) { }
+    </script>
+
     <script src="~/js/main.js" asp-append-version="true"></script>
+
+    <!-- Page-specific scripts -->
     @RenderSection("Scripts", required: false)
 
     <partial name="_FloatingContact" />

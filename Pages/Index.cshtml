@@ -3,6 +3,54 @@
     ViewData["Title"] = "ProHair Studio – Premium Protheses & Haaroplossingen";
 }
 
+<!-- === HERO SLIDER (FULL-BLEED + CAPTION) === -->
+<section class="section hero-slider fullbleed" aria-label="Barbershop sfeerbeelden">
+    <div class="container">
+        <div class="slider fullbleed" id="heroSlider" data-aos="fade-in">
+
+            <div class="slide active">
+                <img src="~/images/hair.jpg" alt="Heren haarprothese barber-finish" asp-append-version="true" />
+                <div class="caption">
+                    <h1>Heren haarprotheses: actief, natuurlijk, zorgeloos</h1>
+                    <p>Lace front of skin base met medische hechting. Sporten, douchen en slapen mogelijk — met barber-grade finish.</p>
+                    <div class="cta">
+                        <a class="btn btn-primary" asp-page="/Reserveren">Plan heren-consult</a>
+                        <a class="btn btn-dark" asp-page="/Prijzen">Bekijk prijzen</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <img src="~/images/hair1.jpg" alt="Onzichtbare haarlijn, maatwerk dichtheid" asp-append-version="true" />
+                <div class="caption">
+                    <h1>Onzichtbare haarlijn, 100% maatwerk</h1>
+                    <p>Ultra-fijne lace, medische bevestiging en een natuurlijke dichtheid op maat.</p>
+                    <div class="cta">
+                        <a class="btn btn-primary" asp-page="/VoorNa">Bekijk voor &amp; na</a>
+                        <a class="btn btn-ghost" asp-page="/OverOns">Onze werkwijze</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <img src="~/images/hair2.jpg" alt="Discreet consult en proefplaatsing" asp-append-version="true" />
+                <div class="caption">
+                    <h1>Discreet consult binnen 60 minuten</h1>
+                    <p>Analyse, designopties en proefplaatsing mogelijk tijdens je eerste afspraak.</p>
+                    <div class="cta">
+                        <a class="btn btn-primary" asp-page="/Reserveren">Maak afspraak</a>
+                    </div>
+                </div>
+            </div>
+
+            <button class="nav prev" aria-label="Vorige foto">‹</button>
+            <button class="nav next" aria-label="Volgende foto">›</button>
+            <div class="slider-dots" aria-hidden="true"></div>
+        </div>
+    </div>
+</section>
+
+<!-- === EXISTING HERO (bırakılabilir) === -->
 <section class="container section hero">
     <div>
         <div class="hero-badges" data-aos="fade-down">
@@ -17,12 +65,11 @@
         </p>
         <div style="display:flex; gap:12px; margin:20px 0 4px" data-aos="fade-up" data-aos-delay="150">
             <a class="btn btn-primary" asp-page="/Reserveren">Plan een consult</a>
-            <a class="btn btn-ghost" asp-page="/VoorNa">Bekijk voor & na</a>
+            <a class="btn btn-ghost" asp-page="/VoorNa">Bekijk voor &amp; na</a>
         </div>
         <div class="hero-badges" data-aos="fade-up" data-aos-delay="200">
             <span class="badge">★★★★★ 4.9/5</span>
             <span class="badge">Dermatologisch getest</span>
-            
         </div>
     </div>
     <div class="hero-card" data-aos="zoom-in">
@@ -143,3 +190,6 @@
     </div>
 </section>
 
+@section Scripts {
+    <script src="~/js/slider.js" asp-append-version="true"></script>
+}

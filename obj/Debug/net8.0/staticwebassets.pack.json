@@ -45,8 +45,48 @@
       "PackagePath": "staticwebassets\\images\\four.jpg"
     },
     {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\hair.jpg",
+      "PackagePath": "staticwebassets\\images\\hair.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\hair1.jpg",
+      "PackagePath": "staticwebassets\\images\\hair1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\hair2.jpg",
+      "PackagePath": "staticwebassets\\images\\hair2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logo.jpg",
+      "PackagePath": "staticwebassets\\images\\logo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logo.svg",
+      "PackagePath": "staticwebassets\\images\\logo.svg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logoo.jpg",
+      "PackagePath": "staticwebassets\\images\\logoo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logooo.jpg",
+      "PackagePath": "staticwebassets\\images\\logooo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logooo.png",
+      "PackagePath": "staticwebassets\\images\\logooo.png"
+    },
+    {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\one.jpg",
       "PackagePath": "staticwebassets\\images\\one.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\osman-mark-512.png",
+      "PackagePath": "staticwebassets\\images\\osman-mark-512.png"
     },
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\three.jpg",
@@ -67,6 +107,10 @@
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\js\\slider.js",
+      "PackagePath": "staticwebassets\\js\\slider.js"
     },
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\js\\voorna.js",

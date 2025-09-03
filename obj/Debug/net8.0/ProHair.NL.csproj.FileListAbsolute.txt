@@ -142,3 +142,4 @@ C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Npgsql.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.sourcelink.json

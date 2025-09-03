@@ -59,3 +59,40 @@
     height: 1px;
     overflow: hidden;
 }
+
+
+
+
+/* --- iOS: stop zoom-on-focus by keeping form controls at ≥16px --- */
+@media (max-width: 900px) {
+    input, select, textarea,
+    .input, .select, .textarea {
+        font-size: 16px; /* prevents Safari zoom */
+        line-height: 1.25;
+    }
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+/* keep text scaling stable */
+
+/* --- If AOS adds transform on the card, kill it when a field is focused --- */
+.contact-card:has(:focus) {
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* Optional: or disable AOS transform on mobile entirely for the form card */
+@media (max-width: 900px) {
+    .contact-card[data-aos] {
+        transform: none !important;
+        opacity: 1 !important;
+        will-change: auto !important;
+    }
+}
+
+/* Make sure the page doesn’t shift under the sticky header when focusing */
+:root {
+    scroll-padding-top: calc(var(--nav-h, 86px) + 8px);
+}

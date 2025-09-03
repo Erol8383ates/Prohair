@@ -27,14 +27,14 @@
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/contact.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\contact.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-rVmFWu\u002BuP2EnLdlA8MDeJvH\u002Bf8V/8/sD1QKu1fYgFlA="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"2471"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022rVmFWu\u002BuP2EnLdlA8MDeJvH\u002Bf8V/8/sD1QKu1fYgFlA=\u0022"},{"Name":"Last-Modified","Value":"Mon, 01 Sep 2025 18:20:11 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-sblizykS6o19s4fcXDViP88vqPm85ojR4fLYaQ3e2M4="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"3407"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022sblizykS6o19s4fcXDViP88vqPm85ojR4fLYaQ3e2M4=\u0022"},{"Name":"Last-Modified","Value":"Wed, 03 Sep 2025 08:59:31 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/contact.twl38gosvt.css">
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/contact.t993sr88xm.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\contact.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"twl38gosvt"},{"Name":"integrity","Value":"sha256-rVmFWu\u002BuP2EnLdlA8MDeJvH\u002Bf8V/8/sD1QKu1fYgFlA="},{"Name":"label","Value":"_content/ProHair.NL/css/contact.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"2471"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022rVmFWu\u002BuP2EnLdlA8MDeJvH\u002Bf8V/8/sD1QKu1fYgFlA=\u0022"},{"Name":"Last-Modified","Value":"Mon, 01 Sep 2025 18:20:11 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"t993sr88xm"},{"Name":"integrity","Value":"sha256-sblizykS6o19s4fcXDViP88vqPm85ojR4fLYaQ3e2M4="},{"Name":"label","Value":"_content/ProHair.NL/css/contact.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3407"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022sblizykS6o19s4fcXDViP88vqPm85ojR4fLYaQ3e2M4=\u0022"},{"Name":"Last-Modified","Value":"Wed, 03 Sep 2025 08:59:31 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/login.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\login.css'))</AssetFile>
@@ -75,14 +75,14 @@
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/style.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\style.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-sAeMG9g07GM6YPr0d//lZmnV6gTVe\u002BZq17SJzED5xo4="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"31180"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022sAeMG9g07GM6YPr0d//lZmnV6gTVe\u002BZq17SJzED5xo4=\u0022"},{"Name":"Last-Modified","Value":"Tue, 02 Sep 2025 17:08:05 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-6SLrnqTHL45YRN/3z5o5lttaRApkMCcMpDIGrYMHT44="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"32294"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00226SLrnqTHL45YRN/3z5o5lttaRApkMCcMpDIGrYMHT44=\u0022"},{"Name":"Last-Modified","Value":"Wed, 03 Sep 2025 09:58:46 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/style.cx47fp8clx.css">
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/style.p8ji5zab2l.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\style.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"cx47fp8clx"},{"Name":"integrity","Value":"sha256-sAeMG9g07GM6YPr0d//lZmnV6gTVe\u002BZq17SJzED5xo4="},{"Name":"label","Value":"_content/ProHair.NL/css/style.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"31180"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022sAeMG9g07GM6YPr0d//lZmnV6gTVe\u002BZq17SJzED5xo4=\u0022"},{"Name":"Last-Modified","Value":"Tue, 02 Sep 2025 17:08:05 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"p8ji5zab2l"},{"Name":"integrity","Value":"sha256-6SLrnqTHL45YRN/3z5o5lttaRApkMCcMpDIGrYMHT44="},{"Name":"label","Value":"_content/ProHair.NL/css/style.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"32294"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00226SLrnqTHL45YRN/3z5o5lttaRApkMCcMpDIGrYMHT44=\u0022"},{"Name":"Last-Modified","Value":"Wed, 03 Sep 2025 09:58:46 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/voorna.3jm64ryqbc.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\voorna.css'))</AssetFile>

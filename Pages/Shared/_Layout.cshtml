@@ -45,7 +45,7 @@
 
             <nav class="menu">
                 <a class="@(Context.Request.Path == "/" ? "active" : null)" asp-page="/Index">Home</a>
-                <a asp-page="/Vrouwen">Voor Vrouwen</a>
+              
                 <a asp-page="/Mannen">Voor Mannen</a>
                 <a asp-page="/VoorNa">Voor &amp; Na</a>
                 <a asp-page="/Prijzen">Prijzen</a>
@@ -54,36 +54,36 @@
                 <a asp-page="/Contact">Contact</a>
             </nav>
 
-            <button class="burger" aria-label="Menu">☰</button>
-        </div>
+        <button class="burger" aria-label="Menu">☰</button>
+    </div>
 
-        <!-- Mobile drawer -->
-        <div class="mobile-drawer" aria-hidden="true">
-            <div class="mobile-panel">
-                <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
-                    <span class="brand-badge">
-                        <img class="brand-mark"
-                             src="@Url.Content("~/images/osman-mark-512.png")"
-                             alt="ProHair Studio"
-                             width="512" height="512" />
-                    </span>
-                    <span class="brand-text">ProHair Studio</span>
-                </a>
+    <!-- Mobile drawer -->
+                <div class="mobile-drawer" aria-hidden="true">
+                    <div class="mobile-panel">
+                        <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
+                            <span class="brand-badge">
+                                <img class="brand-mark"
+                                     src="@Url.Content("~/images/osman-mark-512.png")"
+                                     alt="ProHair Studio"
+                                     width="512" height="512" />
+                            </span>
+                            <span class="brand-text">ProHair Studio</span>
+                        </a>
 
-                <div class="mobile-links">
-                    <a asp-page="/Index">Home</a>
-                    <a asp-page="/Vrouwen">Voor Vrouwen</a>
-                    <a asp-page="/Mannen">Voor Mannen</a>
-                    <a asp-page="/VoorNa">Voor &amp; Na</a>
-                    <a asp-page="/Prijzen">Prijzen</a>
-                    <a href="/Reserveren">Reserveren</a>
-                    <a asp-page="/OverOns">Over ons</a>
-                    <a asp-page="/Contact">Contact</a>
-                    <a asp-page="/Faq">FAQ</a>
+                        <div class="mobile-links">
+                            <a asp-page="/Index">Home</a>
+                            <!--  <a asp-page="/Vrouwen">Voor Vrouwen</a> -->
+                            <a asp-page="/Mannen">Voor Mannen</a>
+                            <a asp-page="/VoorNa">Voor &amp; Na</a>
+                            <a asp-page="/Prijzen">Prijzen</a>
+                            <a href="/Reserveren">Reserveren</a>
+                            <a asp-page="/OverOns">Over ons</a>
+                            <a asp-page="/Contact">Contact</a>
+
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </header>
+</header>
 
     <main role="main">
         @RenderBody()
@@ -99,17 +99,17 @@
     </footer>
 
     <!-- JS: AOS + site -->
-    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-    <script>
-        // Safe init even if AOS is included elsewhere
-        try { AOS.init({ once: true }); } catch (e) { }
-    </script>
+                    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+                    <script>
+                        // Safe init even if AOS is included elsewhere
+                        try { AOS.init({ once: true }); } catch (e) { }
+                    </script>
 
-    <script src="~/js/main.js" asp-append-version="true"></script>
+                    <script src="~/js/main.js" asp-append-version="true"></script>
 
-    <!-- Page-specific scripts -->
-    @RenderSection("Scripts", required: false)
+                    <!-- Page-specific scripts -->
+                    @RenderSection("Scripts", required: false)
 
-    <partial name="_FloatingContact" />
+                    <partial name="_FloatingContact" />
 </body>
 </html>

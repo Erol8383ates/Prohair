@@ -1,27 +1,145 @@
 @page
 @{
-    ViewData["Title"] = "Prijzen – ProHair Studio";
+    ViewData["Title"] = "Prijzen - ProHair Studio";
 }
+
 <section class="container section">
-    <h1>Prijzen</h1>
+    <header class="section-header" data-aos="fade-up">
+        <h1>Prijzen</h1>
+        <p class="muted">Transparante tarieven voor haarwerken, onderhoud en barbershop-diensten. Alle prijzen zijn <strong>vanaf</strong>-prijzen tenzij anders vermeld.</p>
+    </header>
+
+    <!-- HERO KAARTLAR (Prothese) -->
+    <div class="grid grid-3" style="margin-top:18px">
+        <div class="card" data-aos="fade-up">
+            <span class="badge badge-gold">Haarwerk</span>
+            <h3>Maatwerk prothese</h3>
+            <p class="muted">Inclusief advies &amp; styling</p>
+            <p class="price"><strong>&euro; 1.490 &ndash; &euro; 2.990</strong></p>
+            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <span class="badge">Topper / partial</span>
+            <h3>Lichtgewicht oplossing</h3>
+            <p class="muted">Voor kruin of inhammen</p>
+            <p class="price"><strong>&euro; 690 &ndash; &euro; 1.590</strong></p>
+            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <span class="badge">Onderhoud</span>
+            <h3>Re-bonding &amp; verzorging</h3>
+            <p class="muted">Reiniging, lijm/tape, styling</p>
+            <p class="price"><strong>&euro; 80 &ndash; &euro; 160</strong></p>
+            <a class="btn btn-primary" asp-page="/Reserveren">Afspraak</a>
+        </div>
+    </div>
+
+    <!-- PROTHESE EXTRAS -->
+    <div class="grid grid-3" style="margin-top:26px">
+        <div class="card" data-aos="fade-up">
+            <h4>Intake &amp; consult</h4>
+            <ul class="price-list">
+                <li><span>Persoonlijk advies (30 min)</span><span class="amount"><strong>Gratis</strong></span></li>
+                <li><span>Kleur- &amp; maatbepaling</span><span class="amount">&euro; 0</span></li>
+            </ul>
+            <a class="btn btn-secondary" asp-page="/Reserveren">Plan gratis consult</a>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h4>Plaatsing &amp; styling</h4>
+            <ul class="price-list">
+                <li><span>Eerste plaatsing (snijden &amp; stylen)</span><span class="amount">&euro; 120</span></li>
+                <li><span>Perimeter touch-up</span><span class="amount">&euro; 45</span></li>
+                <li><span>Lijm/tape wissel</span><span class="amount">&euro; 25</span></li>
+            </ul>
+            <a class="btn btn-secondary" asp-page="/Reserveren">Afspraak maken</a>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <h4>Onderhoudspakketten</h4>
+            <ul class="price-list">
+                <li><span>Basic &bull; 4&times; per jaar</span><span class="amount">&euro; 280</span></li>
+                <li><span>Plus &bull; 6&times; per jaar</span><span class="amount">&euro; 390</span></li>
+                <li><span>Premium &bull; 12&times; per jaar</span><span class="amount">&euro; 720</span></li>
+            </ul>
+            <p class="muted">Incl. reiniging, rebonding, bijsnijden &amp; styling.</p>
+        </div>
+    </div>
+
+    <!-- BARBERSHOP DIENSTEN -->
+    <div class="section-split" style="margin-top:36px" data-aos="fade-up">
+        <h2>Barbershop &amp; Styling</h2>
+        <p class="muted">ProHair Studio is ook je kapsalon voor moderne coupes, f&ouml;hn/styling en baardverzorging.</p>
+    </div>
+
     <div class="grid grid-3" style="margin-top:14px">
         <div class="card" data-aos="fade-up">
-            <h3>Maatwerk prothese</h3>
-            <p style="color:var(--muted)">Inclusief advies & styling</p>
-            <p><strong>€ 1.490 – € 2.990</strong></p>
-            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
+            <h4>Knippen &amp; Finish</h4>
+            <ul class="price-list">
+                <li><span>Heren knippen</span><span class="amount">&euro; 25 &ndash; &euro; 35</span></li>
+                <li><span>Skin fade</span><span class="amount">&euro; 30 &ndash; &euro; 35</span></li>
+                <li><span>Tondeuse (buzz cut)</span><span class="amount">&euro; 18</span></li>
+                <li><span>Kinderen t/m 12</span><span class="amount">&euro; 20</span></li>
+                <li><span>Contour / haarlijn</span><span class="amount">&euro; 10</span></li>
+            </ul>
         </div>
+
         <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <h3>Topper / partial</h3>
-            <p style="color:var(--muted)">Lichtgewicht oplossing</p>
-            <p><strong>€ 690 – € 1.590</strong></p>
-            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
+            <h4>Wassen, f&ouml;hnen &amp; styling</h4>
+            <ul class="price-list">
+                <li><span>Wassen + f&ouml;hnen (fon)</span><span class="amount">&euro; 15 &ndash; &euro; 25</span></li>
+                <li><span>Styling/finish</span><span class="amount">&euro; 10 &ndash; &euro; 15</span></li>
+                <li><span>Feestlook / f&ouml;hn-brush</span><span class="amount">vanaf &euro; 25</span></li>
+            </ul>
         </div>
+
         <div class="card" data-aos="fade-up" data-aos-delay="200">
-            <h3>Onderhoud</h3>
-            <p style="color:var(--muted)">Re-bonding & verzorging</p>
-            <p><strong>€ 80 – € 160</strong></p>
-            <a class="btn btn-primary" asp-page="/Reserveren">Afspraak</a>
+            <h4>Baard &amp; Kleuring</h4>
+            <ul class="price-list">
+                <li><span>Baard trimmen &amp; contour</span><span class="amount">&euro; 15</span></li>
+                <li><span>Haar kleuring</span><span class="amount">vanaf &euro; 45</span></li>
+                <li><span>Highlights / lowlights</span><span class="amount">vanaf &euro; 60</span></li>
+                <li><span>Keratine / verzorgingsbehandeling</span><span class="amount">vanaf &euro; 80</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ACTIE & CTA -->
+    <div class="callout" data-aos="fade-up" style="margin-top:20px">
+        <p><strong>Actie:</strong> Gratis consult t/m einde maand + <strong>&euro; 100 korting</strong> op maatwerk.</p>
+        <div class="actions">
+            <a class="btn btn-primary" asp-page="/Reserveren">Nu boeken</a>
+            <a class="btn btn-ghost" asp-page="/Contact">Vragen? Neem contact op</a>
+        </div>
+    </div>
+
+    <!-- FAQ / VOORWAARDEN -->
+    <div class="grid grid-2" style="margin-top:26px">
+        <div class="card" data-aos="fade-up">
+            <h4>Veelgestelde vragen</h4>
+            <details open>
+                <summary>Zijn prijzen inclusief btw?</summary>
+                <p>Ja, alle vermelde prijzen zijn inclusief btw.</p>
+            </details>
+            <details>
+                <summary>Hoe lang duurt een onderhoudsbeurt?</summary>
+                <p>Reken op 60&ndash;90 minuten, afhankelijk van type haarwerk en bevestiging.</p>
+            </details>
+            <details>
+                <summary>Biedt u studentenkorting?</summary>
+                <p>Ja, di&ndash;do <strong>10% korting</strong> op knippen en styling (met studentenkaart).</p>
+            </details>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h4>Voorwaarden</h4>
+            <ul class="bullets">
+                <li>Prijzen kunnen vari&euml;ren op basis van haarlengte, dichtheid en gewenste techniek.</li>
+                <li>No-show of late cancel (&lt;24u): &euro; 25 vergoeding.</li>
+                <li>Pakketten zijn 12 maanden geldig vanaf aankoopdatum.</li>
+            </ul>
         </div>
     </div>
 

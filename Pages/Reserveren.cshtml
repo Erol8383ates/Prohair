@@ -146,7 +146,7 @@
         font-style: italic;
     }
 
-    /* The drawer */
+    /* Sticky drawer */
     .resv-drawer {
         position: fixed;
         left: 0;
@@ -157,7 +157,7 @@
         box-shadow: 0 -10px 30px rgba(0,0,0,.4);
         transform: translateY(110%);
         transition: .28s transform;
-        z-index: 9999; /* <<< sits above floating buttons */
+        z-index: 9999;
     }
 
         .resv-drawer.open {
@@ -217,41 +217,12 @@
         cursor: pointer;
     }
 
-    /* NEW: the 3-field row with responsive stacking */
+    /* three fields */
     .resv-input-row {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 10px;
     }
-
-    /* Toasts */
-    .resv-toasts {
-        position: fixed;
-        right: 16px;
-        bottom: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        z-index: 50;
-    }
-
-    .resv-toast {
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: #1e293b;
-        border: 1px solid rgba(255,255,255,.08);
-        box-shadow: 0 8px 20px rgba(0,0,0,.25);
-    }
-
-        .resv-toast.ok {
-            background: #11391b;
-            border-color: #2b6c35;
-        }
-
-        .resv-toast.err {
-            background: #3b1111;
-            border-color: #7a2b2b;
-        }
 
     /* Modal */
     .resv-modal-backdrop {
@@ -289,7 +260,14 @@
             margin: 0 0 14px;
         }
 
-    /* Responsive */
+    /* Drawer should hide FABs while open (mobile) */
+    @@media (max-width:900px) {
+        body.drawer-open .fab-wrap,
+        body.drawer-open #stickyCta {
+            display: none !important;
+        }
+    }
+
     @@media (max-width:880px) {
         .resv-filters {
             grid-template-columns: 1fr;
@@ -303,15 +281,20 @@
         .resv-input-row {
             grid-template-columns: 1fr;
         }
-        /* <<< stack inputs on mobile */
     }
 
-    /* Hide floating FABs / sticky CTA while drawer is open, only on mobile */
-    @@media (max-width:900px) {
-        body.drawer-open .fab-wrap,
-        body.drawer-open #stickyCta {
-            display: none !important;
-        }
+    /* (Optional) mobile menu readability on dark hero: keep these if you want the slide animation */
+    body.no-scroll {
+        overflow: hidden;
+    }
+
+    .mobile-panel {
+        transform: translateX(100%);
+        transition: transform .28s ease;
+    }
+
+    .mobile-drawer.show .mobile-panel {
+        transform: translateX(0);
     }
 </style>
 
@@ -350,7 +333,6 @@
             <span id="holdCountdown" style="margin-left:8px;opacity:.85;"></span>
         </div>
 
-        <!-- UPDATED: use class instead of inline style -->
         <div class="resv-input-row">
             <input id="name" class="resv-input-sm" placeholder="Naam" />
             <input id="email" class="resv-input-sm" placeholder="E-mail" />
@@ -378,6 +360,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script>
+    // IMPORTANT: don't shadow the site's `$` helper used by the header.
+    const byId = (id) => document.getElementById(id);
+
     const tz = "Europe/Brussels";
     const API = {
         config: '/api/availability/config',
@@ -393,26 +378,33 @@
     let activeIso = null;
     let loadingSlotsCtrl = null, isLoadingSlots = false;
 
-    function $(id) { return document.getElementById(id); }
-    function yyyyMmDd(d) { return new Date(d).toISOString().slice(0, 10); }
+    const yyyyMmDd = (d) => new Date(d).toISOString().slice(0, 10);
 
     function toast(text, type = "ok") {
-        const box = $('toasts'); const el = document.createElement('div');
-        el.className = `resv-toast ${type}`; el.textContent = text; box.appendChild(el);
+        const box = byId('toasts');
+        const el = document.createElement('div');
+        el.className = `resv-toast ${type}`;
+        el.textContent = text;
+        box.appendChild(el);
         setTimeout(() => el.remove(), 3500);
     }
 
     function showModal(title, body) {
-        $('modalTitle').textContent = title;
-        $('modalBody').textContent = body;
-        $('modal').classList.add('open');
+        byId('modalTitle').textContent = title;
+        byId('modalBody').textContent = body;
+        byId('modal').classList.add('open');
     }
-    $('modalClose').addEventListener('click', () => $('modal').classList.remove('open'));
+    byId('modalClose').addEventListener('click', () => byId('modal').classList.remove('open'));
 
     function setLoadingSlots(count = 12) {
-        const slotsEl = $('slots'); slotsEl.innerHTML = "";
-        for (let i = 0; i < count; i++) { const s = document.createElement('div'); s.className = 'resv-skeleton'; slotsEl.appendChild(s); }
-        $('meta').textContent = 'Laden…';
+        const slotsEl = byId('slots');
+        slotsEl.innerHTML = "";
+        for (let i = 0; i < count; i++) {
+            const s = document.createElement('div');
+            s.className = 'resv-skeleton';
+            slotsEl.appendChild(s);
+        }
+        byId('meta').textContent = 'Laden…';
     }
 
     function styleActive(btn, isActive) {
@@ -430,18 +422,25 @@
     }
 
     function renderSlots(list) {
-        const slotsEl = $('slots'); slotsEl.innerHTML = '';
-        if (!list || !list.length) { slotsEl.innerHTML = `<div class="resv-empty">Geen tijden beschikbaar voor deze selectie.</div>`; $('meta').textContent = ''; return; }
+        const slotsEl = byId('slots');
+        slotsEl.innerHTML = '';
+        if (!list || !list.length) {
+            slotsEl.innerHTML = `<div class="resv-empty">Geen tijden beschikbaar voor deze selectie.</div>`;
+            byId('meta').textContent = '';
+            return;
+        }
         list.forEach(iso => {
             const t = new Date(iso);
             const label = t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const btn = document.createElement('button');
-            btn.className = 'resv-slot'; btn.textContent = label; btn.dataset.iso = iso;
+            btn.className = 'resv-slot';
+            btn.textContent = label;
+            btn.dataset.iso = iso;
             styleActive(btn, iso === activeIso);
             btn.onclick = () => holdSlot(iso);
             slotsEl.appendChild(btn);
         });
-        $('meta').textContent = `${list.length} tijdsloten gevonden`;
+        byId('meta').textContent = `${list.length} tijdsloten gevonden`;
     }
 
     async function findNextAvailable(date, serviceId, stylistId, days = 21) {
@@ -464,16 +463,20 @@
             const res = await fetch(API.config);
             if (!res.ok) throw new Error(await res.text().catch(() => 'Config laden mislukt.'));
             cfg = await res.json();
-        } catch (err) { toast(err.message || 'Config laden mislukt.', 'err'); return; }
+        } catch (err) {
+            toast(err.message || 'Config laden mislukt.', 'err'); return;
+        }
 
-        const svcSel = $('service'); svcSel.innerHTML = '';
-        (cfg.services ?? []).sort((a, b) => a.name.localeCompare(b.name))
+        const svcSel = byId('service');
+        svcSel.innerHTML = '';
+        (cfg.services ?? [])
+            .sort((a, b) => a.name.localeCompare(b.name))
             .forEach(s => svcSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name} (${s.durationMinutes}m)</option>`));
 
-        if (cfg.stylists?.length) { defaultStylistId = cfg.stylists[0].id; }
-        else { toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err'); }
+        if (cfg.stylists?.length) defaultStylistId = cfg.stylists[0].id;
+        else toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err');
 
-        const dateEl = $('date'); const today = new Date();
+        const dateEl = byId('date'); const today = new Date();
         dateEl.value = yyyyMmDd(today); dateEl.min = yyyyMmDd(today);
 
         dateEl.addEventListener('change', debouncedLoadSlots);
@@ -485,7 +488,7 @@
 
     async function loadSlots() {
         if (!defaultStylistId) return;
-        const date = $('date').value, serviceId = $('service').value, stylistId = defaultStylistId;
+        const date = byId('date').value, serviceId = byId('service').value, stylistId = defaultStylistId;
         current = { date, serviceId, stylistId };
 
         if (loadingSlotsCtrl) loadingSlotsCtrl.abort();
@@ -507,7 +510,7 @@
             if (!list.length) {
                 const next = await findNextAvailable(date, serviceId, stylistId, 21);
                 if (next) {
-                    $('date').value = next.date;
+                    byId('date').value = next.date;
                     toast(`Geen tijden voor gekozen datum. Volgende beschikbare: ${new Date(next.date).toLocaleDateString()} (${next.slots.length} slots).`);
                     renderSlots(next.slots); isLoadingSlots = false; return;
                 }
@@ -516,7 +519,8 @@
         } catch (err) {
             if (err?.name !== 'AbortError') {
                 toast(err?.message || 'Tijden laden mislukt.', 'err');
-                $('meta').textContent = ''; $('slots').innerHTML = `<div class="resv-empty">Laden mislukt.</div>`;
+                byId('meta').textContent = '';
+                byId('slots').innerHTML = `<div class="resv-empty">Laden mislukt.</div>`;
             }
         } finally { isLoadingSlots = false; }
     }
@@ -537,11 +541,11 @@
             hold.token = data.holdToken; hold.expiresAtUtc = data.expiresAtUtc; hold.startLocal = startLocalIso;
             activeIso = startLocalIso; highlightActiveButton();
 
-            $('selectedInfo').textContent =
+            byId('selectedInfo').textContent =
                 `Gekozen: ${new Date(startLocalIso).toLocaleDateString()} • ${new Date(startLocalIso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-            $('drawer').classList.add('open');
-            document.body.classList.add('drawer-open');   // <<< force body flag for mobile CSS
+            byId('drawer').classList.add('open');
+            document.body.classList.add('drawer-open');
             startCountdown();
         } catch (err) { toast(err?.message || 'Niet gelukt.', 'err'); }
     }
@@ -553,13 +557,12 @@
     }
 
     async function confirmBooking() {
-        const name = $('name').value.trim();
-        const email = $('email').value.trim();
-        const phone = $('phone').value.trim();
+        const name = byId('name').value.trim();
+        const email = byId('email').value.trim();
+        const phone = byId('phone').value.trim();
         if (!name || !email) { toast('Naam en e-mail zijn verplicht.', 'err'); return; }
 
-        const confirmBtn = $('confirm'); confirmBtn.disabled = true;
-
+        const confirmBtn = byId('confirm'); confirmBtn.disabled = true;
         try {
             const res = await fetch(API.confirm, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -569,13 +572,12 @@
             if (!res.ok || !data.ok) { toast((data && data.error) ? data.error : 'Niet gelukt', 'err'); return; }
 
             showModal('Reservering bevestigd',
-                `We zien je op ${new Date(hold.startLocal).toLocaleDateString()} om ${new Date(hold.startLocal).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. ` +
-                `Een bevestiging is naar je e-mail verzonden.`);
+                `We zien je op ${new Date(hold.startLocal).toLocaleDateString()} om ${new Date(hold.startLocal).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. Een bevestiging is naar je e-mail verzonden.`);
 
             hold = { token: null, expiresAtUtc: null, startLocal: null };
             activeIso = null;
-            $('drawer').classList.remove('open');
-            document.body.classList.remove('drawer-open');  // <<< close state
+            byId('drawer').classList.remove('open');
+            document.body.classList.remove('drawer-open');
             await loadSlots();
         } catch (err) { toast(err?.message || 'Bevestigen mislukt.', 'err'); }
         finally { confirmBtn.disabled = false; }
@@ -587,13 +589,13 @@
         }
         hold = { token: null, expiresAtUtc: null, startLocal: null };
         activeIso = null;
-        $('drawer').classList.remove('open');
-        document.body.classList.remove('drawer-open');  // <<< close state
+        byId('drawer').classList.remove('open');
+        document.body.classList.remove('drawer-open');
         highlightActiveButton();
     }
 
     function startCountdown() {
-        const el = $('holdCountdown');
+        const el = byId('holdCountdown');
         function tick() {
             if (!hold.expiresAtUtc) { el.textContent = ''; return; }
             const ms = new Date(hold.expiresAtUtc) - new Date();
@@ -613,18 +615,19 @@
         connection.start().catch(() => setTimeout(bindHub, 1500));
     }
     function matchesCurrent(msg) {
-        return String(msg?.stylistId) === String(current.stylistId) && String(msg?.serviceId) === String(current.serviceId);
+        return String(msg?.stylistId) === String(current.stylistId) &&
+            String(msg?.serviceId) === String(current.serviceId);
     }
 
-    $('load').addEventListener('click', loadSlots);
-    $('confirm').addEventListener('click', confirmBooking);
-    $('cancelHold').addEventListener('click', cancelHold);
+    byId('load').addEventListener('click', loadSlots);
+    byId('confirm').addEventListener('click', confirmBooking);
+    byId('cancelHold').addEventListener('click', cancelHold);
     window.addEventListener('beforeunload', cancelHold);
 
     // Keep body class in sync even if something else toggles .open
-    const drawer = document.getElementById('drawer');
-    const sync = () => document.body.classList.toggle('drawer-open', drawer.classList.contains('open'));
-    new MutationObserver(sync).observe(drawer, { attributes: true, attributeFilter: ['class'] }); sync();
+    const drawerEl = document.getElementById('drawer');
+    const sync = () => document.body.classList.toggle('drawer-open', drawerEl.classList.contains('open'));
+    new MutationObserver(sync).observe(drawerEl, { attributes: true, attributeFilter: ['class'] }); sync();
 
     // init
     loadConfig().then(() => { bindHub(); loadSlots(); });

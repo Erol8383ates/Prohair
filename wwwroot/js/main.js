@@ -14,8 +14,17 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     const drawer = $('.mobile-drawer');
     if (!burger || !drawer) return;
 
-    const open = () => { drawer.style.display = 'block'; document.body.classList.add('no-scroll'); };
-    const close = () => { drawer.style.display = 'none'; document.body.classList.remove('no-scroll'); };
+    // SHOW/HIDE + state classes for CSS
+    const open = () => {
+        drawer.style.display = 'block';
+        drawer.classList.add('show');                    // added
+        document.body.classList.add('drawer-open', 'no-scroll'); // added
+    };
+    const close = () => {
+        drawer.classList.remove('show');                 // added
+        drawer.style.display = 'none';
+        document.body.classList.remove('drawer-open', 'no-scroll'); // added
+    };
 
     burger.addEventListener('click', open);
     drawer.addEventListener('click', (e) => { if (e.target === drawer) close(); });
@@ -121,16 +130,13 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 -------------------------------- */
 (function () {
     const initCompare = (w) => {
-        // Prefer the range input inside the widget
         const r = $('input[type="range"]', w);
         const handle = $('.handle', w);
 
-        // New style: use CSS variable --pos (0-100)
         const setPos = (v) => {
             const pct = Math.min(100, Math.max(0, +v || 50));
-            w.style.setProperty('--pos', pct + '%');     // used by .vn2-compare styles
-            if (handle) handle.style.left = pct + '%';   // visible knob
-            // Legacy fallback: if there's an .after image without CSS, set width directly
+            w.style.setProperty('--pos', pct + '%');
+            if (handle) handle.style.left = pct + '%';
             const after = $('.after', w);
             if (after && !w.classList.contains('vn2-compare')) after.style.width = pct + '%';
         };
@@ -148,7 +154,6 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* -------------------------------
    Lightbox for VN2 “Volledig scherm”
-   <button class="zoom" data-b="before.jpg" data-a="after.jpg">
 -------------------------------- */
 (function () {
     const root = $('#vn2'); if (!root) return;
@@ -171,7 +176,6 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
         root.appendChild(m);
 
-        // init the compare inside the modal
         const cmp = $('.vn2-compare', m);
         const r = $('.slider', cmp);
         const h = $('.handle', cmp);
@@ -202,7 +206,6 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* -------------------------------
    Reservation drawer body class
-   (auto-sync if the drawer exists)
 -------------------------------- */
 (function () {
     const drawer = document.getElementById('drawer');

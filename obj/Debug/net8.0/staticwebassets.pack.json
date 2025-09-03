@@ -21,8 +21,8 @@
       "PackagePath": "staticwebassets\\css\\login.css"
     },
     {
-      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\reserveren.cs",
-      "PackagePath": "staticwebassets\\css\\reserveren.cs"
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\reserveren.css",
+      "PackagePath": "staticwebassets\\css\\reserveren.css"
     },
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\site.css",
@@ -39,6 +39,10 @@
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\23763fa2-685e-4446-887a-7365f135ef72.jpg",
+      "PackagePath": "staticwebassets\\images\\23763fa2-685e-4446-887a-7365f135ef72.jpg"
     },
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\four.jpg",

@@ -103,10 +103,113 @@
     </div>
 
     <div class="grid grid-3" style="align-items:stretch; gap:20px; margin-top:18px">
-        <!-- (rest of page unchanged) -->
-    </div>
-</section>
+        <!-- 1) Maatwerkproces -->
+        <div class="card" data-aos="fade-up">
+            <h3 style="margin-top:0">Maatwerk in 4 stappen</h3>
+            <ol class="stepper">
+                <li>
+                    <div class="step-num">1</div>
+                    <div>
+                        <strong>Discreet intakegesprek</strong>
+                        <p class="muted">Analyse van hoofdhuid, lifestyle en gewenste look.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">2</div>
+                    <div>
+                        <strong>Maatname & ontwerp</strong>
+                        <p class="muted">Template/3D-meting, keuze basis, dichtheid, kleur & hairline.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">3</div>
+                    <div>
+                        <strong>Plaatsing & styling</strong>
+                        <p class="muted">Medische lijmtechniek, ultra-fijne lace, barber-finish op maat.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="step-num">4</div>
+                    <div>
+                        <strong>Nazorg & onderhoud</strong>
+                        <p class="muted">Tips, onderhoudsbeurten en productadvies inbegrepen.</p>
+                    </div>
+                </li>
+            </ol>
+            <a class="btn btn-ghost" asp-page="/OverOns" aria-label="Lees meer over onze werkwijze">Onze werkwijze</a>
+        </div>
 
-@section Scripts {
-    <script src="~/js/slider.js" asp-append-version="true"></script>
-}
+        <!-- 2) Resultaat & garanties -->
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h3 style="margin-top:0">Resultaat dat natuurlijk blijft</h3>
+            <ul class="metrics">
+                <li>
+                    <div class="metric">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Human Hair</div>
+                    </div>
+                    <p class="muted">Zijdezacht, hittebestendig en natuurlijk vallend.</p>
+                </li>
+                <li>
+                    <div class="metric">
+                        <div class="metric-value">Onzichtbaar</div>
+                        <div class="metric-label">Hairline</div>
+                    </div>
+                    <p class="muted">Ultra-fijne front lace + medische hechting.</p>
+                </li>
+                <li>
+                    <div class="metric">
+                        <div class="metric-value">6–8&nbsp;wk</div>
+                        <div class="metric-label">Tussen onderhoud</div>
+                    </div>
+                    <p class="muted">Comfortabel, ademend en actief-proof.</p>
+                </li>
+            </ul>
+
+            <div class="badge-row">
+                <span class="badge">Dermatologisch getest</span>
+                <span class="badge">Vergoeding mogelijk</span>
+                <span class="badge">4.9/5</span>
+            </div>
+        </div>
+
+
+
+        <!-- 3) Studio promo + social -->
+        <div class="card promo-social" data-aos="fade-left" data-aos-delay="150">
+            <h3 style="margin-top:0">Volg ProHair Studio</h3>
+            <p class="muted">Voor/na’s, tips en nieuws uit de studio.</p>
+
+            <div class="social-grid">
+                <a class="sbtn fb" href="https://www.facebook.com/YOUR_PAGE_SLUG" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.7V12h2.7V9.7c0-2.7 1.6-4.2 4-4.2 1.2 0 2.4.2 2.4.2v2.6h-1.4c-1.4 0-1.9.9-1.9 1.8V12h3.2l-.5 2.9h-2.7v7A10 10 0 0 0 22 12Z" /></svg>
+                    Facebook
+                </a>
+
+                <a class="sbtn ig" href="https://www.instagram.com/YOUR_HANDLE" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.8" /><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8" /><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" /></svg>
+                    Instagram
+                </a>
+
+                <a class="sbtn wa" href="https://wa.me/31612345678" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.5 3.5A10 10 0 0 0 3.6 20l-1.1 3.4 3.5-1a10 10 0 0 0 14.6-8.9c0-2.7-1-5.1-3-6.9ZM12 20.4a8.3 8.3 0 0 1-4.2-1.2l-.3-.2-2.5.7.7-2.4-.2-.4A8.4 8.4 0 1 1 12 20.4Zm4.7-5.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-.7.8c-.2.2-.4.2-.7.1a6.6 6.6 0 0 1-3.1-2.7c-.2-.4 0-.6.1-.7l.5-.5c.2-.2.2-.3.3-.5l.1-.5c0-.2 0-.4 0-.6 0-.2-.6-.5-.8-.6h-.5c-.2 0-.5 0-.7.3s-1 1-1 2.4 1.1 2.7 1.2 2.9c.1.2 2.1 3.1 5.1 4.2.7.3 1.3.4 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.8-.8 2-1.6.3-.7.3-1.4.2-1.6-.1-.2-.3-.2-.6-.4Z" /></svg>
+                    WhatsApp
+                </a>
+            </div>
+
+            <div class="mini-cta">
+                <a class="btn btn-primary" asp-page="/Reserveren">Gratis consult</a>
+                <a class="btn btn-ghost" href="https://www.instagram.com/YOUR_HANDLE" target="_blank" rel="noopener">Bekijk posts</a>
+            </div>
+
+            <div class="promo-note">
+                <strong>Studio Lier</strong><br>
+                Discreet, op afspraak • Gratis parkeren
+            </div>
+        </div>
+
+
+
+        @section Scripts {
+            <script src="~/js/slider.js" asp-append-version="true"></script>
+        }

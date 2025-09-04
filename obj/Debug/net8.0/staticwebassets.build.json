@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "c3Va2sqGPXJGu0JzEEBxbzqUxoNk+B5s8Zk+g/jQw+U=",
+  "Hash": "+LuuxcR+8Vja+BvU7E3muX1aaJYkIgYLYgTzh7R7C/8=",
   "Source": "ProHair.NL",
   "BasePath": "_content/ProHair.NL",
   "Mode": "Default",
@@ -199,8 +199,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "0dv5qvhnk9",
-      "Integrity": "/MtH1IHBuLOEy6tfbGzb4hvBICe6RItGiO7dRafbBEQ=",
+      "Fingerprint": "khiinwnimi",
+      "Integrity": "GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\style.css"
@@ -2443,51 +2443,6 @@
       ]
     },
     {
-      "Route": "css/style.0dv5qvhnk9.css",
-      "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\style.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "33972"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"/MtH1IHBuLOEy6tfbGzb4hvBICe6RItGiO7dRafbBEQ=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Wed, 03 Sep 2025 17:44:40 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "0dv5qvhnk9"
-        },
-        {
-          "Name": "label",
-          "Value": "css/style.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-/MtH1IHBuLOEy6tfbGzb4hvBICe6RItGiO7dRafbBEQ="
-        }
-      ]
-    },
-    {
       "Route": "css/style.css",
       "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\style.css",
       "Selectors": [],
@@ -2498,7 +2453,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "33972"
+          "Value": "35458"
         },
         {
           "Name": "Content-Type",
@@ -2506,11 +2461,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"/MtH1IHBuLOEy6tfbGzb4hvBICe6RItGiO7dRafbBEQ=\""
+          "Value": "\"GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Wed, 03 Sep 2025 17:44:40 GMT"
+          "Value": "Thu, 04 Sep 2025 06:08:27 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -2520,7 +2475,52 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-/MtH1IHBuLOEy6tfbGzb4hvBICe6RItGiO7dRafbBEQ="
+          "Value": "sha256-GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw="
+        }
+      ]
+    },
+    {
+      "Route": "css/style.khiinwnimi.css",
+      "AssetFile": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\style.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "35458"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 04 Sep 2025 06:08:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "khiinwnimi"
+        },
+        {
+          "Name": "label",
+          "Value": "css/style.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw="
         }
       ]
     },

@@ -1,0 +1,69 @@
+@page "/admin/availability"
+@using Microsoft.AspNetCore.Authorization
+@model ProHair.NL.Pages.Admin.AdminAvailabilityModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@attribute [Authorize(Policy = "AdminOnly")]
+@{
+    ViewData["Title"] = "Beschikbaarheid";
+}
+
+<h1>Beschikbaarheid</h1>
+
+<form method="post" asp-page-handler="SaveWeekly">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Dag</th>
+                <th>Gesloten</th>
+                <th>Open</th>
+                <th>Sluit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Weekly.Count; i++)
+            {
+                <tr>
+                    <td>@Model.Weekly[i].Day</td>
+                    <td>
+                        <input type="checkbox" asp-for="Weekly[i].IsClosed" />
+                    </td>
+                    <td>
+                        <input type="time" asp-for="Weekly[i].Open" />
+                    </td>
+                    <td>
+                        <input type="time" asp-for="Weekly[i].Close" />
+                    </td>
+                    <input type="hidden" asp-for="Weekly[i].Id" />
+                    <input type="hidden" asp-for="Weekly[i].Day" />
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button class="btn btn-primary" type="submit">Opslaan</button>
+</form>
+
+<hr />
+
+<form method="post" asp-page-handler="AddBlackout" class="mb-3">
+    <label class="form-label">Gesloten dag:</label>
+    <!-- Ensure DateOnly shows a valid value -->
+    <input type="date"
+           asp-for="NewBlackoutDate"
+           value="@Model.NewBlackoutDate.ToString("yyyy-MM-dd")"
+           class="form-control" />
+    <input type="text" asp-for="NewBlackoutReason" class="form-control" placeholder="Reden (optioneel)" />
+    <button class="btn btn-secondary mt-2" type="submit">Toevoegen</button>
+</form>
+
+<ul>
+    @foreach (var b in Model.Blackouts)
+    {
+        <li>
+            @b.Date.ToString("yyyy-MM-dd") — @b.Reason
+            <form method="post" asp-page-handler="DeleteBlackout" style="display:inline">
+                <input type="hidden" name="id" value="@b.Id" />
+                <button class="btn btn-link" type="submit">Verwijderen</button>
+            </form>
+        </li>
+    }
+</ul>

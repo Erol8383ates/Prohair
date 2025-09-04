@@ -60,7 +60,6 @@
         .resv-select option {
             color: #111;
         }
-    /* dropdown text readable */
 
     .resv-btn {
         height: 44px;
@@ -217,7 +216,6 @@
         cursor: pointer;
     }
 
-    /* three fields */
     .resv-input-row {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -260,10 +258,8 @@
             margin: 0 0 14px;
         }
 
-    /* Drawer should hide FABs while open (mobile) */
     @@media (max-width:900px) {
-        body.drawer-open .fab-wrap,
-        body.drawer-open #stickyCta {
+        body.drawer-open .fab-wrap, body.drawer-open #stickyCta {
             display: none !important;
         }
     }
@@ -283,7 +279,7 @@
         }
     }
 
-    /* (Optional) mobile menu readability on dark hero: keep these if you want the slide animation */
+    /* (Optional) mobile menu slide animation */
     body.no-scroll {
         overflow: hidden;
     }
@@ -308,7 +304,8 @@
         <div class="resv-filters">
             <div class="resv-field">
                 <label>Datum</label>
-                <input id="date" type="date" class="resv-input" />
+                <!-- switched to text so flatpickr can render & disable closed/blackout dates -->
+                <input id="date" type="text" class="resv-input" />
             </div>
             <div class="resv-field">
                 <label>Behandeling</label>
@@ -357,6 +354,10 @@
 
 <!-- Toasts -->
 <div id="toasts" class="resv-toasts"></div>
+
+<!-- flatpickr (for disabling closed weekdays & blackout dates) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script>
@@ -458,6 +459,46 @@
         return null;
     }
 
+    // === NEW: flatpickr datepicker with closed weekdays + blackout dates ===
+    let fp = null;
+    async function refreshDisabledDates(y, m) {
+        try {
+            const res = await fetch(`?handler=DisabledDates&year=${y}&month=${m}`);
+            if (!res.ok) return;
+            const conf = await res.json();
+
+            // Update flatpickr disable logic: closed weekdays and specific blackout dates
+            fp.set('disable', [
+                // JS getDay(): 0=Sun..6=Sat — server sends same numbers for closed days
+                function (d) { return conf.closedDows.includes(d.getDay()); },
+                ...conf.blackouts // yyyy-MM-dd strings
+            ]);
+        } catch { /* ignore */ }
+    }
+
+    async function setupDatePicker() {
+        const today = new Date();
+        fp = flatpickr("#date", {
+            dateFormat: "Y-m-d",
+            defaultDate: yyyyMmDd(today),
+            minDate: yyyyMmDd(today),
+            onMonthChange: function (selectedDates, dateStr, instance) {
+                const m = instance.currentMonth + 1;
+                const y = instance.currentYear;
+                refreshDisabledDates(y, m);
+            },
+            onOpen: function (selectedDates, dateStr, instance) {
+                const m = instance.currentMonth + 1;
+                const y = instance.currentYear;
+                refreshDisabledDates(y, m);
+            },
+            onChange: function () { debouncedLoadSlots(); }
+        });
+
+        // Initial fetch for current month
+        await refreshDisabledDates(today.getFullYear(), today.getMonth() + 1);
+    }
+
     async function loadConfig() {
         try {
             const res = await fetch(API.config);
@@ -470,7 +511,7 @@
         const svcSel = byId('service');
         svcSel.innerHTML = '';
 
-        // 👉 Only show minutes when > 0 (hide "0m")
+        // Only show minutes when > 0 (hide "0m")
         (cfg.services ?? [])
             .sort((a, b) => a.name.localeCompare(b.name))
             .forEach(s => {
@@ -481,21 +522,25 @@
         if (cfg.stylists?.length) defaultStylistId = cfg.stylists[0].id;
         else toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err');
 
-        const dateEl = byId('date'); const today = new Date();
-        dateEl.value = yyyyMmDd(today); dateEl.min = yyyyMmDd(today);
+        // init date picker after config
+        await setupDatePicker();
 
-        dateEl.addEventListener('change', debouncedLoadSlots);
+        // handlers
         svcSel.addEventListener('change', debouncedLoadSlots);
     }
-
 
     let loadTimer = null;
     function debouncedLoadSlots() { clearTimeout(loadTimer); loadTimer = setTimeout(loadSlots, 150); }
 
     async function loadSlots() {
         if (!defaultStylistId) return;
-        const date = byId('date').value, serviceId = byId('service').value, stylistId = defaultStylistId;
+
+        const date = byId('date').value;
+        const serviceId = byId('service').value;
+        const stylistId = defaultStylistId;
         current = { date, serviceId, stylistId };
+
+        if (!date) return;
 
         if (loadingSlotsCtrl) loadingSlotsCtrl.abort();
         loadingSlotsCtrl = new AbortController();
@@ -508,6 +553,7 @@
             if (!res.ok) throw new Error(await res.text().catch(() => 'Kon tijden niet laden.'));
             let list = await res.json();
 
+            // Hide past times for "today"
             if (date === yyyyMmDd(new Date())) {
                 const now = new Date();
                 list = list.filter(iso => new Date(iso) > now);
@@ -517,6 +563,7 @@
                 const next = await findNextAvailable(date, serviceId, stylistId, 21);
                 if (next) {
                     byId('date').value = next.date;
+                    fp.setDate(next.date, true); // update UI + trigger change
                     toast(`Geen tijden voor gekozen datum. Volgende beschikbare: ${new Date(next.date).toLocaleDateString()} (${next.slots.length} slots).`);
                     renderSlots(next.slots); isLoadingSlots = false; return;
                 }
@@ -535,7 +582,6 @@
         if (hold.token) {
             try { await fetch(API.release, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ HoldToken: hold.token }) }); } catch { }
         }
-
         const payload = { StylistId: +current.stylistId, ServiceId: +current.serviceId, StartLocal: startLocalIso, Tz: tz };
 
         try {

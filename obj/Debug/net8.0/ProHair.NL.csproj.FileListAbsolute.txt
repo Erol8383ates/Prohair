@@ -7,6 +7,7 @@ C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\ProHair.NL.runtimeconfig.json
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\ProHair.NL.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\ProHair.NL.pdb
+C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Humanizer.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Microsoft.Build.Locator.dll
@@ -35,6 +36,8 @@ C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Mono.TextTemplating.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Npgsql.dll
+C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\System.CodeDom.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\System.Composition.AttributedModel.dll
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\System.Composition.Convention.dll
@@ -121,6 +124,7 @@ C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.RazorAssemblyInfo.cache
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.RazorAssemblyInfo.cs
+C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.sourcelink.json
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\scopedcss\bundle\ProHair.NL.styles.css
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\scopedcss\projectbundle\ProHair.NL.bundle.scp.css
@@ -139,7 +143,3 @@ C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.pdb
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.genruntimeconfig.cache
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ref\ProHair.NL.dll
-C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\BCrypt.Net-Next.dll
-C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Npgsql.dll
-C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
-C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.sourcelink.json

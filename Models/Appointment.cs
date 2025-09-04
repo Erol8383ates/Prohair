@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProHair.NL.Models
@@ -19,7 +20,7 @@ namespace ProHair.NL.Models
 
         [MaxLength(120)] public string? ClientName { get; set; }
         [MaxLength(120)] public string? ClientEmail { get; set; }
-        [MaxLength(40)]  public string? ClientPhone { get; set; }
+        [MaxLength(40)] public string? ClientPhone { get; set; }
 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 

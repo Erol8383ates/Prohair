@@ -5,6 +5,7 @@ using ProHair.NL.Data;
 using ProHair.NL.Hubs;
 using ProHair.NL.HostedServices;
 using ProHair.NL.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +25,16 @@ builder.Services.AddRazorPages();
 // Use PostgreSQL
 var pgConn =
     builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? Environment.GetEnvironmentVariable("DATABASE_URL"); // allows Render-style env var
+    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(pgConn));
 
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHostedService<HoldSweeper>();
 builder.Services.AddSignalR();
+
+// ✅ availability rules service (optional to use inside your APIs)
+builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
 // SMTP options
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
@@ -80,7 +84,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
-    await SeedData.EnsureSeededAsync(db);
+    await SeedData.EnsureSeededAsync(db); // keep yours; DbContext also seeds weekly hours by default
 }
 
 app.Run();

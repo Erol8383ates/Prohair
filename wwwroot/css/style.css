@@ -1883,3 +1883,78 @@ main {
 }
 
 
+
+/* ===== Brand area (bigger, clearer) ===== */
+/* ===== Brand area: dairesel rozet, daha okunaklı ===== */
+/* ---- LOGO: dairesel rozet + zoom/crop ---- */
+.brand-badge {
+    width: 96px; /* 80–96 arası deneyebilirsin */
+    height: 96px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px; /* daire */
+    overflow: hidden; /* kırpma */
+    background: #fff; /* koyu header üstünde kontrast */
+    border: 2px solid rgba(199,166,103,.55); /* zarif halka */
+    box-shadow: 0 6px 24px rgba(0,0,0,.35);
+    padding: 0; /* iç boşluk yok; tam kırpma */
+}
+
+.brand-mark {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* tam otur + zoom */
+    object-position: 50% 45%; /* merkeze biraz yukarı kaydır; gerekirse ayarla */
+    /* image-rendering kaldırıldı; çoğu durumda daha doğal sonuç verir */
+}
+
+/* Yan yazı */
+.brand-text {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: .2px;
+}
+
+/* Mobilde ufalt */
+@media (max-width:980px) {
+    .brand-badge {
+        width: 86px;
+        height: 86px;
+    }
+
+    .brand-text {
+        font-size: 22px;
+    }
+}
+
+
+/* Mobilde biraz küçült */
+@media (max-width:980px) {
+    .brand-badge {
+        width: 78px;
+        height: 78px;
+        padding: 5px;
+    }
+
+    .brand-mark {
+    }
+
+    .brand-text {
+        font-size: 22px;
+    }
+}
+
+.brand-badge {
+    position: relative;
+}
+
+    .brand-badge::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        box-shadow: inset 0 0 0 3px rgba(199,166,103,.25);
+        pointer-events: none;
+    }
+

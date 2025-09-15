@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\css\\login.css"
     },
     {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\logo-modal.css",
+      "PackagePath": "staticwebassets\\css\\logo-modal.css"
+    },
+    {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\reserveren.css",
       "PackagePath": "staticwebassets\\css\\reserveren.css"
     },
@@ -35,6 +39,10 @@
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\voorna.css",
       "PackagePath": "staticwebassets\\css\\voorna.css"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\css\\vrouwen.css",
+      "PackagePath": "staticwebassets\\css\\vrouwen.css"
     },
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\favicon.ico",
@@ -75,6 +83,10 @@
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\img4.jpg",
       "PackagePath": "staticwebassets\\images\\img4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\log.png",
+      "PackagePath": "staticwebassets\\images\\log.png"
     },
     {
       "Id": "C:\\Users\\erol_\\Documents\\Aangepaste Office-sjablonen\\ProHair.NL\\wwwroot\\images\\logo.jpg",

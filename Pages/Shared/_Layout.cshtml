@@ -20,32 +20,31 @@
 
     <!-- Site CSS -->
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <!-- Logo modal CSS (separate file; only affects modal + badge) -->
+    <link rel="stylesheet" href="~/css/logo-modal.css" asp-append-version="true" />
 
-    <!-- Page-specific head extras (e.g., preloads) -->
     @RenderSection("Head", required: false)
-
-    <!-- Page-specific styles -->
     @RenderSection("Styles", required: false)
 </head>
 <body>
     <header class="header">
         <div class="container nav" role="navigation" aria-label="Hoofdmenu">
             <div class="nav-left">
+                <!-- Outer link goes Home; round badge opens the promo modal -->
                 <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
-                    <span class="brand-badge">
+                    <span class="brand-badge" id="phLogoBadge">
                         <img class="brand-mark"
-                             src="@Url.Content("~/images/osman-mark-512.png")"
-                             alt="ProHair Studio"
-                             width="512" height="512" />
+                             src='@Url.Content("~/images/log.png")'
+                             alt="ProHair Studio logo"
+                             width="512" height="512"
+                             loading="eager" decoding="async" />
                     </span>
                     <span class="brand-text">ProHair Studio</span>
                 </a>
-
             </div>
 
             <nav class="menu">
                 <a class="@(Context.Request.Path == "/" ? "active" : null)" asp-page="/Index">Home</a>
-              
                 <a asp-page="/Mannen">Voor Mannen</a>
                 <a asp-page="/VoorNa">Voor &amp; Na</a>
                 <a asp-page="/Prijzen">Prijzen</a>
@@ -54,36 +53,36 @@
                 <a asp-page="/Contact">Contact</a>
             </nav>
 
-        <button class="burger" aria-label="Menu">☰</button>
-    </div>
+            <button class="burger" aria-label="Menu">☰</button>
+        </div>
 
-    <!-- Mobile drawer -->
-                <div class="mobile-drawer" aria-hidden="true">
-                    <div class="mobile-panel">
-                        <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
-                            <span class="brand-badge">
-                                <img class="brand-mark"
-                                     src="@Url.Content("~/images/osman-mark-512.png")"
-                                     alt="ProHair Studio"
-                                     width="512" height="512" />
-                            </span>
-                            <span class="brand-text">ProHair Studio</span>
-                        </a>
+        <!-- Mobile drawer -->
+        <div class="mobile-drawer" aria-hidden="true">
+            <div class="mobile-panel">
+                <a class="logo" asp-page="/Index" aria-label="ProHair Studio Home">
+                    <span class="brand-badge" id="phLogoBadgeMobile">
+                        <img class="brand-mark"
+                             src='@Url.Content("~/images/log.png")'
+                             alt="ProHair Studio logo"
+                             width="512" height="512"
+                             loading="eager" decoding="async" />
+                    </span>
+                    <span class="brand-text">ProHair Studio</span>
+                </a>
 
-                        <div class="mobile-links">
-                            <a asp-page="/Index">Home</a>
-                            <!--  <a asp-page="/Vrouwen">Voor Vrouwen</a> -->
-                            <a asp-page="/Mannen">Voor Mannen</a>
-                            <a asp-page="/VoorNa">Voor &amp; Na</a>
-                            <a asp-page="/Prijzen">Prijzen</a>
-                            <a href="/Reserveren">Reserveren</a>
-                            <a asp-page="/OverOns">Over ons</a>
-                            <a asp-page="/Contact">Contact</a>
-
-                        </div>
-                    </div>
+                <div class="mobile-links">
+                    <a asp-page="/Index">Home</a>
+                    <!-- <a asp-page="/Vrouwen">Voor Vrouwen</a> -->
+                    <a asp-page="/Mannen">Voor Mannen</a>
+                    <a asp-page="/VoorNa">Voor &amp; Na</a>
+                    <a asp-page="/Prijzen">Prijzen</a>
+                    <a href="/Reserveren">Reserveren</a>
+                    <a asp-page="/OverOns">Over ons</a>
+                    <a asp-page="/Contact">Contact</a>
                 </div>
-</header>
+            </div>
+        </div>
+    </header>
 
     <main role="main">
         @RenderBody()
@@ -98,18 +97,65 @@
         </div>
     </footer>
 
+    <!-- Logo Promo Modal (commercial CTA, no downloads) -->
+    <div id="phLogoModal" class="ph-logo-modal" role="dialog" aria-modal="true" aria-labelledby="phLogoModalTitle" aria-hidden="true">
+        <div class="ph-logo-backdrop"></div>
+        <div class="ph-logo-card" role="document">
+            <button class="ph-logo-close" aria-label="Sluiten">✕</button>
+
+            <div class="ph-logo-grid">
+                <div class="ph-logo-frame">
+                    <img src="@Url.Content("~/images/log.png")" alt="ProHair Studio logo groot" />
+                </div>
+                <div class="ph-logo-caption">
+                    <h3 id="phLogoModalTitle">Actie: Gratis intakegesprek</h3>
+                    <p>Plan vandaag je vrijblijvende consult en ontvang persoonlijk advies op maat.</p>
+                    <div class="ph-cta-row">
+                        <a class="ph-cta" href="/Reserveren">Afspraak plannen</a>
+                        <a class="ph-cta" href="/Contact">Vraag meer info</a>
+                        <a class="ph-cta" href="/Index">Terug naar Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JS: AOS + site -->
-                    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-                    <script>
-                        // Safe init even if AOS is included elsewhere
-                        try { AOS.init({ once: true }); } catch (e) { }
-                    </script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>try { AOS.init({ once: true }); } catch (e) { }</script>
 
-                    <script src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/main.js" asp-append-version="true"></script>
 
-                    <!-- Page-specific scripts -->
-                    @RenderSection("Scripts", required: false)
+    <!-- Minimal JS just for the logo modal -->
+    <script>
+        (() => {
+            const modal = document.getElementById('phLogoModal');
+            const openers = [document.getElementById('phLogoBadge'), document.getElementById('phLogoBadgeMobile')].filter(Boolean);
+            const closeB = modal.querySelector('.ph-logo-close');
 
-                    <partial name="_FloatingContact" />
+            function openModal(e) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                modal.classList.add('show');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('ph-no-scroll');
+                closeB.focus();
+            }
+            function closeModal() {
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('ph-no-scroll');
+            }
+
+            openers.forEach(el => el.addEventListener('click', openModal));
+            closeB.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target.classList.contains('ph-logo-backdrop')) closeModal();
+            });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        })();
+    </script>
+
+    @RenderSection("Scripts", required: false)
+    <partial name="_FloatingContact" />
 </body>
 </html>

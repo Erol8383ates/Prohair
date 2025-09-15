@@ -48,6 +48,18 @@
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ojh3hop6er"},{"Name":"integrity","Value":"sha256-lJzNpmij6PI8di8XoroWTkFLdt\u002BPIrYn6h\u002BHrAUPdo8="},{"Name":"label","Value":"_content/ProHair.NL/css/login.css"}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1741"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022lJzNpmij6PI8di8XoroWTkFLdt\u002BPIrYn6h\u002BHrAUPdo8=\u0022"},{"Name":"Last-Modified","Value":"Tue, 02 Sep 2025 07:27:04 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/logo-modal.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\logo-modal.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-bkMdUpt0F6GIsqkLYfFROGANKz9dqxXgcysAfyX6Hpc="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"2784"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022bkMdUpt0F6GIsqkLYfFROGANKz9dqxXgcysAfyX6Hpc=\u0022"},{"Name":"Last-Modified","Value":"Mon, 15 Sep 2025 14:58:32 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/logo-modal.mfavuydcnv.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\logo-modal.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"mfavuydcnv"},{"Name":"integrity","Value":"sha256-bkMdUpt0F6GIsqkLYfFROGANKz9dqxXgcysAfyX6Hpc="},{"Name":"label","Value":"_content/ProHair.NL/css/logo-modal.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"2784"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022bkMdUpt0F6GIsqkLYfFROGANKz9dqxXgcysAfyX6Hpc=\u0022"},{"Name":"Last-Modified","Value":"Mon, 15 Sep 2025 14:58:32 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/reserveren.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\reserveren.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
@@ -75,14 +87,14 @@
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/style.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\style.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"35458"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw=\u0022"},{"Name":"Last-Modified","Value":"Thu, 04 Sep 2025 06:08:27 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-W6m9JSh0oiB3kw\u002Brt5GlL82On281Uhtt\u002BMEItlcEvZM="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"37172"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022W6m9JSh0oiB3kw\u002Brt5GlL82On281Uhtt\u002BMEItlcEvZM=\u0022"},{"Name":"Last-Modified","Value":"Mon, 15 Sep 2025 14:49:32 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/style.khiinwnimi.css">
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/style.ju9qlkrdwj.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\style.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"khiinwnimi"},{"Name":"integrity","Value":"sha256-GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw="},{"Name":"label","Value":"_content/ProHair.NL/css/style.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"35458"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022GBU4cD9fP3d8GLed5QSBZpjr5nILCGzNahdZ5Vyp8Bw=\u0022"},{"Name":"Last-Modified","Value":"Thu, 04 Sep 2025 06:08:27 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ju9qlkrdwj"},{"Name":"integrity","Value":"sha256-W6m9JSh0oiB3kw\u002Brt5GlL82On281Uhtt\u002BMEItlcEvZM="},{"Name":"label","Value":"_content/ProHair.NL/css/style.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"37172"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022W6m9JSh0oiB3kw\u002Brt5GlL82On281Uhtt\u002BMEItlcEvZM=\u0022"},{"Name":"Last-Modified","Value":"Mon, 15 Sep 2025 14:49:32 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/voorna.3jm64ryqbc.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\voorna.css'))</AssetFile>
@@ -95,6 +107,18 @@
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-cdg3WHd48xHmSc2rOkcafOJ1gd3HXgYuTIoXUdibS3A="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"2947"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022cdg3WHd48xHmSc2rOkcafOJ1gd3HXgYuTIoXUdibS3A=\u0022"},{"Name":"Last-Modified","Value":"Thu, 28 Aug 2025 18:19:05 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/vrouwen.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\vrouwen.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-4h\u002BZ7HbxJ26loEt\u002B0krDObFkPm5eiVjXMiOLucb4lek="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"4307"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00224h\u002BZ7HbxJ26loEt\u002B0krDObFkPm5eiVjXMiOLucb4lek=\u0022"},{"Name":"Last-Modified","Value":"Fri, 05 Sep 2025 09:12:22 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/css/vrouwen.ekg5xfez0g.css">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\vrouwen.css'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ekg5xfez0g"},{"Name":"integrity","Value":"sha256-4h\u002BZ7HbxJ26loEt\u002B0krDObFkPm5eiVjXMiOLucb4lek="},{"Name":"label","Value":"_content/ProHair.NL/css/vrouwen.css"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"4307"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u00224h\u002BZ7HbxJ26loEt\u002B0krDObFkPm5eiVjXMiOLucb4lek=\u0022"},{"Name":"Last-Modified","Value":"Fri, 05 Sep 2025 09:12:22 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/favicon.61n19gt1b8.ico">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.ico'))</AssetFile>
@@ -215,6 +239,18 @@
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-Rh3t/DErnljPzIbNGgSxRkAa4r350WXx62STNWx6kdk="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"2032013"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022Rh3t/DErnljPzIbNGgSxRkAa4r350WXx62STNWx6kdk=\u0022"},{"Name":"Last-Modified","Value":"Wed, 03 Sep 2025 17:16:28 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/images/log.ipnyewzokx.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\log.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"ipnyewzokx"},{"Name":"integrity","Value":"sha256-hirxsOjpHUJueZqiFV5qOggajcZJgaH7Tueu6jQ3Ov0="},{"Name":"label","Value":"_content/ProHair.NL/images/log.png"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"130606"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022hirxsOjpHUJueZqiFV5qOggajcZJgaH7Tueu6jQ3Ov0=\u0022"},{"Name":"Last-Modified","Value":"Mon, 15 Sep 2025 14:08:47 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProHair.NL/images/log.png">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\log.png'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-hirxsOjpHUJueZqiFV5qOggajcZJgaH7Tueu6jQ3Ov0="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"130606"},{"Name":"Content-Type","Value":"image/png"},{"Name":"ETag","Value":"\u0022hirxsOjpHUJueZqiFV5qOggajcZJgaH7Tueu6jQ3Ov0=\u0022"},{"Name":"Last-Modified","Value":"Mon, 15 Sep 2025 14:08:47 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProHair.NL/images/logo.2zneamamtw.png">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\logo.png'))</AssetFile>

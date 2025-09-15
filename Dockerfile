@@ -1,14 +1,13 @@
 # ---------- build ----------
 FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build
 WORKDIR /src
-# copy the whole repo as context (Render: set Build Context to ".")
+# Render Build Context is set to "ProHair.NL", so this copies the contents of ProHair.NL/
 COPY . .
-RUN dotnet restore ProHair.NL/ProHair.NL.csproj
-RUN dotnet publish ProHair.NL/ProHair.NL.csproj -c Release -o /app/publish
+RUN dotnet restore ProHair.NL.csproj
+RUN dotnet publish ProHair.NL.csproj -c Release -o /app/publish
 
 # ---------- runtime ----------
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-bookworm-slim AS final
-# Bind to Render's PORT and enable full globalization + timezone
 ENV ASPNETCORE_URLS=http://+:${PORT} \
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     TZ=Europe/Brussels

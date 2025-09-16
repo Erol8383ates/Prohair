@@ -99,13 +99,15 @@ namespace ProHair.NL.Controllers
             for (var t = openLocal; t.AddMinutes(durationMin) <= closeLocal; t = t.AddMinutes(stepMin))
             {
                 var startUtc = TimeZoneInfo.ConvertTimeToUtc(t, zone);
-                var ok = await _availability.IsSlotBookable(new DateTimeOffset(startUtc, TimeSpan.Zero), stylistId, serviceId);
+
+                // <<< BURASI DÜZELTİLDİ: tek parametreli çağrı >>>
+                var ok = await _availability.IsSlotBookable(new DateTimeOffset(startUtc, TimeSpan.Zero));
                 if (!ok) continue;
 
                 slots.Add(t.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture));
             }
 
-            // Ek olarak başlıkları cache'leme (proksi) kapat
+            // No-cache başlıkları
             Response.Headers.CacheControl = "no-store, no-cache, must-revalidate, max-age=0";
             Response.Headers.Pragma = "no-cache";
             Response.Headers.Expires = "0";

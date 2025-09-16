@@ -220,3 +220,30 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
 /* iOS no-zoom for form controls in modals or pages */
 .modal input, .modal select, .modal textarea { font-size: 16px; }
 input, select, textarea { font-size: 16px; }
+
+
+/* sticky drawer */
+.resv-drawer{
+  position:fixed;left:0;right:0;bottom:0;background:rgba(18,18,18,.96);
+  border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -10px 30px rgba(0,0,0,.4);
+  transform:translateY(110%);transition:.28s transform;z-index:9999;
+
+  /* mobile keyboard/responsiveness */
+  max-height:calc(100dvh - 8px);
+  overflow:auto;
+  will-change:transform;
+  contain:layout paint;
+}
+@supports not (height: 100dvh){
+  .resv-drawer{ max-height:calc(100vh - 8px); }
+}
+
+.resv-drawer.open{ transform:translateY(0); }
+
+.resv-drawer-inner{
+  max-width:1200px;margin:0 auto;padding:18px 20px;
+  display:grid;gap:14px;grid-template-columns:1.2fr 1fr auto;
+
+  /* add keyboard offset here */
+  padding-bottom:calc(env(safe-area-inset-bottom,0px) + var(--kb,0px) + 8px);
+}

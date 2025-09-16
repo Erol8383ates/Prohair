@@ -164,6 +164,25 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
     return new Date(y, (m || 1) - 1, d || 1);
   };
 
+  // -------- NEW: track & remove slots locally (minimal change) --------
+  let currentSlots = [];
+
+  function removeSlotByIso(iso) {
+    if (!iso) return false;
+    const btn = document.querySelector(`#slots .resv-slot[data-iso="${iso}"]`);
+    if (btn) btn.remove();
+    currentSlots = currentSlots.filter(x => x !== iso);
+    const count = document.querySelectorAll('#slots .resv-slot').length;
+    byId('meta').textContent = count ? `${count} tijdsloten gevonden` : '';
+    if (!count) byId('slots').innerHTML = `<div class="resv-empty">Geen tijden beschikbaar voor deze selectie.</div>`;
+    return !!btn;
+  }
+
+  function getIsoFromMsg(msg) {
+    return msg?.startLocalIso || msg?.startLocal || msg?.startIso || msg?.startUTC || msg?.startUtc || msg?.start || null;
+  }
+  // --------------------------------------------------------------------
+
   function toast(text, type = "ok") {
     const box = byId('toasts');
     const el = document.createElement('div');
@@ -206,6 +225,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
   }
 
   function renderSlots(list) {
+    currentSlots = Array.isArray(list) ? list.slice() : []; // NEW: remember what we drew
     const slotsEl = byId('slots');
     slotsEl.innerHTML = '';
     if (!list || !list.length) {
@@ -399,6 +419,9 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
       hold.token = data.holdToken; hold.expiresAtUtc = data.expiresAtUtc; hold.startLocal = startLocalIso;
       activeIso = startLocalIso; highlightActiveButton();
 
+      // NEW: remove this time from the list immediately
+      removeSlotByIso(startLocalIso);
+
       byId('selectedInfo').textContent = `Gekozen: ${new Date(startLocalIso).toLocaleDateString()} • ${new Date(startLocalIso).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
 
       byId('drawer').classList.add('open');
@@ -462,8 +485,18 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
 
   function bindHub(){
     connection = new signalR.HubConnectionBuilder().withUrl('/hubs/booking').withAutomaticReconnect().build();
-    connection.on('slotHeld', msg => { if (matchesCurrent(msg)) loadSlots(); });
-    connection.on('slotBooked', () => loadSlots());
+
+    // NEW: remove the single slot if we can identify it; otherwise reload
+    connection.on('slotHeld', msg => {
+      if (!matchesCurrent(msg)) return;
+      const iso = getIsoFromMsg(msg);
+      if (!removeSlotByIso(iso)) loadSlots();
+    });
+    connection.on('slotBooked', msg => {
+      if (!matchesCurrent(msg)) return;
+      const iso = getIsoFromMsg(msg);
+      if (!removeSlotByIso(iso)) loadSlots();
+    });
     connection.on('slotReleased', () => loadSlots());
 
     connection.on('calendarChanged', async () => {

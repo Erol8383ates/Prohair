@@ -1,6 +1,7 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Data;
 using ProHair.NL.Models;
@@ -12,7 +13,7 @@ namespace ProHair.NL.Services
     {
         private readonly AppDbContext _db;
 
-        // SLOT SPACING: set to 45 to show times every 45 minutes
+        // SLOT SPACING: show times every X minutes
         private const int SlotStepMinutes = 45;
 
         // Small buffer after each service (minutes)
@@ -30,22 +31,67 @@ namespace ProHair.NL.Services
             DateTime dateLocal, int stylistId, int serviceId, string tzId = "Europe/Brussels")
         {
             var tz = GetTz(tzId);
+
+            // Settings (slot/min notice)
+            var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync()
+                           ?? new BusinessSettings { SlotMinutes = SlotStepMinutes, MinNoticeHours = 0 };
+
             var service = await _db.Services.FirstAsync(s => s.Id == serviceId && s.IsActive);
             var stylist = await _db.Stylists
                 .Include(s => s.WorkingHours)
                 .Include(s => s.TimeOffs)
                 .FirstAsync(s => s.Id == stylistId && s.IsActive);
 
+            // 0) BLACKOUT: Gün tamamen kapalıysa hiç slot üretme
+            var dateOnly = DateOnly.FromDateTime(dateLocal.Date);
+            var isBlackout = await _db.BlackoutDates
+                .AsNoTracking()
+                .AnyAsync(b => b.Date == dateOnly);
+            if (isBlackout) return new List<DateTime>();
+
+            // 1) WEEKLY GLOBAL SAAT: Gün kapalıysa hiç slot yok
+            var weekly = await _db.WeeklyOpenHours
+                .AsNoTracking()
+                .SingleOrDefaultAsync(w => w.Day == dateLocal.DayOfWeek);
+
+            if (weekly == null || weekly.IsClosed || weekly.Open == null || weekly.Close == null)
+                return new List<DateTime>();
+
+            var globalOpen  = weekly.Open.Value.ToTimeSpan();   // örn 09:00
+            var globalClose = weekly.Close.Value.ToTimeSpan();  // örn 19:00
+            if (globalClose <= globalOpen) return new List<DateTime>();
+
+            // 2) STYLIST GÜN BLOKLARI: Sadece o gün
             var dow = (int)dateLocal.DayOfWeek;
-            var dayHours = stylist.WorkingHours.Where(w => w.DayOfWeek == dow).ToList();
+            var dayHoursRaw = stylist.WorkingHours.Where(w => w.DayOfWeek == dow).ToList();
+
+            if (!dayHoursRaw.Any()) return new List<DateTime>();
+
+            // 3) GLOBAL İLE KESİŞİM: Stilist bloklarını global açık-kapanışla kesiştir
+            var dayHours = dayHoursRaw
+                .Select(w => new
+                {
+                    Start = (w.StartLocal < globalOpen)  ? globalOpen  : w.StartLocal,
+                    End   = (w.EndLocal   > globalClose) ? globalClose : w.EndLocal
+                })
+                .Where(b => b.End > b.Start)
+                .ToList();
+
             if (!dayHours.Any()) return new List<DateTime>();
 
+            // 4) Gün sınırları (local/utc)
             var dayStartLocal = dateLocal.Date;
             var dayEndLocal = dayStartLocal.AddDays(1);
             var dayStartUtc = TimeZoneInfo.ConvertTimeToUtc(dayStartLocal, tz);
             var dayEndUtc = TimeZoneInfo.ConvertTimeToUtc(dayEndLocal, tz);
-            var nowLocal = TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
 
+            // 5) Şu an + MinNoticeHours
+            var nowLocal = TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
+            var earliestAllowed = settings.MinNoticeHours > 0
+                ? nowLocal.AddHours(settings.MinNoticeHours)
+                : nowLocal.AddMinutes(15); // mevcut kısa tamponun kalsın
+
+            // 6) Aktif randevular (o günle kesişen)
             var activeAppointments = await _db.Appointments
                 .Where(a => a.StylistId == stylistId
                             && a.Status != AppointmentStatus.Cancelled
@@ -53,6 +99,7 @@ namespace ProHair.NL.Services
                 .Include(a => a.Service)
                 .ToListAsync();
 
+            // Hold süresi olmayan/bitmişleri çıkar
             activeAppointments = activeAppointments
                 .Where(a => a.Status == AppointmentStatus.Confirmed ||
                             (a.Status == AppointmentStatus.Hold && a.HoldUntilUtc > DateTime.UtcNow))
@@ -64,27 +111,33 @@ namespace ProHair.NL.Services
                 End = TimeZoneInfo.ConvertTimeFromUtc(a.EndUtc, tz)
             }).ToList();
 
+            // 7) Stylist TimeOff
             var timeOffs = stylist.TimeOffs
                 .Where(t => t.EndLocal > dayStartLocal && t.StartLocal < dayEndLocal)
                 .ToList();
 
+            // 8) Slot üretimi
             var duration = TimeSpan.FromMinutes(service.DurationMinutes + BufferMinutes);
             var step = TimeSpan.FromMinutes(SlotStepMinutes);
             var slots = new List<DateTime>();
 
             foreach (var wh in dayHours)
             {
-                var whStartLocal = dayStartLocal.Add(wh.StartLocal);
-                var whEndLocal = dayStartLocal.Add(wh.EndLocal);
+                var whStartLocal = dayStartLocal.Add(wh.Start);
+                var whEndLocal = dayStartLocal.Add(wh.End);
 
                 for (var t = whStartLocal; t + duration <= whEndLocal; t = t.Add(step))
                 {
-                    if (dateLocal.Date == nowLocal.Date && t < nowLocal.AddMinutes(15)) continue;
+                    // Min Notice (ve bugün ise biraz tampon)
+                    if (t < earliestAllowed) continue;
 
                     var slotEnd = t + duration;
+
+                    // TimeOff çakışması
                     bool overlapsTimeOff = timeOffs.Any(to => t < to.EndLocal && slotEnd > to.StartLocal);
                     if (overlapsTimeOff) continue;
 
+                    // Mevcut randevu çakışması
                     bool overlapsBusy = busyLocal.Any(b => t < b.End && slotEnd > b.Start);
                     if (overlapsBusy) continue;
 

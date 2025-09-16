@@ -149,13 +149,19 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
   // keeps last "disabled dates" config from server
   let lastDisabledConf = { closedDows: [], blackouts: [] };
 
-  // local Y-M-D (no UTC shift)
+  // Local Y-M-D (no UTC shift)
   const yyyyMmDd = (d) => {
     const dt = (d instanceof Date) ? d : new Date(d);
     const y = dt.getFullYear();
     const m = String(dt.getMonth() + 1).padStart(2, '0');
     const day = String(dt.getDate()).padStart(2, '0');
     return `${y}-${m}-${day}`;
+  };
+
+  // Parse "YYYY-MM-DD" safely as local time (avoids mobile UTC shift)
+  const parseYmd = (s) => {
+    const [y,m,d] = s.split('-').map(n => parseInt(n, 10));
+    return new Date(y, (m || 1) - 1, d || 1);
   };
 
   function toast(text, type = "ok") {
@@ -222,7 +228,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
   }
 
   async function findNextAvailable(date, serviceId, stylistId, days = 21) {
-    let d = new Date(date);
+    let d = parseYmd(date);
     for (let i = 1; i <= days; i++) {
       d.setDate(d.getDate() + 1);
       const ds = yyyyMmDd(d);
@@ -266,7 +272,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
       dateFormat: "Y-m-d",
       defaultDate: yyyyMmDd(today),
       minDate: yyyyMmDd(today),
-      disableMobile: true,  // force Flatpickr so disabled days work on phones
+      disableMobile: true,  // use Flatpickr UI on phones so disabled days work
       onMonthChange: function (_, __, instance) {
         const m = instance.currentMonth + 1;
         const y = instance.currentYear;
@@ -303,20 +309,19 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
         svcSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}${mins}</option>`);
       });
 
-    // stylist default
     if (cfg.stylists?.length) defaultStylistId = cfg.stylists[0].id;
     else toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err');
 
     await setupDatePicker();
 
-    // ✅ Mobile fix: ensure a service is selected (placeholder stays selected on some phones)
+    // Ensure a service is selected (mobile sometimes keeps the placeholder)
     if (!svcSel.value && (cfg.services?.length ?? 0) > 0) {
       svcSel.value = String(cfg.services[0].id);
     }
 
     svcSel.addEventListener('change', debouncedLoadSlots);
 
-    // ✅ Load once now that both date and service are set
+    // initial load
     debouncedLoadSlots();
   }
 
@@ -334,7 +339,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
     if (!date || !serviceId) return;
 
     // Short-circuit if date is closed or blackout
-    const dLocal = new Date(`${date}T00:00:00`);
+    const dLocal = parseYmd(date);
     if (isDateClosedOrBlackout(dLocal)) {
       byId('slots').innerHTML = `<div class="resv-empty">Deze dag is gesloten.</div>`;
       byId('meta').textContent = '';
@@ -352,7 +357,9 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
       if (!res.ok) throw new Error(await res.text().catch(()=>"Kon tijden niet laden."));
       let list = await res.json();
 
-      if (date === yyyyMmDd(new Date())) {
+      // If today, hide past times using local clock
+      const todayStr = yyyyMmDd(new Date());
+      if (date === todayStr) {
         const now = new Date();
         list = list.filter(iso => new Date(iso) > now);
       }
@@ -362,7 +369,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
         if (next) {
           byId('date').value = next.date;
           fp.setDate(next.date, true);
-          toast(`Geen tijden voor gekozen datum. Volgende beschikbare: ${new Date(next.date).toLocaleDateString()} (${next.slots.length} slots).`);
+          toast(`Geen tijden voor gekozen datum. Volgende beschikbare: ${new Date(parseYmd(next.date)).toLocaleDateString()} (${next.slots.length} slots).`);
           renderSlots(next.slots); isLoadingSlots = false; return;
         }
       }
@@ -459,7 +466,6 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
     connection.on('slotBooked', () => loadSlots());
     connection.on('slotReleased', () => loadSlots());
 
-    // react to Admin calendar changes (hours/blackouts)
     connection.on('calendarChanged', async () => {
       try {
         if (fp) {
@@ -537,7 +543,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
 
   // boot
   document.addEventListener('DOMContentLoaded', () => {
-    loadConfig().then(() => { bindHub(); });
+    loadConfig().then(() => { bindHub(); /* loadSlots happens inside loadConfig */ });
   });
-
+})();  /* <-- important: close the IIFE so JS actually runs */
 </script>

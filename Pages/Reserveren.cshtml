@@ -10,7 +10,7 @@
 .resv-wrap{max-width:1200px;margin:48px auto;padding:0 20px;}
 .resv-hero h1{font-size:clamp(28px,3.2vw,42px);line-height:1.1;margin:0 0 8px;}
 .resv-hero p{opacity:.8;margin:0 0 22px;}
-.resv-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);backdrop-filter:blur(6px);}
+.resv-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);backdrop-filter:blur(6px);} 
 .resv-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px;}
 .resv-field label{display:block;font-weight:600;font-size:14px;margin:0 0 6px;opacity:.95;}
 .resv-input,.resv-select{width:100%;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#f5f5f5;padding:0 12px;}
@@ -19,22 +19,34 @@
 .resv-btn{height:44px;padding:0 16px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:linear-gradient(180deg,#FFE6A8,#E4C66B);color:#1a1a1a;font-weight:800;cursor:pointer;}
 .resv-btn:disabled{opacity:.6;cursor:default;}
 .resv-slots{padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
-.resv-slot{padding:12px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.18);color:#111;font-weight:800;letter-spacing:.2px;cursor:pointer;text-align:center;transition:.2s transform,.2s background,.2s border-color,.2s box-shadow;box-shadow:0 6px 16px rgba(0,0,0,.15);}
-.resv-slot:hover{transform:translateY(-2px);background:rgba(255,255,255,.24);}
-.resv-slot:active{transform:translateY(0);box-shadow:none;}
-.resv-slot[disabled]{opacity:.45;cursor:default;}
+.resv-slot{padding:12px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.18);color:#111;font-weight:800;letter-spacing:.2px;cursor:pointer;text-align:center;transition:.2s transform,.2s background,.2s border-color,.2s box-shadow;box-shadow:0 6px 16px rgba(0,0,0,.15);} 
+.resv-slot:hover{transform:translateY(-2px);background:rgba(255,255,255,.24);} 
+.resv-slot:active{transform:translateY(0);box-shadow:none;} 
+.resv-slot[disabled]{opacity:.45;cursor:default;} 
 .resv-empty{padding:28px;text-align:center;opacity:.8;font-style:italic;}
 
 /* skeleton */
 .resv-skeleton{height:44px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.22),rgba(255,255,255,.10));animation:resv-shimmer 1.2s infinite;background-size:200px 100%;}
-@@keyframes resv-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+@keyframes resv-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
 
-/* sticky drawer */
-.resv-drawer{position:fixed;left:0;right:0;bottom:0;background:rgba(18,18,18,.96);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -10px 30px rgba(0,0,0,.4);transform:translateY(110%);transition:.28s transform;z-index:9999;}
-.resv-drawer.open{transform:translateY(0);}
-.resv-drawer-inner{max-width:1200px;margin:0 auto;padding:18px 20px;display:grid;gap:14px;grid-template-columns:1.2fr 1fr auto;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);}
+/* ===== FIX: prevent scroll behind drawer ===== */
+.drawer-open{overflow:hidden;}
+
+/* ===== sticky drawer (keyboard-aware) ===== */
+.resv-drawer{position:fixed;left:0;right:0;bottom:0;background:rgba(18,18,18,.96);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -10px 30px rgba(0,0,0,.4);transform:translateY(110%);transition:.28s transform;z-index:9999;
+  /* keyboard lift variable, controlled by JS */
+  --kb: 0px;
+  transform: translateY(calc(110% + var(--kb)));
+  max-height: 60dvh; /* never cover whole screen on phones */
+  overflow:auto; -webkit-overflow-scrolling:touch;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.resv-drawer.open{transform: translateY(calc(0px - var(--kb)));}
+.resv-drawer-inner{max-width:1200px;margin:0 auto;padding:18px 20px;display:grid;gap:14px;grid-template-columns:1.2fr 1fr auto;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);} 
 .resv-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);font-weight:700;}
-.resv-input-sm{height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#f5f5f5;padding:0 12px;width:100%;}
+
+/* ===== inputs (prevent iOS zoom) ===== */
+.resv-input-sm,.resv-input,.resv-select, .resv-modal input, .resv-modal select, .resv-modal textarea{height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#f5f5f5;padding:0 12px;font-size:16px;}
 .resv-btn-primary{height:42px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,0,.25);background:linear-gradient(180deg,#A5F07C,#73DC52);color:#0f1b0f;font-weight:900;cursor:pointer;}
 .resv-btn-ghost{height:42px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.28);background:transparent;color:#f5f5f5;font-weight:800;cursor:pointer;}
 .resv-input-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
@@ -42,20 +54,23 @@
 /* modal */
 .resv-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:60;}
 .resv-modal-backdrop.open{display:flex;}
-.resv-modal{background:#0f1115;border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px;max-width:520px;width:calc(100% - 32px);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.resv-modal{background:#0f1115;border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px;max-width:520px;width:calc(100% - 32px);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5);} 
 .resv-modal h3{margin:0 0 6px;font-size:22px;}
 .resv-modal p{opacity:.9;margin:0 0 14px;}
 
 /* toasts */
 .resv-toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:10px;z-index:99999;}
 .resv-toast{padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(4px);font-weight:700;}
-.resv-toast.err{background:rgba(255,60,60,.12);border-color:rgba(255,60,60,.28);}
+.resv-toast.err{background:rgba(255,60,60,.12);border-color:rgba(255,60,60,.28);} 
 
 /* responsive */
-@@media (max-width:880px){
+@media (max-width:880px){
   .resv-filters{grid-template-columns:1fr;}
   .resv-drawer-inner{grid-template-columns:1fr;gap:10px;}
   .resv-input-row{grid-template-columns:1fr;}
+}
+@media (max-width:420px){
+  .resv-drawer-inner{grid-template-columns:1fr;}
 }
 </style>
 
@@ -242,7 +257,6 @@
         blackouts: conf.blackouts || []
       };
       fp.set('disable', [
-        // JS getDay(): 0=Sun..6=Sat — server returns same indices
         function (d) { return lastDisabledConf.closedDows.includes(d.getDay()); },
         ...lastDisabledConf.blackouts
       ]);
@@ -273,7 +287,7 @@
   async function loadConfig() {
     try {
       const res = await fetch(`${API.config}?v=${Date.now()}`);
-      if (!res.ok) throw new Error(await res.text().catch(()=>'Config laden mislukt.'));
+      if (!res.ok) throw new Error(await res.text().catch(()=>"Config laden mislukt."));
       cfg = await res.json();
     } catch (err) {
       console.error(err);
@@ -327,7 +341,7 @@
     try {
       const url = `${API.availability}?date=${date}&stylistId=${stylistId}&serviceId=${serviceId}&tz=${encodeURIComponent(tz)}&v=${Date.now()}`;
       const res = await fetch(url, { signal: loadingSlotsCtrl.signal });
-      if (!res.ok) throw new Error(await res.text().catch(()=>'Kon tijden niet laden.'));
+      if (!res.ok) throw new Error(await res.text().catch(()=>"Kon tijden niet laden."));
       let list = await res.json();
 
       if (date === yyyyMmDd(new Date())) {
@@ -437,7 +451,7 @@
     connection.on('slotBooked', () => loadSlots());
     connection.on('slotReleased', () => loadSlots());
 
-    // NEW: react to Admin calendar changes (hours/blackouts)
+    // react to Admin calendar changes (hours/blackouts)
     connection.on('calendarChanged', async () => {
       try {
         if (fp) {
@@ -466,6 +480,52 @@
   const drawerEl = document.getElementById('drawer');
   const sync = () => document.body.classList.toggle('drawer-open', drawerEl.classList.contains('open'));
   new MutationObserver(sync).observe(drawerEl, { attributes:true, attributeFilter:['class'] }); sync();
+
+  // ==== Keyboard-aware drawer support (iOS/Android) ====
+  (function keyboardAwareDrawer(){
+    const root = document.documentElement;
+    const drawer = document.getElementById('drawer');
+
+    function setKb(px){
+      const v = Math.max(0, Math.min(400, Math.round(px || 0)));
+      root.style.setProperty('--kb', v + 'px');
+    }
+
+    const vv = window.visualViewport;
+    if (vv) {
+      const onResize = () => {
+        const kb = window.innerHeight - vv.height; // keyboard delta
+        setKb(drawer.classList.contains('open') ? kb : 0);
+      };
+      vv.addEventListener('resize', onResize);
+      vv.addEventListener('scroll', onResize);
+      window.addEventListener('orientationchange', onResize);
+    } else {
+      let base = window.innerHeight;
+      const onResize = () => {
+        const kb = Math.max(0, base - window.innerHeight);
+        setKb(drawer.classList.contains('open') ? kb : 0);
+      };
+      window.addEventListener('resize', onResize);
+      window.addEventListener('orientationchange', () => { base = window.innerHeight; onResize(); });
+    }
+
+    ['name','email','phone'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('focus', () => {
+        setTimeout(() => { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 150);
+      });
+    });
+
+    const syncKb = () => {
+      const vv2 = window.visualViewport;
+      if (!vv2) return;
+      const kb = window.innerHeight - vv2.height;
+      setKb(drawer.classList.contains('open') ? kb : 0);
+    };
+    new MutationObserver(syncKb).observe(drawer, { attributes:true, attributeFilter:['class'] });
+  })();
 
   // boot
   document.addEventListener('DOMContentLoaded', () => {

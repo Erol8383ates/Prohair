@@ -10,10 +10,12 @@ namespace ProHair.NL.Pages
     public class ContactModel : PageModel
     {
         private readonly SmtpOptions _smtp;
+        private readonly ILogger<ContactModel> _log;
 
-        public ContactModel(IOptions<SmtpOptions> smtp)
+        public ContactModel(IOptions<SmtpOptions> smtp, ILogger<ContactModel> log)
         {
             _smtp = smtp.Value;
+            _log = log;
         }
 
         [BindProperty]
@@ -51,70 +53,89 @@ namespace ProHair.NL.Pages
                 return Page();
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+            if (!ModelState.IsValid) return Page();
 
-            // Compose email to studio
-            var toStudio = new MailMessage();
-            var fromAddr = ParseFromAddress(_smtp.From, _smtp.User);
-
-            toStudio.From = fromAddr;
-            toStudio.To.Add(_smtp.User); // send to your inbox
-            toStudio.ReplyToList.Add(new MailAddress(Input.Email, Input.Name));
-            toStudio.Subject = $"[Contact] {Input.Subject} — {Input.Name}";
-            toStudio.IsBodyHtml = true;
-            toStudio.Body =
-                $"<h3>Nieuw bericht via contactformulier</h3>" +
-                $"<p><b>Naam:</b> {WebUtility.HtmlEncode(Input.Name)}<br>" +
-                $"<b>E-mail:</b> {WebUtility.HtmlEncode(Input.Email)}<br>" +
-                $"<b>Onderwerp:</b> {WebUtility.HtmlEncode(Input.Subject)}</p>" +
-                $"<p style='white-space:pre-wrap'>{WebUtility.HtmlEncode(Input.Message)}</p>";
-
-            using var client = new SmtpClient(_smtp.Host, _smtp.Port)
-            {
-                EnableSsl = _smtp.EnableSsl,
-                Credentials = new NetworkCredential(_smtp.User, _smtp.Pass)
-            };
-            await client.SendMailAsync(toStudio);
-
-            // Optional: auto-reply to the client
-            var toClient = new MailMessage
-            {
-                From = fromAddr,
-                Subject = "We hebben je bericht ontvangen – ProHair Studio",
-                IsBodyHtml = true,
-                Body = $"<p>Hi {WebUtility.HtmlEncode(Input.Name)},</p>" +
-                       "<p>Bedankt voor je bericht. We antwoorden meestal binnen 1 werkdag.</p>" +
-                       "<p>Groeten,<br>ProHair Studio</p>"
-            };
-            toClient.To.Add(new MailAddress(Input.Email, Input.Name));
-            await client.SendMailAsync(toClient);
-
-            Sent = true;
-            ModelState.Clear();
-            Input = new InputModel(); // clear the form
-            return Page();
-        }
-
-        private static MailAddress ParseFromAddress(string fromSetting, string fallbackUser)
-        {
-            // supports "Display Name <email@example.com>" or plain email
             try
             {
-                if (fromSetting?.Contains("<") == true && fromSetting.Contains(">"))
+                // FROM: Gmail kuralı -> e-posta adresi AUTH kullanıcıyla aynı olmalı
+                var displayName = ExtractDisplayName(_smtp.From) ?? "Haarmaster";
+                var fromAddr = new MailAddress(_smtp.User, displayName);
+
+                // Studio'ya giden mail
+                using var toStudio = new MailMessage
                 {
-                    var start = fromSetting.IndexOf('<') + 1;
-                    var end = fromSetting.IndexOf('>');
-                    var email = fromSetting.Substring(start, end - start).Trim();
-                    var name = fromSetting.Substring(0, start - 1).Trim();
-                    return new MailAddress(email, name);
-                }
-                if (!string.IsNullOrWhiteSpace(fromSetting)) return new MailAddress(fromSetting);
+                    From = fromAddr,
+                    Subject = $"[Contact] {Input.Subject} — {Input.Name}",
+                    IsBodyHtml = true,
+                    Body =
+                        $"<h3>Nieuw bericht via contactformulier</h3>" +
+                        $"<p><b>Naam:</b> {WebUtility.HtmlEncode(Input.Name)}<br>" +
+                        $"<b>E-mail:</b> {WebUtility.HtmlEncode(Input.Email)}<br>" +
+                        $"<b>Onderwerp:</b> {WebUtility.HtmlEncode(Input.Subject)}</p>" +
+                        $"<p style='white-space:pre-wrap'>{WebUtility.HtmlEncode(Input.Message)}</p>"
+                };
+                toStudio.To.Add(_smtp.User); // kendi gelen kutuna
+                toStudio.ReplyToList.Add(new MailAddress(Input.Email, Input.Name));
+
+                using var client = new SmtpClient(_smtp.Host, _smtp.Port)
+                {
+                    EnableSsl = _smtp.EnableSsl,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(_smtp.User, _smtp.Pass),
+                    Timeout = 1000 * 30
+                };
+
+                await client.SendMailAsync(toStudio);
+
+                // Otomatik "mesaj alındı" yanıtı müşteriye
+                using var toClient = new MailMessage
+                {
+                    From = fromAddr,
+                    Subject = "We hebben je bericht ontvangen – Haarmaster",
+                    IsBodyHtml = true,
+                    Body =
+                        $"<p>Hi {WebUtility.HtmlEncode(Input.Name)},</p>" +
+                        "<p>Bedankt voor je bericht. We antwoorden meestal binnen 1 werkdag.</p>" +
+                        "<p>Groeten,<br>Haarmaster</p>"
+                };
+                toClient.To.Add(new MailAddress(Input.Email, Input.Name));
+                await client.SendMailAsync(toClient);
+
+                Sent = true;
+                ModelState.Clear();
+                Input = new InputModel(); // formu temizle
+                return Page();
             }
-            catch { /* fallback */ }
-            return new MailAddress(fallbackUser, "ProHair Studio");
+            catch (SmtpException ex)
+            {
+                _log.LogError(ex, "Contact mail SMTP error (Host={Host}, User={User})", _smtp.Host, _smtp.User);
+                TempData["ContactErr"] = "Bericht kon niet worden verzonden. Probeer later opnieuw.";
+                return Page(); // 500 yerine aynı sayfayı nazik mesajla göster
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "Contact mail general error");
+                TempData["ContactErr"] = "Er ging iets mis. Probeer later opnieuw.";
+                return Page();
+            }
+        }
+
+        // "Haarstudio <foo@bar>" içinden sadece görünen adı al
+        private static string? ExtractDisplayName(string? fromSetting)
+        {
+            if (string.IsNullOrWhiteSpace(fromSetting)) return null;
+            try
+            {
+                if (fromSetting.Contains('<') && fromSetting.Contains('>'))
+                {
+                    var name = fromSetting[..fromSetting.IndexOf('<')].Trim();
+                    return string.IsNullOrWhiteSpace(name) ? null : name;
+                }
+                // sade e-posta verilmişse görünen ad yoktur
+                return null;
+            }
+            catch { return null; }
         }
     }
 }

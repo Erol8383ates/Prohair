@@ -6,37 +6,38 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 using ProHair.NL.Data;
 using ProHair.NL.Models;
+using ProHair.NL.Hubs;
+using ProHair.NL.Services; // CacheKeys (opsiyonel)
 
 namespace ProHair.NL.Pages.Admin
 {
-    [Authorize(Policy = "AdminOnly")] // or [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminOnly")]
     public class AdminAvailabilityModel : PageModel
     {
         private readonly AppDbContext _db;
-        public AdminAvailabilityModel(AppDbContext db) => _db = db;
+        private readonly IHubContext<BookingHub> _hub;
+        private readonly IMemoryCache _cache;
+
+        public AdminAvailabilityModel(AppDbContext db, IHubContext<BookingHub> hub, IMemoryCache cache)
+        {
+            _db = db; _hub = hub; _cache = cache;
+        }
 
         [BindProperty] public List<WeeklyOpenHours> Weekly { get; set; } = new();
         public List<BlackoutDate> Blackouts { get; set; } = new();
 
-        // Pre-fill to today so the date input is never 0001-01-01
         [BindProperty] public DateOnly NewBlackoutDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
         [BindProperty] public string? NewBlackoutReason { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Weekly = await _db.WeeklyOpenHours
-                              .OrderBy(x => x.Day)
-                              .ToListAsync();
-
-            Blackouts = await _db.BlackoutDates
-                                 .OrderBy(x => x.Date)
-                                 .ToListAsync();
-
-            if (NewBlackoutDate == default)
-                NewBlackoutDate = DateOnly.FromDateTime(DateTime.Today);
-
+            Weekly = await _db.WeeklyOpenHours.OrderBy(x => x.Day).ToListAsync();
+            Blackouts = await _db.BlackoutDates.OrderBy(x => x.Date).ToListAsync();
+            if (NewBlackoutDate == default) NewBlackoutDate = DateOnly.FromDateTime(DateTime.Today);
             return Page();
         }
 
@@ -44,17 +45,30 @@ namespace ProHair.NL.Pages.Admin
         {
             if (!ModelState.IsValid)
             {
-                // re-load lists so the page renders correctly with validation messages
                 await OnGetAsync();
                 return Page();
             }
 
+            // Güvenli update (DB'den çek → alanları ata)
             foreach (var row in Weekly)
             {
-                _db.Update(row);
+                var dbRow = await _db.WeeklyOpenHours.FirstOrDefaultAsync(w => w.Id == row.Id);
+                if (dbRow == null) continue;
+
+                dbRow.IsClosed = row.IsClosed;
+                dbRow.Open = row.Open;
+                dbRow.Close = row.Close;
             }
 
             await _db.SaveChangesAsync();
+
+            // Cache invalidate (opsiyonel)
+            _cache.Set(CacheKeys.Stamp, Guid.NewGuid().ToString());
+
+            // 🔔 Tüm client'lara bildir
+            await _hub.Clients.All.SendAsync("calendarChanged");
+
+            TempData["Ok"] = "Çalışma saatleri güncellendi.";
             return RedirectToPage();
         }
 
@@ -74,6 +88,9 @@ namespace ProHair.NL.Pages.Admin
                 await _db.SaveChangesAsync();
             }
 
+            _cache.Set(CacheKeys.Stamp, Guid.NewGuid().ToString());
+            await _hub.Clients.All.SendAsync("calendarChanged");
+
             return RedirectToPage();
         }
 
@@ -85,6 +102,10 @@ namespace ProHair.NL.Pages.Admin
                 _db.BlackoutDates.Remove(b);
                 await _db.SaveChangesAsync();
             }
+
+            _cache.Set(CacheKeys.Stamp, Guid.NewGuid().ToString());
+            await _hub.Clients.All.SendAsync("calendarChanged");
+
             return RedirectToPage();
         }
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Data;
@@ -22,18 +22,25 @@ if (!string.IsNullOrEmpty(portEnv) && int.TryParse(portEnv, out var port))
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Use PostgreSQL
+// Use PostgreSQL (+ optional command timeout)
 var pgConn =
     builder.Configuration.GetConnectionString("DefaultConnection")
     ?? Environment.GetEnvironmentVariable("DATABASE_URL");
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(pgConn));
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseNpgsql(pgConn, o => o.CommandTimeout(15));
+});
+
+// ✅ Needed by AvailabilityService (IMemoryCache)
+builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHostedService<HoldSweeper>();
 builder.Services.AddSignalR();
 
-// ✅ availability rules service (optional to use inside your APIs)
+// availability rules service
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
 // SMTP options
@@ -79,12 +86,19 @@ app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Inde
 app.MapRazorPages();
 app.MapHub<BookingHub>("/hubs/booking");
 
+// Health endpoint for Render
+app.MapGet("/healthz", async (AppDbContext db) =>
+{
+    try { await db.Database.ExecuteSqlRawAsync("select 1"); return Results.Ok("ok"); }
+    catch (Exception ex) { return Results.Problem(ex.Message, statusCode: 500); }
+});
+
 // Auto-migrate + seed
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
-    await SeedData.EnsureSeededAsync(db); // keep yours; DbContext also seeds weekly hours by default
+    await SeedData.EnsureSeededAsync(db);
 }
 
 app.Run();

@@ -5,6 +5,8 @@
     ViewData["Title"] = "Reserveren";
 }
 <style>
+:root { --kb: 0px; } /* keyboard-safe padding variable */
+
 /* ===== Page layout ===== */
 .resv-wrap{max-width:1200px;margin:48px auto;padding:0 20px;}
 .resv-hero h1{font-size:clamp(28px,3.2vw,42px);line-height:1.1;margin:0 0 8px;}
@@ -26,12 +28,12 @@
 
 /* skeleton */
 .resv-skeleton{height:44px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.22),rgba(255,255,255,.10));animation:resv-shimmer 1.2s infinite;background-size:200px 100%;}
-@keyframes resv-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+@@keyframes resv-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
 
 /* sticky drawer */
 .resv-drawer{position:fixed;left:0;right:0;bottom:0;background:rgba(18,18,18,.96);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -10px 30px rgba(0,0,0,.4);transform:translateY(110%);transition:.28s transform;z-index:9999;}
 .resv-drawer.open{transform:translateY(0);}
-.resv-drawer-inner{max-width:1200px;margin:0 auto;padding:18px 20px;display:grid;gap:14px;grid-template-columns:1.2fr 1fr auto;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px);}
+.resv-drawer-inner{max-width:1200px;margin:0 auto;padding:18px 20px;display:grid;gap:14px;grid-template-columns:1.2fr 1fr auto;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px + var(--kb));}
 .resv-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);font-weight:700;}
 .resv-input-sm{height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#f5f5f5;padding:0 12px;width:100%;}
 .resv-btn-primary{height:42px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,0,.25);background:linear-gradient(180deg,#A5F07C,#73DC52);color:#0f1b0f;font-weight:900;cursor:pointer;}
@@ -44,7 +46,7 @@
 .resv-toast.err{background:rgba(255,60,60,.12);border-color:rgba(255,60,60,.28);}
 
 /* responsive */
-@media (max-width:880px){
+@@media (max-width:880px){
   .resv-filters{grid-template-columns:1fr;}
   .resv-drawer-inner{grid-template-columns:1fr;gap:10px;}
   .resv-input-row{grid-template-columns:1fr;}
@@ -53,9 +55,7 @@
 /* Mobile keyboard & iOS zoom helpers */
 .drawer-open { overflow:hidden; }
 input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
-
 </style>
-
 
 <div class="resv-wrap">
     <section class="resv-hero">
@@ -477,7 +477,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
     const vv = window.visualViewport;
     if (vv) {
       const onResize = () => {
-        const kb = window.innerHeight - vv.height; // keyboard delta
+        const kb = window.innerHeight - vv.height;
         setKb(drawer.classList.contains('open') ? kb : 0);
       };
       vv.addEventListener('resize', onResize);

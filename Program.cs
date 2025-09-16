@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics; // <-- önemli
 using ProHair.NL.Data;
-using Microsoft.EntityFrameworkCore.Diagnostics; 
 using ProHair.NL.Hubs;
 using ProHair.NL.HostedServices;
 using ProHair.NL.Services;
@@ -33,6 +33,8 @@ var pgConn =
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseNpgsql(pgConn, o => o.CommandTimeout(15));
+    // EF'nin "PendingModelChangesWarning" uyarısını runtime'da ignore et
+    opt.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 });
 
 // ✅ DataProtection keylerini DB'de sakla (antiforgery fix)
@@ -102,11 +104,28 @@ app.MapGet("/healthz", async (AppDbContext db) =>
     catch (Exception ex) { return Results.Problem(ex.Message, statusCode: 500); }
 });
 
-// Auto-migrate + seed
+// Auto-migrate + seed (+ güvenlik ağı)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    // Var olan EF migration’ları uygula
     await db.Database.MigrateAsync();
+
+    // ✅ DataProtectionKeys tablosu yoksa oluştur (Postgres)
+    await db.Database.ExecuteSqlRawAsync(@"
+        CREATE TABLE IF NOT EXISTS ""DataProtectionKeys"" (
+            ""Id"" SERIAL PRIMARY KEY,
+            ""FriendlyName"" text NULL,
+            ""Xml"" text NULL
+        );");
+
+    // ✅ Haftalık saatler: Pazartesi kapalı, Pazar açık (idempotent güncelleme)
+    await db.Database.ExecuteSqlRawAsync(@"
+        UPDATE ""WeeklyOpenHours"" SET ""IsClosed"" = TRUE  WHERE ""Day"" = 1;  -- Monday
+        UPDATE ""WeeklyOpenHours"" SET ""IsClosed"" = FALSE WHERE ""Day"" = 0;  -- Sunday
+    ");
+
     await SeedData.EnsureSeededAsync(db);
 }
 

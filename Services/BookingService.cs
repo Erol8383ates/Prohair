@@ -13,136 +13,115 @@ namespace ProHair.NL.Services
     {
         private readonly AppDbContext _db;
 
-        // SLOT SPACING: show times every X minutes
-        private const int SlotStepMinutes = 45;
-
-        // Small buffer after each service (minutes)
+        // Küçük servis sonrası tampon (dk)
         private const int BufferMinutes = 5;
 
         public BookingService(AppDbContext db) { _db = db; }
 
-        private static TimeZoneInfo GetTz(string tzId)
+        private static TimeZoneInfo GetTz(string? tzId)
         {
+            tzId ??= "Europe/Brussels";
             try { return TimeZoneInfo.FindSystemTimeZoneById(tzId); }
             catch { return TZConvert.GetTimeZoneInfo(tzId); }
         }
 
+        /// <summary>
+        /// Admin › Availability (WeeklyOpenHours, BlackoutDates, BusinessSettings) esas alınarak
+        /// seçili gün için yerel slotları üretir. Stylist.WorkingHours KULLANILMAZ.
+        /// </summary>
         public async Task<List<DateTime>> GetAvailableSlotsLocalAsync(
-            DateTime dateLocal, int stylistId, int serviceId, string tzId = "Europe/Brussels")
+            DateTime dateLocal,
+            int stylistId,
+            int serviceId,
+            string tzId = "Europe/Brussels")
         {
-            var tz = GetTz(tzId);
-
-            // Settings (slot/min notice)
+            // Ayarlar
             var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync()
-                           ?? new BusinessSettings { SlotMinutes = SlotStepMinutes, MinNoticeHours = 0 };
+                           ?? new BusinessSettings { SlotMinutes = 30, MinNoticeHours = 0, TimeZone = tzId };
 
-            var service = await _db.Services.FirstAsync(s => s.Id == serviceId && s.IsActive);
-            var stylist = await _db.Stylists
-                .Include(s => s.WorkingHours)
-                .Include(s => s.TimeOffs)
-                .FirstAsync(s => s.Id == stylistId && s.IsActive);
+            var tz = GetTz(settings.TimeZone ?? tzId);
 
-            // 0) BLACKOUT: Gün tamamen kapalıysa hiç slot üretme
-            var dateOnly = DateOnly.FromDateTime(dateLocal.Date);
-            var isBlackout = await _db.BlackoutDates
+            // Servis (süre)
+            var service = await _db.Services
                 .AsNoTracking()
-                .AnyAsync(b => b.Date == dateOnly);
-            if (isBlackout) return new List<DateTime>();
+                .FirstAsync(s => s.Id == serviceId && s.IsActive);
 
-            // 1) WEEKLY GLOBAL SAAT: Gün kapalıysa hiç slot yok
-            var weekly = await _db.WeeklyOpenHours
+            // Gün kapalı mı / saatleri nedir?
+            var dow = dateLocal.DayOfWeek;
+            var wh = await _db.WeeklyOpenHours
                 .AsNoTracking()
-                .SingleOrDefaultAsync(w => w.Day == dateLocal.DayOfWeek);
+                .SingleOrDefaultAsync(w => w.Day == dow);
 
-            if (weekly == null || weekly.IsClosed || weekly.Open == null || weekly.Close == null)
+            // Blackout?
+            var dayOnly = DateOnly.FromDateTime(dateLocal.Date);
+            var isBlackout = await _db.BlackoutDates.AsNoTracking().AnyAsync(b => b.Date == dayOnly);
+
+            // Açık değilse ya da blackout ise: hiç slot yok
+            if (isBlackout || wh is null || wh.IsClosed || wh.Open is null || wh.Close is null)
                 return new List<DateTime>();
 
-            var globalOpen  = weekly.Open.Value.ToTimeSpan();   // örn 09:00
-            var globalClose = weekly.Close.Value.ToTimeSpan();  // örn 19:00
-            if (globalClose <= globalOpen) return new List<DateTime>();
-
-            // 2) STYLIST GÜN BLOKLARI: Sadece o gün
-            var dow = (int)dateLocal.DayOfWeek;
-            var dayHoursRaw = stylist.WorkingHours.Where(w => w.DayOfWeek == dow).ToList();
-
-            if (!dayHoursRaw.Any()) return new List<DateTime>();
-
-            // 3) GLOBAL İLE KESİŞİM: Stilist bloklarını global açık-kapanışla kesiştir
-            var dayHours = dayHoursRaw
-                .Select(w => new
-                {
-                    Start = (w.StartLocal < globalOpen)  ? globalOpen  : w.StartLocal,
-                    End   = (w.EndLocal   > globalClose) ? globalClose : w.EndLocal
-                })
-                .Where(b => b.End > b.Start)
-                .ToList();
-
-            if (!dayHours.Any()) return new List<DateTime>();
-
-            // 4) Gün sınırları (local/utc)
-            var dayStartLocal = dateLocal.Date;
-            var dayEndLocal = dayStartLocal.AddDays(1);
-            var dayStartUtc = TimeZoneInfo.ConvertTimeToUtc(dayStartLocal, tz);
-            var dayEndUtc = TimeZoneInfo.ConvertTimeToUtc(dayEndLocal, tz);
-
-            // 5) Şu an + MinNoticeHours
+            // Min notice + bugün için geçmiş saatleri gizle
             var nowLocal = TimeZoneInfo.ConvertTime(DateTime.UtcNow, tz);
-            var earliestAllowed = settings.MinNoticeHours > 0
-                ? nowLocal.AddHours(settings.MinNoticeHours)
-                : nowLocal.AddMinutes(15); // mevcut kısa tamponun kalsın
+            var minStartLocal = nowLocal.AddHours(settings.MinNoticeHours);
 
-            // 6) Aktif randevular (o günle kesişen)
-            var activeAppointments = await _db.Appointments
+            var openLocal = dateLocal.Date.Add(wh.Open.Value);
+            var closeLocal = dateLocal.Date.Add(wh.Close.Value);
+
+            // Başlangıç: gün açılış ile minNotice’in maksimumu
+            var firstStart = openLocal > minStartLocal && dateLocal.Date == minStartLocal.Date
+                ? openLocal
+                : dateLocal.Date == minStartLocal.Date ? minStartLocal : openLocal;
+
+            // Slot step: BusinessSettings.SlotMinutes
+            var step = TimeSpan.FromMinutes(Math.Max(5, settings.SlotMinutes));
+            var duration = TimeSpan.FromMinutes(service.DurationMinutes + BufferMinutes);
+
+            // Gün içindeki mevcut randevular (hold + confirmed; hold süresi bitmemiş)
+            var dayStartUtc = TimeZoneInfo.ConvertTimeToUtc(dateLocal.Date, tz);
+            var dayEndUtc = TimeZoneInfo.ConvertTimeToUtc(dateLocal.Date.AddDays(1), tz);
+
+            var appts = await _db.Appointments
                 .Where(a => a.StylistId == stylistId
                             && a.Status != AppointmentStatus.Cancelled
                             && a.EndUtc > dayStartUtc && a.StartUtc < dayEndUtc)
                 .Include(a => a.Service)
                 .ToListAsync();
 
-            // Hold süresi olmayan/bitmişleri çıkar
-            activeAppointments = activeAppointments
+            var activeAppts = appts
                 .Where(a => a.Status == AppointmentStatus.Confirmed ||
                             (a.Status == AppointmentStatus.Hold && a.HoldUntilUtc > DateTime.UtcNow))
-                .ToList();
-
-            var busyLocal = activeAppointments.Select(a => new
-            {
-                Start = TimeZoneInfo.ConvertTimeFromUtc(a.StartUtc, tz),
-                End = TimeZoneInfo.ConvertTimeFromUtc(a.EndUtc, tz)
-            }).ToList();
-
-            // 7) Stylist TimeOff
-            var timeOffs = stylist.TimeOffs
-                .Where(t => t.EndLocal > dayStartLocal && t.StartLocal < dayEndLocal)
-                .ToList();
-
-            // 8) Slot üretimi
-            var duration = TimeSpan.FromMinutes(service.DurationMinutes + BufferMinutes);
-            var step = TimeSpan.FromMinutes(SlotStepMinutes);
-            var slots = new List<DateTime>();
-
-            foreach (var wh in dayHours)
-            {
-                var whStartLocal = dayStartLocal.Add(wh.Start);
-                var whEndLocal = dayStartLocal.Add(wh.End);
-
-                for (var t = whStartLocal; t + duration <= whEndLocal; t = t.Add(step))
+                .Select(a => new
                 {
-                    // Min Notice (ve bugün ise biraz tampon)
-                    if (t < earliestAllowed) continue;
+                    StartLocal = TimeZoneInfo.ConvertTimeFromUtc(a.StartUtc, tz),
+                    EndLocal = TimeZoneInfo.ConvertTimeFromUtc(a.EndUtc, tz)
+                })
+                .ToList();
 
-                    var slotEnd = t + duration;
+            // (Varsa) Stylist TimeOff çakışmaları
+            var stylist = await _db.Stylists
+                .Include(s => s.TimeOffs)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Id == stylistId && s.IsActive);
 
-                    // TimeOff çakışması
-                    bool overlapsTimeOff = timeOffs.Any(to => t < to.EndLocal && slotEnd > to.StartLocal);
-                    if (overlapsTimeOff) continue;
+            var timeOffs = stylist?.TimeOffs?
+                .Where(t => t.EndLocal > dateLocal.Date && t.StartLocal < dateLocal.Date.AddDays(1))
+                .ToList() ?? new List<StylistTimeOff>();
 
-                    // Mevcut randevu çakışması
-                    bool overlapsBusy = busyLocal.Any(b => t < b.End && slotEnd > b.Start);
-                    if (overlapsBusy) continue;
+            // Slot üretimi
+            var slots = new List<DateTime>();
+            for (var t = firstStart; t + duration <= closeLocal; t = t.Add(step))
+            {
+                var end = t + duration;
 
-                    slots.Add(t);
-                }
+                // TimeOff çakışması?
+                if (timeOffs.Any(to => t < to.EndLocal && end > to.StartLocal))
+                    continue;
+
+                // Randevu çakışması?
+                if (activeAppts.Any(b => t < b.EndLocal && end > b.StartLocal))
+                    continue;
+
+                slots.Add(t);
             }
 
             return slots.Distinct().OrderBy(x => x).ToList();
@@ -153,19 +132,40 @@ namespace ProHair.NL.Services
         {
             var tz = GetTz(tzId);
             var service = await _db.Services.FirstAsync(s => s.Id == serviceId && s.IsActive);
+
+            // WeeklyOpenHours + Blackout + notice ile bookable mı?
+            var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync()
+                           ?? new BusinessSettings { SlotMinutes = 30, MinNoticeHours = 0, TimeZone = tzId };
+            var dateLocal = startLocal.Date;
+
+            // Gün kontrolü
+            var wh = await _db.WeeklyOpenHours.AsNoTracking().SingleOrDefaultAsync(w => w.Day == dateLocal.DayOfWeek);
+            var isBlackout = await _db.BlackoutDates.AsNoTracking()
+                                .AnyAsync(b => b.Date == DateOnly.FromDateTime(dateLocal));
+            if (isBlackout || wh is null || wh.IsClosed || wh.Open is null || wh.Close is null)
+                return (false, "Deze dag is niet boekbaar.", null);
+
+            // Notice
+            var nowLocal = TimeZoneInfo.ConvertTime(DateTime.UtcNow, GetTz(settings.TimeZone ?? tzId));
+            if (startLocal < nowLocal.AddHours(settings.MinNoticeHours))
+                return (false, "Te weinig tijd om te reserveren.", null);
+
             var startUtc = TimeZoneInfo.ConvertTimeToUtc(startLocal, tz);
             var endUtc = startUtc.AddMinutes(service.DurationMinutes + BufferMinutes);
 
             using var trx = await _db.Database.BeginTransactionAsync();
             try
             {
+                // Süresi geçen hold’ları temizle
                 var expired = _db.Appointments.Where(a => a.Status == AppointmentStatus.Hold && a.HoldUntilUtc < DateTime.UtcNow);
                 _db.Appointments.RemoveRange(expired);
                 await _db.SaveChangesAsync();
 
+                // Çakışma kontrolü
                 bool conflict = await _db.Appointments.AnyAsync(a => a.StylistId == stylistId
                     && a.Status != AppointmentStatus.Cancelled
                     && a.EndUtc > startUtc && a.StartUtc < endUtc);
+
                 if (conflict) return (false, "Slot is net ingenomen. Kies een andere tijd.", null);
 
                 var hold = new Appointment

@@ -1958,3 +1958,10 @@ main {
         pointer-events: none;
     }
 
+
+
+.fab-wrap { position: fixed; right: 16px; bottom: 18px; display: flex; flex-direction: column; gap: 10px; z-index: 60; }
+  .fab { display:inline-flex; align-items:center; gap:.5rem; padding:.75rem 1rem; border-radius:999px; font-weight:600; text-decoration:none; }
+  .fab svg { width:18px; height:18px; }
+  .fab.ig { background: linear-gradient(45deg,#F58529,#FEDA77,#DD2A7B,#8134AF,#515BD4); color:#fff; }
+  .fab.secondary { background:#0f1620; color:#fff; }

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Data;
 using ProHair.NL.Hubs;
@@ -22,7 +24,7 @@ if (!string.IsNullOrEmpty(portEnv) && int.TryParse(portEnv, out var port))
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Use PostgreSQL (+ optional command timeout)
+// PostgreSQL connection
 var pgConn =
     builder.Configuration.GetConnectionString("DefaultConnection")
     ?? Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -32,7 +34,11 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(pgConn, o => o.CommandTimeout(15));
 });
 
-// IMemoryCache (AvailabilityService/slot cache)
+// ✅ DataProtection keylerini DB'de sakla (antiforgery fix)
+builder.Services.AddDataProtection()
+    .PersistKeysToDbContext<AppDbContext>();
+
+// Memory cache
 builder.Services.AddMemoryCache();
 
 // App services
@@ -44,7 +50,7 @@ builder.Services.AddSignalR();
 // Availability rules service
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
-// SMTP options (if you bind to a SmtpOptions class elsewhere)
+// SMTP options
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 
 // Auth
@@ -60,6 +66,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             OnRedirectToLogin = ctx => { ctx.Response.Redirect(ctx.RedirectUri); return Task.CompletedTask; }
         };
     });
+
 builder.Services.AddAuthorization(o => o.AddPolicy("AdminOnly", p => p.RequireRole("Admin")));
 
 var app = builder.Build();
@@ -87,7 +94,7 @@ app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Inde
 app.MapRazorPages();
 app.MapHub<BookingHub>("/hubs/booking");
 
-// Health endpoint for Render
+// Health endpoint
 app.MapGet("/healthz", async (AppDbContext db) =>
 {
     try { await db.Database.ExecuteSqlRawAsync("select 1"); return Results.Ok("ok"); }
@@ -99,7 +106,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
-    await SeedData.EnsureSeededAsync(db); // ensure idempotent (don't overwrite admin-changed hours)
+    await SeedData.EnsureSeededAsync(db);
 }
 
 app.Run();

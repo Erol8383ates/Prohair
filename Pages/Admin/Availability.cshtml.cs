@@ -11,7 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 using ProHair.NL.Data;
 using ProHair.NL.Models;
 using ProHair.NL.Hubs;
-using ProHair.NL.Services; // CacheKeys (opsiyonel)
+using ProHair.NL.Services; // CacheKeys için
 
 namespace ProHair.NL.Pages.Admin
 {
@@ -49,23 +49,20 @@ namespace ProHair.NL.Pages.Admin
                 return Page();
             }
 
-            // Güvenli update (DB'den çek → alanları ata)
+            // Güvenli update: DB’den çek -> alanları ata
             foreach (var row in Weekly)
             {
                 var dbRow = await _db.WeeklyOpenHours.FirstOrDefaultAsync(w => w.Id == row.Id);
                 if (dbRow == null) continue;
 
                 dbRow.IsClosed = row.IsClosed;
-                dbRow.Open = row.Open;
-                dbRow.Close = row.Close;
+                dbRow.Open     = row.Open;
+                dbRow.Close    = row.Close;
             }
 
             await _db.SaveChangesAsync();
 
-            // Cache invalidate (opsiyonel)
             _cache.Set(CacheKeys.Stamp, Guid.NewGuid().ToString());
-
-            // 🔔 Tüm client'lara bildir
             await _hub.Clients.All.SendAsync("calendarChanged");
 
             TempData["Ok"] = "Çalışma saatleri güncellendi.";
@@ -80,11 +77,7 @@ namespace ProHair.NL.Pages.Admin
             var exists = await _db.BlackoutDates.AnyAsync(b => b.Date == NewBlackoutDate);
             if (!exists)
             {
-                _db.BlackoutDates.Add(new BlackoutDate
-                {
-                    Date = NewBlackoutDate,
-                    Reason = NewBlackoutReason
-                });
+                _db.BlackoutDates.Add(new BlackoutDate { Date = NewBlackoutDate, Reason = NewBlackoutReason });
                 await _db.SaveChangesAsync();
             }
 

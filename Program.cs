@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Data;
+using Microsoft.EntityFrameworkCore.Diagnostics; 
 using ProHair.NL.Hubs;
 using ProHair.NL.HostedServices;
 using ProHair.NL.Services;

@@ -41,30 +41,11 @@
 .resv-input-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 
 /* modal */
-.resv-modal-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;                 /* hide by default */
-  align-items:center;
-  justify-content:center;
-  z-index:9998;
-}
-.resv-modal-backdrop.open{      /* shown when .open is added in JS */
-  display:flex;
-}
-.resv-modal{
-  background:#0f1115;
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:16px;
-  padding:20px;
-  max-width:520px;
-  width:calc(100% - 32px);
-  text-align:center;
-  box-shadow:0 24px 60px rgba(0,0,0,.5);
-}
-.resv-modal h3{ margin:0 0 6px; font-size:22px; }
-.resv-modal p{ opacity:.9; margin:0 0 14px; }
+.resv-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9998;}
+.resv-modal-backdrop.open{display:flex;}
+.resv-modal{background:#0f1115;border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px;max-width:520px;width:calc(100% - 32px);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.resv-modal h3{margin:0 0 6px;font-size:22px;}
+.resv-modal p{opacity:.9;margin:0 0 14px;}
 
 /* toasts */
 .resv-toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:10px;z-index:99999;}
@@ -168,7 +149,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
   // keeps last "disabled dates" config from server
   let lastDisabledConf = { closedDows: [], blackouts: [] };
 
-  // ✅ Local (no UTC shift)
+  // local Y-M-D (no UTC shift)
   const yyyyMmDd = (d) => {
     const dt = (d instanceof Date) ? d : new Date(d);
     const y = dt.getFullYear();
@@ -285,7 +266,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
       dateFormat: "Y-m-d",
       defaultDate: yyyyMmDd(today),
       minDate: yyyyMmDd(today),
-      disableMobile: true,              // ✅ force Flatpickr on phones
+      disableMobile: true,  // force Flatpickr so disabled days work on phones
       onMonthChange: function (_, __, instance) {
         const m = instance.currentMonth + 1;
         const y = instance.currentYear;
@@ -322,11 +303,21 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
         svcSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}${mins}</option>`);
       });
 
+    // stylist default
     if (cfg.stylists?.length) defaultStylistId = cfg.stylists[0].id;
     else toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err');
 
     await setupDatePicker();
+
+    // ✅ Mobile fix: ensure a service is selected (placeholder stays selected on some phones)
+    if (!svcSel.value && (cfg.services?.length ?? 0) > 0) {
+      svcSel.value = String(cfg.services[0].id);
+    }
+
     svcSel.addEventListener('change', debouncedLoadSlots);
+
+    // ✅ Load once now that both date and service are set
+    debouncedLoadSlots();
   }
 
   let loadTimer = null;
@@ -546,7 +537,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
 
   // boot
   document.addEventListener('DOMContentLoaded', () => {
-    loadConfig().then(() => { bindHub(); loadSlots(); });
+    loadConfig().then(() => { bindHub(); });
   });
 
 </script>

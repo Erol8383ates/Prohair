@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Linq;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore; // ✅ DataProtection için
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Models;
 
 namespace ProHair.NL.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IDataProtectionKeyContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -20,6 +21,9 @@ namespace ProHair.NL.Data
         public DbSet<WeeklyOpenHours> WeeklyOpenHours => Set<WeeklyOpenHours>();
         public DbSet<BlackoutDate> BlackoutDates => Set<BlackoutDate>();
 
+        // ✅ DataProtection Key tablosu
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -29,11 +33,11 @@ namespace ProHair.NL.Data
                 .Property(s => s.Price)
                 .HasPrecision(10, 2);
 
-            // Prevent double booking (Postgres filter syntax)
+            // Prevent double booking
             modelBuilder.Entity<Appointment>()
                 .HasIndex(a => new { a.StylistId, a.StartUtc })
                 .IsUnique()
-                .HasFilter("\"Status\" IN (0,1)"); // 0 = Hold, 1 = Confirmed
+                .HasFilter("\"Status\" IN (0,1)");
 
             // Seed settings
             modelBuilder.Entity<BusinessSettings>().HasData(
@@ -47,16 +51,17 @@ namespace ProHair.NL.Data
                 }
             );
 
-            // Seed weekly hours (Mon–Sat 10:00–19:00, Sun closed)
+            // ✅ Haftalık çalışma saatleri: Pzt kapalı (Monday), diğer günler 10:00–19:00
             var weeklySeed = Enum.GetValues<DayOfWeek>().Select((d, i) =>
                 new WeeklyOpenHours
                 {
                     Id = i + 1,
                     Day = d,
-                    IsClosed = (d == DayOfWeek.Sunday),
+                    IsClosed = (d == DayOfWeek.Monday), // <-- DEĞİŞTİRİLDİ
                     Open = new TimeOnly(10, 0),
                     Close = new TimeOnly(19, 0)
                 });
+
             modelBuilder.Entity<WeeklyOpenHours>().HasData(weeklySeed);
         }
     }

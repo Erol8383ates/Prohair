@@ -163,3 +163,9 @@
     background: #141827;
     color: #e9eefc
 }
+
+
+
+/* iOS no-zoom for form controls in modals or pages */
+.modal input, .modal select, .modal textarea { font-size: 16px; }
+input, select, textarea { font-size: 16px; }

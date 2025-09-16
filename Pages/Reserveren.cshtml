@@ -141,6 +141,9 @@
   let loadingSlotsCtrl = null, isLoadingSlots = false;
   let fp = null;
 
+  // keeps last "disabled dates" config from server
+  let lastDisabledConf = { closedDows: [], blackouts: [] };
+
   const yyyyMmDd = (d) => new Date(d).toISOString().slice(0,10);
 
   function toast(text, type = "ok") {
@@ -212,7 +215,7 @@
       d.setDate(d.getDate() + 1);
       const ds = yyyyMmDd(d);
       try {
-        const r = await fetch(`${API.availability}?date=${ds}&stylistId=${stylistId}&serviceId=${serviceId}&tz=${encodeURIComponent(tz)}`);
+        const r = await fetch(`${API.availability}?date=${ds}&stylistId=${stylistId}&serviceId=${serviceId}&tz=${encodeURIComponent(tz)}&v=${Date.now()}`);
         if (!r.ok) continue;
         const slots = await r.json();
         if (slots.length > 0) return { date: ds, slots };
@@ -221,14 +224,27 @@
     return null;
   }
 
+  // --- Disabled days helpers ---
+  function isDateClosedOrBlackout(d) {
+    const day = d.getDay(); // 0..6
+    if (lastDisabledConf.closedDows?.includes(day)) return true;
+    const iso = yyyyMmDd(d);
+    return (lastDisabledConf.blackouts || []).includes(iso);
+  }
+
   async function refreshDisabledDates(y, m) {
     try {
-      const res = await fetch(`?handler=DisabledDates&year=${y}&month=${m}`);
+      const res = await fetch(`?handler=DisabledDates&year=${y}&month=${m}&v=${Date.now()}`);
       if (!res.ok) return; // safe no-op if handler not present
       const conf = await res.json();
+      lastDisabledConf = {
+        closedDows: conf.closedDows || [],
+        blackouts: conf.blackouts || []
+      };
       fp.set('disable', [
-        function (d) { return conf.closedDows.includes(d.getDay()); },
-        ...conf.blackouts
+        // JS getDay(): 0=Sun..6=Sat — server returns same indices
+        function (d) { return lastDisabledConf.closedDows.includes(d.getDay()); },
+        ...lastDisabledConf.blackouts
       ]);
     } catch { }
   }
@@ -256,7 +272,6 @@
 
   async function loadConfig() {
     try {
-      // cache-buster avoids CDN/proxy caching
       const res = await fetch(`${API.config}?v=${Date.now()}`);
       if (!res.ok) throw new Error(await res.text().catch(()=>'Config laden mislukt.'));
       cfg = await res.json();
@@ -295,6 +310,14 @@
     current = { date, serviceId, stylistId };
 
     if (!date || !serviceId) return;
+
+    // Short-circuit if date is closed or blackout
+    const dLocal = new Date(`${date}T00:00:00`);
+    if (isDateClosedOrBlackout(dLocal)) {
+      byId('slots').innerHTML = `<div class="resv-empty">Deze dag is gesloten.</div>`;
+      byId('meta').textContent = '';
+      return;
+    }
 
     if (loadingSlotsCtrl) loadingSlotsCtrl.abort();
     loadingSlotsCtrl = new AbortController();
@@ -413,6 +436,19 @@
     connection.on('slotHeld', msg => { if (matchesCurrent(msg)) loadSlots(); });
     connection.on('slotBooked', () => loadSlots());
     connection.on('slotReleased', () => loadSlots());
+
+    // NEW: react to Admin calendar changes (hours/blackouts)
+    connection.on('calendarChanged', async () => {
+      try {
+        if (fp) {
+          const m = fp.currentMonth + 1;
+          const y = fp.currentYear;
+          await refreshDisabledDates(y, m);
+        }
+        await loadSlots();
+      } catch {}
+    });
+
     connection.start().catch(() => setTimeout(bindHub, 1500));
   }
   function matchesCurrent(msg){

@@ -66,8 +66,6 @@
 .resv-modal h3{ margin:0 0 6px; font-size:22px; }
 .resv-modal p{ opacity:.9; margin:0 0 14px; }
 
-
-
 /* toasts */
 .resv-toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:10px;z-index:99999;}
 .resv-toast{padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(4px);font-weight:700;}
@@ -170,7 +168,14 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
   // keeps last "disabled dates" config from server
   let lastDisabledConf = { closedDows: [], blackouts: [] };
 
-  const yyyyMmDd = (d) => new Date(d).toISOString().slice(0,10);
+  // ✅ Local (no UTC shift)
+  const yyyyMmDd = (d) => {
+    const dt = (d instanceof Date) ? d : new Date(d);
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
 
   function toast(text, type = "ok") {
     const box = byId('toasts');
@@ -280,6 +285,7 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
       dateFormat: "Y-m-d",
       defaultDate: yyyyMmDd(today),
       minDate: yyyyMmDd(today),
+      disableMobile: true,              // ✅ force Flatpickr on phones
       onMonthChange: function (_, __, instance) {
         const m = instance.currentMonth + 1;
         const y = instance.currentYear;
@@ -542,5 +548,5 @@ input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
   document.addEventListener('DOMContentLoaded', () => {
     loadConfig().then(() => { bindHub(); loadSlots(); });
   });
-})();
+
 </script>

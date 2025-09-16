@@ -1965,3 +1965,34 @@ main {
   .fab svg { width:18px; height:18px; }
   .fab.ig { background: linear-gradient(45deg,#F58529,#FEDA77,#DD2A7B,#8134AF,#515BD4); color:#fff; }
   .fab.secondary { background:#0f1620; color:#fff; }
+
+
+
+/* Price list – clean & aligned */
+.price-list { list-style: none; margin: 0; padding: 0; }
+.price-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;   /* label ... amount */
+  gap: 12px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.08); /* for dark bg; use rgba(0,0,0,.08) on light */
+}
+.price-list li:last-child { border-bottom: 0; }
+
+/* Works with or without .label class */
+.price-list li > .label,
+.price-list li > :first-child {
+  font-weight: 500;
+  letter-spacing: .1px;
+}
+
+.price-list .amount {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums; /* aligned digits */
+  white-space: nowrap;                 /* keep € with number */
+}
+
+/* (optional) a bit tighter inside cards */
+.card .price-list li { padding: 6px 0; }
+

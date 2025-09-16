@@ -1,142 +1,128 @@
 @page
+@model ProHair.NL.Pages.ContactModel
 @{
-    ViewData["Title"] = "Prijzen - ProHair Studio";
+    ViewData["Title"] = "Contact – ProHair Studio";
 }
+<link rel="stylesheet" href="~/css/contact.css" asp-append-version="true" />
 
-<section class="container section">
-    <header class="section-header" data-aos="fade-up">
-        <h1>Prijzen</h1>
-        <p class="muted">Transparante tarieven voor haarwerken, onderhoud en barbershop-diensten. Alle prijzen zijn <strong>vanaf</strong>-prijzen tenzij anders vermeld.</p>
-    </header>
+<section class="container section contact-wrap contact-safe-bottom">
+    <h1 data-aos="fade-up">Contact</h1>
+    <p class="contact-sub" data-aos="fade-up" data-aos-delay="60">
+        Vragen, een offerte of snel een afspraak plannen? Stuur ons een bericht – we antwoorden meestal binnen <strong>1 werkdag</strong>.
+    </p>
 
-    <!-- === 1) BARBERSHOP & STYLING (moved to top) === -->
-    <div class="section-split" style="margin-top:24px" data-aos="fade-up">
-        <h2>Barbershop &amp; Styling</h2>
-        <p class="muted">ProHair Studio is ook je kapsalon voor moderne coupes, föhn/styling en baardverzorging.</p>
+    <div class="contact-grid">
+        <!-- Left: form -->
+        <div class="card contact-card" data-aos="fade-up">
+            <h3>Stuur ons een bericht</h3>
+
+            @if (Model.Sent)
+            {
+            <div class="card" style="border-color:#2b6c35;background:#11391b;margin-top:10px">
+                <strong>Bedankt!</strong> We hebben je bericht ontvangen en reageren zo snel mogelijk.
+            </div>
+            }
+            else
+            {
+            <form method="post" asp-antiforgery="true" style="display:grid; gap:12px; margin-top:10px">
+                <!-- honeypot (must remain empty) -->
+                <input type="text" name="Website" class="hp" autocomplete="off" tabindex="-1" aria-hidden="true" />
+
+                <div class="field-row">
+                    <label class="field">
+                        <span>Naam</span>
+                        <input class="input" asp-for="Input.Name" placeholder="Jouw naam" />
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </label>
+                    <label class="field">
+                        <span>E-mail</span>
+                        <input class="input" asp-for="Input.Email" placeholder="jij@voorbeeld.be" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </label>
+                </div>
+
+                <label class="field">
+                    <span>Onderwerp</span>
+                    <select class="select" asp-for="Input.Subject">
+                        <option>Algemene vraag</option>
+                        <option>Consult – hairprothese</option>
+                        <option>Onderhoud / re-bonding</option>
+                        <option>Prijzen & beschikbaarheid</option>
+                    </select>
+                    <span asp-validation-for="Input.Subject" class="text-danger"></span>
+                </label>
+
+                <label class="field">
+                    <span>Bericht</span>
+                    <textarea class="textarea" asp-for="Input.Message" rows="6" placeholder="Vertel ons kort wat je zoekt…"></textarea>
+                    <span asp-validation-for="Input.Message" class="text-danger"></span>
+                </label>
+
+                <span class="help">Door te verzenden ga je akkoord met onze privacyverklaring. We gebruiken je gegevens uitsluitend om op je bericht te reageren.</span>
+
+                <button class="btn btn-primary contact-submit" type="submit">Versturen</button>
+            </form>
+            }
+        </div>
+
+        <!-- Right: studio info -->
+        <div class="card contact-card" data-aos="fade-up" data-aos-delay="80">
+            <h3>Onze studio</h3>
+            <p>
+                Kantstraat 6 bus 2, 2500 Lierl<br>
+
+            </p>
+
+            <div class="contact-chips">
+                <a class="contact-chip" href="tel:" +32472980895">📞 Bel ons</a>
+                <a class="contact-chip" href="mailto:info@prohair.be">✉️ info@prohair.be</a>
+                <a class="contact-chip" href="https://wa.me/32472980895" target="_blank" rel="noopener">🟢 WhatsApp</a>
+                <a class="contact-chip" href="https://www.instagram.com/haarmasterprothesecentrum/" target="_blank" rel="noopener">📸 Instagram</a>
+
+            </div>
+            <div class="map-frame" style="margin-top:12px">
+                <iframe src="https://www.google.com/maps?q=Kantstraat+6+bus+2,+2500+Lier&hl=nl&z=16&output=embed"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Kaart – ProHair Studio, Kantstraat 6 bus 2, 2500 Lier">
+                </iframe>
+            </div>
+        </div>
     </div>
 
-    <div class="grid grid-3" style="margin-top:14px">
+    <!-- Extra info row -->
+    <div class="info-grid">
         <div class="card" data-aos="fade-up">
-            <h4>Knippen &amp; Finish</h4>
-            <ul class="price-list">
-                <li><span>Heren knippen</span><span class="amount">&euro; 18</span></li>
-                <li><span>Kinderen (t/m 11)</span><span class="amount">&euro; 15</span></li>
-                <li><span>Knippen + Scheren + Wassen + föhnen</span><span class="amount">&euro; 35</span></li>
+            <h3>Openingstijden</h3>
+            <ul class="hours">
+                <li><span>Maandag</span><span>Gesloten</span></li>
+                <li><span>Dinsdag</span><span>09:30–18:30</span></li>
+                <li><span>Woensdag</span><span>09:30–18:30</span></li>
+                <li><span>Donderdag</span><span>09:30–18:30</span></li>
+                <li><span>Vrijdag</span><span>09:30–18:30</span></li>
+                <li><span>Zaterdag</span><span>09:30–19:00</span></li>
+                <li><span>Zondag</span><span>10:00–18:30</span></li>
+                <li><span>Met Afspraak</span></li>
             </ul>
         </div>
 
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <h4>Scheren, Wassen, föhnen &amp; styling</h4>
-            <ul class="price-list">
-                <li><span>Scheren</span><span class="amount">&euro; 10</span></li>
-                <li><span>Scheren + Wassen + föhnen</span><span class="amount">&euro; 20</span></li>
-                <li><span>Scheren met model + Wassen + föhnen</span><span class="amount">&euro; 25</span></li>
-            </ul>
-        </div>
-
-        <div class="card" data-aos="fade-up" data-aos-delay="200">
-            <h4>Kleuring</h4>
-            <ul class="price-list">
-                <li><span>Haar kleuring</span><span class="amount">vanaf &euro; 45</span></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- === 2) HAARWERK / PROTHESE (moved below) === -->
-    <div class="section-split" style="margin-top:36px" data-aos="fade-up">
-        <h2>Haarwerk &amp; Onderhoud</h2>
-        <p class="muted">Maatwerkoplossingen en onderhoud, afgestemd op jouw look en lifestyle.</p>
-    </div>
-
-    <!-- Hero cards -->
-    <div class="grid grid-3" style="margin-top:18px">
-        <div class="card" data-aos="fade-up">
-            <span class="badge badge-gold">Haarwerk</span>
-            <h3>Maatwerk prothese</h3>
-            <p class="muted">Inclusief advies &amp; styling</p>
-            <p class="price"><strong>Gratis intake &mdash; prijs op maat</strong></p>
-            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
-        </div>
-
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <span class="badge">Topper / partial</span>
-            <h3>Lichtgewicht oplossing</h3>
-            <p class="muted">Voor kruin of inhammen</p>
-            <p class="price"><strong>Persoonlijk voorstel na consult</strong></p>
-            <a class="btn btn-primary" asp-page="/Reserveren">Boek consult</a>
-        </div>
-
-        <div class="card" data-aos="fade-up" data-aos-delay="200">
-            <span class="badge">Onderhoud</span>
-            <h3>Re-bonding &amp; verzorging</h3>
-            <p class="muted">Reiniging, lijm/tape, styling</p>
-            <p class="price"><strong>Prijs in studio (op maat)</strong></p>
-            <a class="btn btn-primary" asp-page="/Reserveren">Afspraak</a>
-        </div>
-    </div>
-
-    <!-- Extras / pakketten -->
-    <div class="grid grid-3" style="margin-top:26px">
-        <div class="card" data-aos="fade-up">
-            <h4>Intake &amp; consult</h4>
-            <ul class="price-list">
-                <li><span>Persoonlijk advies (30 min)</span><span class="amount"><strong>Gratis</strong></span></li>
-                <li><span>Kleur- &amp; maatbepaling</span><span class="amount"></span></li>
-            </ul>
-            <a class="btn btn-secondary" asp-page="/Reserveren">Plan gratis consult</a>
-        </div>
-
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <h4>Plaatsing &amp; styling</h4>
-            <ul class="price-list">
-                <li><span>Eerste plaatsing (snijden &amp; stylen)</span><span class="amount"><strong>Prijs in studio (op maat)</strong></span></li>
-                <li><span>Lijm/tape wissel</span><span class="amount">Prijs in studio</span></li>
-            </ul>
-            <p class="muted">Tarief wordt afgestemd op techniek, haarlengte en gewenste finish.</p>
-            <a class="btn btn-secondary" asp-page="/Reserveren">Afspraak maken</a>
-        </div>
-
-        <div class="card" data-aos="fade-up" data-aos-delay="200">
-            <h4>Onderhoudspakketten</h4>
-            <ul class="price-list">
-                <li><span>Basic &bull; 4&times; per jaar</span><span class="amount"></span></li>
-                <li><span>Plus &bull; 6&times; per jaar</span><span class="amount"></span></li>
-                <li><span>Premium &bull; 12&times; per jaar</span><span class="amount"></span></li>
-            </ul>
-            <p class="muted">Incl. reiniging, rebonding, bijsnijden &amp; styling. Persoonlijk voorstel na consult.</p>
-        </div>
-    </div>
-
-    <!-- Actie & CTA -->
-    <div class="callout" data-aos="fade-up" style="margin-top:20px">
-        <p><strong>Actie:</strong> Gratis consult.</p>
-        <div class="actions">
-            <a class="btn btn-primary" asp-page="/Reserveren">Nu boeken</a>
-            <a class="btn btn-ghost" asp-page="/Contact">Vragen? Neem contact op</a>
-        </div>
-    </div>
-
-    <!-- FAQ / Voorwaarden -->
-    <div class="grid grid-2" style="margin-top:26px">
-        <div class="card" data-aos="fade-up">
-            <h4>Veelgestelde vragen</h4>
-            <details open>
-                <summary>Zijn prijzen inclusief btw?</summary>
-                <p>Ja, alle vermelde prijzen zijn inclusief btw.</p>
+        <div class="card faq-mini" data-aos="fade-up" data-aos-delay="80">
+            <h3>Veelgestelde vragen</h3>
+            <details>
+                <summary>Hoe snel krijg ik antwoord?</summary>
+                <p>Meestal binnen 1 werkdag. Via WhatsApp reageren we vaak dezelfde dag.</p>
             </details>
             <details>
-                <summary>Hoe lang duurt een onderhoudsbeurt?</summary>
-                <p>Reken op 60&ndash;90 minuten, afhankelijk van type haarwerk en bevestiging.</p>
+                <summary>Kan ik gratis een consult plannen?</summary>
+                <p>Ja. Plan via <a href="/Reserveren">Reserveren</a> of laat je beschikbare momenten weten.</p>
+            </details>
+            <details>
+                <summary>Is er parkeergelegenheid?</summary>
+                <p>Gratis parkeren in de straat; er is ook een betaalde parking op 200 m.</p>
             </details>
         </div>
-
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <h4>Voorwaarden</h4>
-            <ul class="bullets">
-                <li>Prijzen kunnen variëren op basis van haarlengte, dichtheid en gewenste techniek.</li>
-                <li>No-show of late cancel (&lt;24u): &euro; 25 vergoeding.</li>
-                <li>Pakketten zijn 12 maanden geldig vanaf aankoopdatum.</li>
-            </ul>
-        </div>
     </div>
+
+   
 </section>
+

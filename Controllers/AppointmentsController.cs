@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using System;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Mvc;
 using ProHair.NL.Hubs;
 using ProHair.NL.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace ProHair.NL.Controllers
 {
@@ -42,11 +42,9 @@ namespace ProHair.NL.Controllers
             var (ok, err, appt) = await _booking.ConfirmAsync(req.HoldToken, req.ClientName, req.ClientEmail, req.ClientPhone);
             if (!ok || appt is null) return Ok(new SimpleResponse(false, err ?? "Niet gelukt."));
 
-            // realtime updates
             await _hub.Clients.All.SendAsync("slotBooked", new { stylistId = appt.StylistId, serviceId = appt.ServiceId, startUtc = appt.StartUtc });
             await _hub.Clients.All.SendAsync("bookingCreated", new { appointmentId = appt.Id });
 
-            // send email (best-effort; errors are logged inside the service)
             await _email.SendBookingConfirmationAsync(appt);
 
             return Ok(new SimpleResponse(true, null));

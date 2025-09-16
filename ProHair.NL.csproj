@@ -10,6 +10,8 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+
+    <!-- EF Core + Design tools -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -18,11 +20,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    
-    <!-- ✅ DataProtection EF Core desteği -->
+
+    <!-- ✅ BUNU EKLEDİK: DataProtection için EF Core desteği -->
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.8" />
 
+    <!-- PostgreSQL provider -->
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+
     <PackageReference Include="TimeZoneConverter" Version="7.0.0" />
   </ItemGroup>
 

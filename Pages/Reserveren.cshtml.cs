@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,14 +7,17 @@ using ProHair.NL.Data;
 
 namespace ProHair.NL.Pages
 {
+    // PageModel seviyesinde uygulanır
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class ReserverenModel : PageModel
     {
         private readonly AppDbContext _db;
         public ReserverenModel(AppDbContext db) => _db = db;
 
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        // /Reserveren?handler=DisabledDates&year=YYYY&month=M
         public async Task<IActionResult> OnGetDisabledDates(int year, int month)
         {
+            // Ara cache/proxy’leri de kapat
             Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0";
             Response.Headers["Pragma"] = "no-cache";
 

@@ -32,18 +32,19 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(pgConn, o => o.CommandTimeout(15));
 });
 
-// ✅ Needed by AvailabilityService (IMemoryCache)
+// IMemoryCache (AvailabilityService/slot cache)
 builder.Services.AddMemoryCache();
 
+// App services
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHostedService<HoldSweeper>();
 builder.Services.AddSignalR();
 
-// availability rules service
+// Availability rules service
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
-// SMTP options
+// SMTP options (if you bind to a SmtpOptions class elsewhere)
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 
 // Auth
@@ -98,7 +99,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
-    await SeedData.EnsureSeededAsync(db);
+    await SeedData.EnsureSeededAsync(db); // ensure idempotent (don't overwrite admin-changed hours)
 }
 
 app.Run();

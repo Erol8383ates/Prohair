@@ -1996,3 +1996,46 @@ main {
 /* (optional) a bit tighter inside cards */
 .card .price-list li { padding: 6px 0; }
 
+
+/* === MOBILE-ONLY: hero caption'ı yukarı al ve daha okunur yap === */
+@media (max-width: 980px) {
+  /* Caption'ı ekranın üst-orta bandına taşı */
+  .slider.fullbleed .caption {
+    left: 16px;
+    right: 16px;
+    bottom: auto;                                      /* alttan kaldır */
+    top: calc(12dvh + env(safe-area-inset-top, 0px));  /* iOS güvenli alan + üstten pay */
+    max-width: 100%;
+    gap: 8px;
+  }
+
+  /* Mobilde başlığı biraz küçült, taşmayı engelle */
+  .slider.fullbleed .caption h1 {
+    font-size: clamp(20px, 6.2vw, 28px);
+    line-height: 1.15;
+  }
+
+  .slider.fullbleed .caption p {
+    font-size: 14px;
+  }
+
+  /* Alttaki buton/dots ile çakışmayı azalt */
+  .slider-dots {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+
+  /* Üstteki yazı için üst tarafı biraz daha karart (sadece mobil) */
+  .slider.fullbleed .slide::before {
+    background: linear-gradient(
+      180deg,
+      rgba(0,0,0,.55) 0%,
+      rgba(0,0,0,.25) 45%,
+      rgba(0,0,0,.60) 100%
+    );
+  }
+}
+
+/* Çok kısa ekranlar (yükseklik < 700px) için biraz daha yukarı al */
+@media (max-height: 700px) and (max-width: 980px) {
+  .slider.fullbleed .caption { top: calc(16dvh + env(safe-area-inset-top, 0px)); }
+}

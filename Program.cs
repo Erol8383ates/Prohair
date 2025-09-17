@@ -9,6 +9,7 @@ using ProHair.NL.Hubs;
 using ProHair.NL.HostedServices;
 using ProHair.NL.Services;
 using System;
+using System.Threading.Tasks; // <-- Task.CompletedTask için
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,14 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHostedService<HoldSweeper>();
-builder.Services.AddSignalR();
+
+// ✅ SignalR (kopma azaltma)
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = false;
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);     // sunucu pingi
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);  // client’tan ping bekleme süresi
+});
 
 // Availability rules service
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
@@ -80,12 +88,37 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+// ✅ Proxy başlıklarını doğru oku (host dahil)
+var fwd = new ForwardedHeadersOptions
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                     | ForwardedHeaders.XForwardedProto
+                     | ForwardedHeaders.XForwardedHost,
+    RequireHeaderSymmetry = false
+};
+// Proxy listesi bilinmiyorsa hepsine güven (PaaS/LB arkasında yaygın)
+fwd.KnownNetworks.Clear();
+fwd.KnownProxies.Clear();
+app.UseForwardedHeaders(fwd);
 
 app.UseHttpsRedirection();
+
+// ✅ Canonical redirect: haarmaster.be -> www.haarmaster.be (yalnızca Prod)
+if (app.Environment.IsProduction())
+{
+    app.Use(async (ctx, next) =>
+    {
+        var host = ctx.Request.Host.Host;
+        if (string.Equals(host, "haarmaster.be", StringComparison.OrdinalIgnoreCase))
+        {
+            var newUrl = $"https://www.haarmaster.be{ctx.Request.PathBase}{ctx.Request.Path}{ctx.Request.QueryString}";
+            ctx.Response.Redirect(newUrl, permanent: true);
+            return;
+        }
+        await next();
+    });
+}
+
 app.UseStaticFiles();
 
 app.UseRouting();

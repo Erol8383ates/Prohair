@@ -1,13 +1,38 @@
-﻿@{
-    var title = ViewData["Title"] as string ?? "ProHair Studio";
+@{
+    var rawTitle = ViewData["Title"] as string ?? "ProHair Studio";
+
+    // Sayfa başlığı (markayla birlikte)
+    var fullTitle = rawTitle == "ProHair Studio"
+        ? "Haarmaster — ProHair Studio | Premium protheses & haaroplossingen"
+        : $"{rawTitle} — Haarmaster | ProHair Studio";
+
+    // Açıklama (istersen ViewData["Description"] ile sayfaya özel verebilirsin)
+    var description = ViewData["Description"] as string
+        ?? "Haarmaster (ProHair Studio): premium haarprotheses en haaroplossingen. Natuurlijk resultaat, maatwerk en discreet advies.";
+
+    // Canonical: her zaman www.haarmaster.be üzerinden
+    var baseHost = "www.haarmaster.be";
+    var path = (Context?.Request?.Path.HasValue ?? false) ? Context.Request.Path.Value : "/";
+    path = string.IsNullOrEmpty(path) ? "/" : (path == "/" ? "/" : path.TrimEnd('/'));
+    var canonicalUrl = $"https://{baseHost}{path}";
 }
 <!doctype html>
 <html lang="nl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@title</title>
-    <meta name="description" content="Premium haarprotheses voor vrouwen en mannen. Natuurlijk resultaat, maatwerk en discreet advies.">
+
+    <title>@fullTitle</title>
+    <meta name="description" content="@description" />
+    <link rel="canonical" href="@canonicalUrl" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Haarmaster" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@fullTitle" />
+    <meta property="og:description" content="@description" />
+    <meta property="og:url" content="@canonicalUrl" />
+
     <meta name="theme-color" content="#2c3442" />
 
     <!-- Fonts -->
@@ -46,7 +71,7 @@
             <nav class="menu">
                 <a class="@(Context.Request.Path == "/" ? "active" : null)" asp-page="/Index">Home</a>
                 <a asp-page="/Mannen">Voor Mannen</a>
-                 <!--  <a asp-page="/VoorNa">Voor &amp; Na</a> -->
+                <!--  <a asp-page="/VoorNa">Voor &amp; Na</a> -->
                 <a asp-page="/Prijzen">Prijzen</a>
                 <a href="/Reserveren">Reserveren</a>
                 <a asp-page="/OverOns">Over ons</a>

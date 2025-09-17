@@ -4,18 +4,7 @@
     <loc>https://www.haarmaster.be/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://www.haarmaster.be/Mannen</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.haarmaster.be/Prijzen</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2025-09-17</lastmod>
   </url>
 
   <url>
@@ -25,22 +14,26 @@
   </url>
 
   <url>
-    <loc>https://www.haarmaster.be/OverOns</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
+    <loc>https://www.haarmaster.be/Prijzen</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://www.haarmaster.be/Contact</loc>
-    <changefreq>yearly</changefreq>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://www.haarmaster.be/Mannen</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  
   <url>
-    <loc>https://www.haarmaster.be/VoorNa</loc>
+    <loc>https://www.haarmaster.be/OverOns</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  
-
+    <priority>0.6</priority>
+  </url>
 </urlset>

@@ -1,11 +1,4 @@
 User-agent: *
 Allow: /
 
-# Arama motorları için gizli/teknik yolları kapat
-Disallow: /admin
-Disallow: /api/
-Disallow: /hubs/
-Disallow: /_framework/
-Disallow: /_content/
-
 Sitemap: https://www.haarmaster.be/sitemap.xml

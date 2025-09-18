@@ -53,7 +53,7 @@
     @RenderSection("Head", required: false)
     @RenderSection("Styles", required: false)
 
-    <!-- JSON-LD: Organization + HairSalon (Razor için @ işaretleri kaçırıldı) -->
+    <!-- JSON-LD: Organization + HairSalon (Razor uyumlu) -->
     <script type="application/ld+json">
     {
       "@@context": "https://schema.org",
@@ -186,12 +186,12 @@
                 if (e) { e.preventDefault(); e.stopPropagation(); }
                 modal.classList.add('show');
                 modal.setAttribute('aria-hidden', 'false');
-                document.body.classList.add('ph-no-scroll');
                 if (closeB) { closeB.focus(); }
+                document.body.classList.add('ph-no-scroll');
             }
             function closeModal() {
                 modal.classList.remove('show');
-                modal.setAttribute('aria-hidden', 'true'); // <-- typo düzeltildi
+                modal.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('ph-no-scroll');
             }
 

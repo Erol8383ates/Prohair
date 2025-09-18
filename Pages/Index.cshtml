@@ -1,6 +1,8 @@
-﻿@page
+@page
 @{
-    ViewData["Title"] = "ProHair Studio – Premium Protheses & Haaroplossingen";
+    // Layout başlık kuralı için Title sayfa adı: Home sayfasında "ProHair Studio"
+    ViewData["Title"] = "ProHair Studio";
+    ViewData["Description"] = "Haarmaster (ProHair Studio): premium haarprotheses en haaroplossingen. Natuurlijk resultaat, maatwerk en discreet advies.";
 }
 
 <!-- === HERO SLIDER (FULL-BLEED + CAPTION) === -->
@@ -12,7 +14,7 @@
             <div class="slide active">
                 <img src="~/images/img4.jpg" alt="Heren haarprothese barber-finish" asp-append-version="true" />
                 <div class="caption">
-                    <h1>Heren haarprotheses & Barbershop: actief, natuurlijk, zorgeloos</h1>
+                    <h1>Haarmaster — Heren haarprotheses & Barbershop: actief, natuurlijk, zorgeloos</h1>
                     <p>Lace front of skin base met medische hechting. Sporten, douchen en slapen mogelijk — met barber-grade finish.</p>
                 </div>
             </div>
@@ -52,7 +54,6 @@
     </div>
 </section>
 
-<!-- === EXISTING HERO (bırakılabilir) === -->
 <section class="container section hero">
     <div>
         <div class="hero-badges" data-aos="fade-down">
@@ -60,7 +61,7 @@
             <span class="badge">Onzichtbare haarlijn</span>
             <span class="badge">Medisch & Cosmetisch</span>
         </div>
-        <h1 data-aos="fade-up">Premium Haarprotheses voor een natuurlijk, zelfverzekerd leven</h1>
+        <h1 data-aos="fade-up">Haarmaster — Premium Haarprotheses voor een natuurlijk, selbstverzekerd leven</h1>
         <p data-aos="fade-up" data-aos-delay="100">
             Wij ontwerpen hyperrealistische haaroplossingen voor vrouwen en mannen.
             Discreet consult, hoogwaardige materialen en directe plaatsing mogelijk.
@@ -173,21 +174,16 @@
             </div>
         </div>
 
-
-
         <!-- 3) Studio promo + social -->
         <div class="card promo-social" data-aos="fade-left" data-aos-delay="150">
             <h3 style="margin-top:0">Volg ProHair Studio</h3>
             <p class="muted">Voor/na’s, tips en nieuws uit de studio.</p>
 
             <div class="social-grid">
-            
-
                 <a class="sbtn ig" href="https://www.instagram.com/haarmasterprothesecentrum/" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.8" /><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8" /><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" /></svg>
                     Instagram
                 </a>
-
                 <a class="sbtn wa" href="https://wa.me/32472980895" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.5 3.5A10 10 0 0 0 3.6 20l-1.1 3.4 3.5-1a10 10 0 0 0 14.6-8.9c0-2.7-1-5.1-3-6.9ZM12 20.4a8.3 8.3 0 0 1-4.2-1.2l-.3-.2-2.5.7.7-2.4-.2-.4A8.4 8.4 0 1 1 12 20.4Zm4.7-5.5c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2l-.7.8c-.2.2-.4.2-.7.1a6.6 6.6 0 0 1-3.1-2.7c-.2-.4 0-.6.1-.7l.5-.5c.2-.2.2-.3.3-.5l.1-.5c0-.2 0-.4 0-.6 0-.2-.6-.5-.8-.6h-.5c-.2 0-.5 0-.7.3s-1 1-1 2.4 1.1 2.7 1.2 2.9c.1.2 2.1 3.1 5.1 4.2.7.3 1.3.4 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.8-.8 2-1.6.3-.7.3-1.4.2-1.6-.1-.2-.3-.2-.6-.4Z" /></svg>
                     WhatsApp
@@ -204,8 +200,6 @@
                 Discreet, op afspraak • Gratis parkeren
             </div>
         </div>
-
-
 
         @section Scripts {
             <script src="~/js/slider.js" asp-append-version="true"></script>

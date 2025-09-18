@@ -1,12 +1,14 @@
 @{
     var rawTitle = ViewData["Title"] as string ?? "ProHair Studio";
 
-    // Sayfa başlığı (markayla birlikte)
-    var fullTitle = rawTitle == "ProHair Studio"
+    // SAYFA BAŞLIĞI — Haarmaster'ı öne çıkar:
+    // Örn: Home: "Haarmaster — ProHair Studio | Premium protheses & haaroplossingen"
+    // Diğer sayfa: "Haarmaster — Voor Mannen | ProHair Studio"
+    var fullTitle = (rawTitle == "ProHair Studio")
         ? "Haarmaster — ProHair Studio | Premium protheses & haaroplossingen"
-        : $"{rawTitle} — Haarmaster | ProHair Studio";
+        : $"Haarmaster — {rawTitle} | ProHair Studio";
 
-    // Açıklama (istersen ViewData["Description"] ile sayfaya özel verebilirsin)
+    // Açıklama (sayfa ViewData["Description"] ile override edebilir)
     var description = ViewData["Description"] as string
         ?? "Haarmaster (ProHair Studio): premium haarprotheses en haaroplossingen. Natuurlijk resultaat, maatwerk en discreet advies.";
 
@@ -50,6 +52,28 @@
 
     @RenderSection("Head", required: false)
     @RenderSection("Styles", required: false)
+
+    <!-- JSON-LD: Organization + HairSalon -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["Organization","HairSalon"],
+      "name": "Haarmaster",
+      "alternateName": "ProHair Studio",
+      "url": "https://www.haarmaster.be/",
+      "logo": "https://www.haarmaster.be/images/log.png",
+      "sameAs": [
+        "https://www.instagram.com/haarmasterprothesecentrum/",
+        "https://wa.me/32472980895"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lier",
+        "addressCountry": "BE"
+      },
+      "telephone": "+32 472 98 08 95"
+    }
+    </script>
 </head>
 <body>
     <header class="header">
@@ -64,7 +88,7 @@
                              width="512" height="512"
                              loading="eager" decoding="async" />
                     </span>
-                    <span class="brand-text">ProHair Studio</span>
+                    <span class="brand-text">Haarmaster | ProHair Studio</span>
                 </a>
             </div>
 
@@ -92,7 +116,7 @@
                              width="512" height="512"
                              loading="eager" decoding="async" />
                     </span>
-                    <span class="brand-text">ProHair Studio</span>
+                    <span class="brand-text">Haarmaster | ProHair Studio</span>
                 </a>
 
                 <div class="mobile-links">
@@ -116,7 +140,7 @@
     <footer class="footer section">
         <div class="container">
             <div class="subfoot">
-                <span>© @DateTime.Now.Year ProHair Studio</span>
+                <span>© @DateTime.Now.Year Haarmaster | ProHair Studio</span>
                 <span>Made with ♥︎</span>
             </div>
         </div>
@@ -167,7 +191,7 @@
             }
             function closeModal() {
                 modal.classList.remove('show');
-                modal.setAttribute('aria-hidden', 'true');
+                modal.setAttribute('aria-hidden", "true");
                 document.body.classList.remove('ph-no-scroll');
             }
 

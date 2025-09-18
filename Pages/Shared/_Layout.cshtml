@@ -53,11 +53,11 @@
     @RenderSection("Head", required: false)
     @RenderSection("Styles", required: false)
 
-    <!-- JSON-LD: Organization + HairSalon -->
+    <!-- JSON-LD: Organization + HairSalon (Razor için @ işaretleri kaçırıldı) -->
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": ["Organization","HairSalon"],
+      "@@context": "https://schema.org",
+      "@@type": ["Organization","HairSalon"],
       "name": "Haarmaster",
       "alternateName": "ProHair Studio",
       "url": "https://www.haarmaster.be/",
@@ -67,7 +67,7 @@
         "https://wa.me/32472980895"
       ],
       "address": {
-        "@type": "PostalAddress",
+        "@@type": "PostalAddress",
         "addressLocality": "Lier",
         "addressCountry": "BE"
       },
@@ -187,16 +187,16 @@
                 modal.classList.add('show');
                 modal.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('ph-no-scroll');
-                closeB.focus();
+                if (closeB) { closeB.focus(); }
             }
             function closeModal() {
                 modal.classList.remove('show');
-                modal.setAttribute('aria-hidden", "true");
+                modal.setAttribute('aria-hidden', 'true'); // <-- typo düzeltildi
                 document.body.classList.remove('ph-no-scroll');
             }
 
             openers.forEach(el => el.addEventListener('click', openModal));
-            closeB.addEventListener('click', closeModal);
+            if (closeB) { closeB.addEventListener('click', closeModal); }
             modal.addEventListener('click', (e) => {
                 if (e.target === modal || e.target.classList.contains('ph-logo-backdrop')) closeModal();
             });

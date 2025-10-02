@@ -9,6 +9,9 @@ using TimeZoneConverter;
 
 namespace ProHair.NL.Services
 {
+    /// <summary>
+    /// Açılış/blackout/notice kuralları + veritabanına göre slot uygunluğu.
+    /// </summary>
     public sealed class AvailabilityService : IAvailabilityService
     {
         private readonly AppDbContext _db;
@@ -22,6 +25,7 @@ namespace ProHair.NL.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync() ?? new BusinessSettings();
 
+            // Timezone (Windows/Linux uyumlu)
             TimeZoneInfo tz;
             try
             {
@@ -30,6 +34,7 @@ namespace ProHair.NL.Services
             }
             catch { tz = TimeZoneInfo.Utc; }
 
+            // UTC -> local
             var localStart = TimeZoneInfo.ConvertTime(startUtc, tz).DateTime;
 
             var date = DateOnly.FromDateTime(localStart);
@@ -38,19 +43,28 @@ namespace ProHair.NL.Services
             var slotMinutes = settings.SlotMinutes > 0 ? settings.SlotMinutes : DefaultSlotMinutes;
             var slotEnd = time.AddMinutes(slotMinutes);
 
+            // Min notice
             var nowLocal = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz).DateTime;
             if (settings.MinNoticeHours > 0 && localStart < nowLocal.AddHours(settings.MinNoticeHours))
                 return false;
 
-            var isBlackout = await _db.BlackoutDates.AsNoTracking()
+            // Blackout
+            var isBlackout = await _db.BlackoutDates
+                .AsNoTracking()
                 .AnyAsync(b => b.Date == date);
             if (isBlackout) return false;
 
-            var wh = await _db.WeeklyOpenHours.AsNoTracking()
+            // Haftalık çalışma saatleri
+            var wh = await _db.WeeklyOpenHours
+                .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Day == localStart.DayOfWeek);
 
-            if (wh is null || wh.IsClosed || wh.Open is null || wh.Close is null) return false;
-            if (time < wh.Open || slotEnd > wh.Close) return false;
+            if (wh is null || wh.IsClosed || wh.Open is null || wh.Close is null)
+                return false;
+
+            // Saat aralığı
+            if (time < wh.Open || slotEnd > wh.Close)
+                return false;
 
             return true;
         }
@@ -62,12 +76,15 @@ namespace ProHair.NL.Services
             CancellationToken ct = default)
         {
             var endUtc = startUtc.AddMinutes(durationMinutes);
+            var now = DateTimeOffset.UtcNow;
 
+            // Overlap: (a.StartUtc < endUtc) AND (a.EndUtc > startUtc)
+            // Block both Confirmed appointments and ACTIVE holds (HoldUntilUtc > now).
             var anyOverlap = await _db.Appointments.AsNoTracking()
                 .Where(a => a.StylistId == stylistId)
                 .Where(a =>
                     a.Status == AppointmentStatus.Confirmed ||
-                    (a.Status == AppointmentStatus.Held && a.HoldUntilUtc > DateTimeOffset.UtcNow))
+                    (a.HoldUntilUtc != null && a.HoldUntilUtc > now))
                 .AnyAsync(a => a.StartUtc < endUtc && a.EndUtc > startUtc, ct);
 
             return !anyOverlap;

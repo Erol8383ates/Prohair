@@ -1,0 +1,25 @@
+# Build artifacts & IDE folders
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Git stuff
+.git
+.gitignore
+
+# Node or other caches (if present)
+node_modules/
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+# Do not ship local secrets files
+appsettings.*.local.json
+secrets.json
+
+# Misc
+Dockerfile.*.backup
+*.swp

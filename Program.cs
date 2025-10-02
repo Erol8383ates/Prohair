@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics; // <-- önemli
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using ProHair.NL.Data;
 using ProHair.NL.Hubs;
 using ProHair.NL.HostedServices;
 using ProHair.NL.Services;
 using System;
-using System.Threading.Tasks; // <-- Task.CompletedTask için
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +34,11 @@ var pgConn =
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseNpgsql(pgConn, o => o.CommandTimeout(15));
-    // EF'nin "PendingModelChangesWarning" uyarısını runtime'da ignore et
+    // Ignore EF PendingModelChangesWarning at runtime
     opt.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 });
 
-// ✅ DataProtection keylerini DB'de sakla (antiforgery fix)
+// ✅ Persist DataProtection keys in DB (antiforgery/session)
 builder.Services.AddDataProtection()
     .PersistKeysToDbContext<AppDbContext>();
 
@@ -50,18 +50,21 @@ builder.Services.AddScoped<BookingService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddHostedService<HoldSweeper>();
 
-// ✅ SignalR (kopma azaltma)
+// ✅ Needed for SendGrid (HTTP API) used by EmailService
+builder.Services.AddHttpClient();
+
+// ✅ SignalR
 builder.Services.AddSignalR(options =>
 {
     options.EnableDetailedErrors = false;
-    options.KeepAliveInterval = TimeSpan.FromSeconds(15);     // sunucu pingi
-    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);  // client’tan ping bekleme süresi
+    options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
 });
 
 // Availability rules service
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
-// SMTP options
+// SMTP options (still fine to bind; EmailService reads IConfiguration directly)
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp"));
 
 // Auth
@@ -88,7 +91,30 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// ✅ Proxy başlıklarını doğru oku (host dahil)
+// ✅ Log which mail provider is active (check Render logs on startup)
+{
+    var cfg = app.Configuration;
+    var hasSendGrid = !string.IsNullOrWhiteSpace(cfg["SendGrid:ApiKey"]);
+    var hasSmtp = !string.IsNullOrWhiteSpace(cfg["Smtp:Host"]) && !string.IsNullOrWhiteSpace(cfg["Smtp:User"]);
+    var provider = hasSendGrid ? "SendGrid" : (hasSmtp ? "SMTP" : "None");
+    app.Logger.LogInformation("Mail provider selected: {Provider}", provider);
+    if (hasSendGrid)
+    {
+        app.Logger.LogInformation("SendGrid FromEmail={From} Name={Name}",
+            cfg["SendGrid:FromEmail"], cfg["SendGrid:FromName"] ?? "ProHair Studio");
+    }
+    else if (hasSmtp)
+    {
+        app.Logger.LogInformation("SMTP Host={Host} Port={Port} SSL={SSL} User={User} From={From}",
+            cfg["Smtp:Host"], cfg["Smtp:Port"], cfg["Smtp:EnableSsl"], cfg["Smtp:User"], cfg["Smtp:FromAddress"] ?? cfg["Smtp:User"]);
+    }
+    else
+    {
+        app.Logger.LogWarning("No email configuration found. Booking/Contact emails will NOT be sent.");
+    }
+}
+
+// ✅ Respect proxy headers
 var fwd = new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor
@@ -96,14 +122,13 @@ var fwd = new ForwardedHeadersOptions
                      | ForwardedHeaders.XForwardedHost,
     RequireHeaderSymmetry = false
 };
-// Proxy listesi bilinmiyorsa hepsine güven (PaaS/LB arkasında yaygın)
 fwd.KnownNetworks.Clear();
 fwd.KnownProxies.Clear();
 app.UseForwardedHeaders(fwd);
 
 app.UseHttpsRedirection();
 
-// ✅ Canonical redirect: haarmaster.be -> www.haarmaster.be (yalnızca Prod)
+// ✅ Canonical redirect (Prod only)
 if (app.Environment.IsProduction())
 {
     app.Use(async (ctx, next) =>
@@ -137,15 +162,12 @@ app.MapGet("/healthz", async (AppDbContext db) =>
     catch (Exception ex) { return Results.Problem(ex.Message, statusCode: 500); }
 });
 
-// Auto-migrate + seed (+ güvenlik ağı)
+// Auto-migrate + seed (+ safety net)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-    // Var olan EF migration’ları uygula
     await db.Database.MigrateAsync();
 
-    // ✅ DataProtectionKeys tablosu yoksa oluştur (Postgres)
     await db.Database.ExecuteSqlRawAsync(@"
         CREATE TABLE IF NOT EXISTS ""DataProtectionKeys"" (
             ""Id"" SERIAL PRIMARY KEY,
@@ -153,7 +175,6 @@ using (var scope = app.Services.CreateScope())
             ""Xml"" text NULL
         );");
 
-    // ✅ Haftalık saatler: Pazartesi kapalı, Pazar açık (idempotent güncelleme)
     await db.Database.ExecuteSqlRawAsync(@"
         UPDATE ""WeeklyOpenHours"" SET ""IsClosed"" = TRUE  WHERE ""Day"" = 1;  -- Monday
         UPDATE ""WeeklyOpenHours"" SET ""IsClosed"" = FALSE WHERE ""Day"" = 0;  -- Sunday

@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Data;
@@ -8,10 +10,8 @@ using TimeZoneConverter;
 namespace ProHair.NL.Services
 {
     /// <summary>
-    /// Tek bir slot başlangıcının, global çalışma saatleri ve blackout günlerine göre
-    /// rezervasyona uygun olup olmadığını kontrol eder.
-    /// Not: Burada stilist/time-off veya servis süresi denetimi yoktur;
-    /// bunlar slot üretimini yapan BookingService tarafında ele alınır.
+    /// Global çalışma saatleri / blackout / min notice kontrolü +
+    /// veritabanındaki randevulara göre slot çakışma kontrolü.
     /// </summary>
     public sealed class AvailabilityService : IAvailabilityService
     {
@@ -21,50 +21,41 @@ namespace ProHair.NL.Services
         // BusinessSettings.SlotMinutes boş/0 ise kullanılacak varsayılan
         private const int DefaultSlotMinutes = 45;
 
+        /// <summary>
+        /// Açılış saatleri, blackout günleri ve min notice kuralları açısından slot uygun mu?
+        /// </summary>
         public async Task<bool> IsSlotBookable(DateTimeOffset startUtc)
         {
-            // Global ayarlar
             var settings = await _db.BusinessSettings
                 .AsNoTracking()
                 .FirstOrDefaultAsync() ?? new BusinessSettings();
 
-            // Timezone (hem Windows hem Linux uyumlu)
-            var tzId = settings.TimeZone;
+            // Timezone (Windows/Linux uyumlu)
             TimeZoneInfo tz;
             try
             {
-                tz = !string.IsNullOrWhiteSpace(tzId)
-                    ? TZConvert.GetTimeZoneInfo(tzId)
-                    : TZConvert.GetTimeZoneInfo("Europe/Brussels");
+                var tzId = string.IsNullOrWhiteSpace(settings.TimeZone) ? "Europe/Brussels" : settings.TimeZone;
+                tz = TZConvert.GetTimeZoneInfo(tzId);
             }
-            catch
-            {
-                tz = TimeZoneInfo.Utc;
-            }
+            catch { tz = TimeZoneInfo.Utc; }
 
-            // UTC -> local
             var localStart = TimeZoneInfo.ConvertTime(startUtc, tz).DateTime;
 
-            // Tarih/saat parçaları
             var date = DateOnly.FromDateTime(localStart);
             var time = TimeOnly.FromDateTime(localStart);
 
-            // Slot uzunluğu: global slot minutes (servis süresi değil)
             var slotMinutes = settings.SlotMinutes > 0 ? settings.SlotMinutes : DefaultSlotMinutes;
             var slotEnd = time.AddMinutes(slotMinutes);
 
-            // Minimum haber süresi (MinNoticeHours)
             var nowLocal = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, tz).DateTime;
             if (settings.MinNoticeHours > 0 && localStart < nowLocal.AddHours(settings.MinNoticeHours))
                 return false;
 
-            // Blackout: tam gün kapalıysa
             var isBlackout = await _db.BlackoutDates
                 .AsNoTracking()
                 .AnyAsync(b => b.Date == date);
             if (isBlackout) return false;
 
-            // Haftalık çalışma saatleri: gün kapalı veya saatler boş ise
             var wh = await _db.WeeklyOpenHours
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Day == localStart.DayOfWeek);
@@ -72,15 +63,33 @@ namespace ProHair.NL.Services
             if (wh is null || wh.IsClosed || wh.Open is null || wh.Close is null)
                 return false;
 
-            // Saat aralığı kontrolü (başlangıç içeride olmalı ve slot bitişi kapanışı aşmamalı)
             if (time < wh.Open || slotEnd > wh.Close)
                 return false;
 
             return true;
         }
+
+        /// <summary>
+        /// Veritabanındaki randevulara (Confirmed) ve süresi dolmamış hold'lara (Held && HoldUntilUtc > now)
+        /// göre bu slot boş mu? (stilist bazında)
+        /// </summary>
+        public async Task<bool> IsSlotFreeAsync(
+            int stylistId,
+            DateTimeOffset startUtc,
+            int durationMinutes,
+            CancellationToken ct = default)
+        {
+            var endUtc = startUtc.AddMinutes(durationMinutes);
+
+            // Overlap kuralı: (a.StartUtc < endUtc) AND (a.EndUtc > startUtc)
+            var anyOverlap = await _db.Appointments.AsNoTracking()
+                .Where(a => a.StylistId == stylistId)
+                .Where(a =>
+                    a.Status == AppointmentStatus.Confirmed ||
+                    (a.Status == AppointmentStatus.Held && a.HoldUntilUtc > DateTimeOffset.UtcNow))
+                .AnyAsync(a => a.StartUtc < endUtc && a.EndUtc > startUtc, ct);
+
+            return !anyOverlap;
+        }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/main

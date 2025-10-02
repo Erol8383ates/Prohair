@@ -1,0 +1,230 @@
+@page
+@{
+    ViewData["Title"] = "Voor & Na – Echte resultaten";
+}
+
+<link rel="stylesheet" href="~/css/voorna.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/ba-pairs.css" asp-append-version="true" />
+
+<!-- ===== HERO + main compare ===== -->
+<section id="vn2" class="container section">
+    <header class="vn2-hero">
+        <div class="vn2-left">
+            <h1>Voor & Na – Echte resultaten</h1>
+            <p class="muted">Sleep de cirkel om te vergelijken. Klik op “Volledig scherm”.</p>
+
+            <div class="vn2-cta">
+                <a class="btn btn-primary" href="/Reserveren">Plan een consult</a>
+                <a class="btn btn-ghost" href="/Prijzen">Bekijk prijzen</a>
+            </div>
+
+            <div class="vn2-chips">
+                <span>Onzichtbare haarlijn</span>
+                <span>Sport &amp; douche-proof</span>
+                <span>Maatwerk</span>
+            </div>
+        </div>
+
+        <div class="vn2-compare big" style="--pos:50%">
+            <!-- IMPORTANT: class="before" and class="after" -->
+            <img class="before" src="~/images/four.jpg" alt="Voor – hero" asp-append-version="true" />
+            <img class="after" src="~/images/voorna/hero-after.jpg" alt="Na – hero" asp-append-version="true" />
+
+            <input class="slider" type="range" min="0" max="100" value="50" aria-label="Vergelijk">
+            <div class="handle" aria-hidden="true"></div>
+            <div class="labels"><span>Voor</span><span>Na</span></div>
+
+            <!-- Use Url.Content for data-* so ~ resolves -->
+          
+            </button>
+        </div>
+    </header>
+
+    <!-- ===== Filters ===== -->
+    <div class="vn2-filters">
+        <button class="pill active" data-filter="all">Alles</button>
+        <button class="pill" data-filter="mannen">Mannen</button>
+        <button class="pill" data-filter="vrouwen">Vrouwen</button>
+        <button class="pill" data-filter="onderhoud">Onderhoud</button>
+    </div>
+
+    <!-- ===== 3 compare cards ===== -->
+    <div class="vn2-grid">
+        <!-- Card 1 (mannen) -->
+        <article class="vn2-card" data-cat="mannen">
+            <div class="vn2-media">
+                <div class="vn2-compare" style="--pos:50%">
+                    <img class="before" src="~/images/four.jpg" alt="Voor – mannen case 1" asp-append-version="true">
+                    <img class="after" src="~/images/three.jpg" alt="Na – mannen case 1" asp-append-version="true">
+                    <input class="slider" type="range" min="0" max="100" value="50" aria-label="Vergelijk">
+                    <div class="handle" aria-hidden="true"></div>
+                    <div class="labels"><span>Voor</span><span>Na</span></div>
+                </div>
+            </div>
+            <div class="vn2-body">
+                <h3>Korte fade + lace front</h3>
+                <p class="muted">Barber-grade afwerking, sport-proof hechting.</p>
+                <div class="tags"><span>Lace</span><span>Fade</span></div>
+                <div class="actions">
+                  
+                    <a class="btn btn-primary" href="/Reserveren">Plan dit resultaat</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Card 2 (vrouwen) -->
+        <article class="vn2-card" data-cat="vrouwen">
+            <div class="vn2-media">
+                <div class="vn2-compare" style="--pos:45%">
+                    <img class="before" src="~/images/four.jpg" alt="Voor – vrouwen case 1" asp-append-version="true">
+                    <img class="after" src="~/images/two.jpg" alt="Na – vrouwen case 1" asp-append-version="true">
+                    <input class="slider" type="range" min="0" max="100" value="45" aria-label="Vergelijk">
+                    <div class="handle" aria-hidden="true"></div>
+                    <div class="labels"><span>Voor</span><span>Na</span></div>
+                </div>
+            </div>
+            <div class="vn2-body">
+                <h3>Natuurlijk volume</h3>
+                <p class="muted">Licht en ademend – dagelijks comfort.</p>
+                <div class="tags"><span>Volume</span><span>Vrouwen</span></div>
+                <div class="actions">
+                    
+                    <a class="btn btn-primary" href="/Reserveren">Vrijblijvend consult</a>
+                </div>
+            </div>
+        </article>
+
+        <!-- Card 3 (onderhoud) -->
+        <article class="vn2-card" data-cat="onderhoud">
+            <div class="vn2-media">
+                <div class="vn2-compare" style="--pos:60%">
+                    <img class="before" src="~/images/four.jpg" alt="Voor – onderhoud case 1" asp-append-version="true">
+                    <img class="after" src="~/images/two.jpg" alt="Na – onderhoud case 1" asp-append-version="true">
+                    <input class="slider" type="range" min="0" max="100" value="60" aria-label="Vergelijk">
+                    <div class="handle" aria-hidden="true"></div>
+                    <div class="labels"><span>Voor</span><span>Na</span></div>
+                </div>
+            </div>
+            <div class="vn2-body">
+                <h3>Re-bonding &amp; barber finish</h3>
+                <p class="muted">Schoonmaken, herbevestigen en shape – 60 min.</p>
+                <div class="tags"><span>Onderhoud</span><span>Barber</span></div>
+                <div class="actions">
+                 
+                    <a class="btn btn-primary" href="/Reserveren">Onderhoud boeken</a>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+<!-- ===== Side-by-side Pairs gallery (12 items) ===== -->
+<section id="baPairs" class="container section">
+    <h2 style="margin:0 0 8px">Voor &amp; Na – Cases</h2>
+    <p class="muted">Twee foto’s naast elkaar. Klik om in volledig scherm te bekijken.</p>
+
+    <div class="pairs-grid">
+        @* Row 1 *@
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 1" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 1" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0">
+                <span class="seg before">Voor</span>
+                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+                <span class="seg after">Na</span>
+            </figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 2" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 2" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0">
+                <span class="seg before">Voor</span>
+                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+                <span class="seg after">Na</span>
+            </figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 3" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 3" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0">
+                <span class="seg before">Voor</span>
+                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+                <span class="seg after">Na</span>
+            </figcaption>
+        </figure>
+
+        @* Row 2 *@
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 4" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 4" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/one.jpg" alt="Voor – case 5" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/two.jpg" alt="Na – case 5" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 6" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 6" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        @* Row 3 *@
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 7" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/three.jpg" alt="Na – case 7" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 8" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/two.jpg" alt="Na – case 8" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/three.jpg" alt="Voor – case 9" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 9" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        @* Row 4 *@
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 10" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 10" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 11" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/four.jpg" alt="Na – case 11" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+
+        <figure class="pair">
+            <img class="before" src="~/images/four.jpg" alt="Voor – case 12" loading="lazy" asp-append-version="true">
+            <span class="divider" aria-hidden="true"></span>
+            <img class="after" src="~/images/two.jpg" alt="Na – case 12" loading="lazy" asp-append-version="true">
+            <figcaption class="pill" role="button" tabindex="0"><span class="seg before">Voor</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" /></svg><span class="seg after">Na</span></figcaption>
+        </figure>
+    </div>
+</section>
+
+<script src="~/js/voorna.js" asp-append-version="true"></script>
+<script src="~/js/ba-pairs.js" asp-append-version="true"></script>

@@ -1,0 +1,204 @@
+﻿@page
+@{
+    ViewData["Title"] = "Voor Vrouwen – ProHair Studio";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/vrouwen.css" asp-append-version="true" />
+}
+
+<section class="container section vv">
+    <!-- HERO -->
+    <header class="vv-hero" data-aos="fade-up">
+        <h1>Haaroplossingen voor vrouwen</h1>
+        <p class="muted">
+            Zacht, discreet en vrouwvriendelijk. Van lichte verdunning tot volledige haarprothese – altijd op maat en met respect voor jouw privacy.
+        </p>
+        <div class="vv-hero-actions">
+            <a class="btn btn-primary" asp-page="/Reserveren">Plan een gratis consult</a>
+            <a class="btn btn-ghost" asp-page="/Contact">Vragen? Neem contact op</a>
+        </div>
+    </header>
+
+    <!-- TRUST STRIP -->
+    <div class="vv-trust" data-aos="fade-up" data-aos-delay="50">
+        <div>🫶 Privacy-first</div>
+        <div>🧴 Huidvriendelijke bevestiging</div>
+        <div>🎀 Natuurlijk resultaat</div>
+        <div>🤝 Vergoeding mogelijk</div>
+    </div>
+
+    <!-- SOLUTIONS -->
+    <div class="vv-grid3">
+        <article class="vv-card" data-aos="fade-up">
+            <span class="vv-badge vv-badge-gold">Maatwerk</span>
+            <h3>Volledige haarprothese</h3>
+            <p class="muted">Onzichtbare lace front, eigen scheiding en kleur/dichtheid op maat. Comfortabel en natuurlijk.</p>
+            <a class="btn btn-secondary" asp-page="/Reserveren">Gratis intake</a>
+        </article>
+
+        <article class="vv-card" data-aos="fade-up" data-aos-delay="100">
+            <span class="vv-badge">Topper / partial</span>
+            <h3>Lichtgewicht oplossing</h3>
+            <p class="muted">Ideaal bij dunner haar op kruin/inhammen. Ventilerende basis, haast niet voelbaar.</p>
+            <a class="btn btn-secondary" asp-page="/Reserveren">Probeer in studio</a>
+        </article>
+
+        <article class="vv-card" data-aos="fade-up" data-aos-delay="200">
+            <span class="vv-badge">Medisch</span>
+            <h3>Prothese bij chemo</h3>
+            <p class="muted">Zachte huid-opties en nazorg. Coaching rondom haarverlies, discretie verzekerd.</p>
+            <a class="btn btn-secondary" asp-page="/Contact">Meer informatie</a>
+        </article>
+    </div>
+
+    <!-- WHY US -->
+    <div class="vv-benefits">
+        <div class="vv-benefit" data-aos="fade-up">
+            <h4>Comfort &amp; pasvorm</h4>
+            <p>Ultralichte bases, zachte randen en maatwerk contour voor langdurig, comfortabel dragen.</p>
+        </div>
+        <div class="vv-benefit" data-aos="fade-up" data-aos-delay="60">
+            <h4>Kleurmatching op maat</h4>
+            <p>We blenden highlights/lowlights en dichtheid voor een naadloze aansluiting op jouw look.</p>
+        </div>
+        <div class="vv-benefit" data-aos="fade-up" data-aos-delay="120">
+            <h4>Snel &amp; discreet traject</h4>
+            <p>Afzonderlijke ruimte, 1-op-1 begeleiding. Intake mogelijk binnen enkele dagen.</p>
+        </div>
+        <div class="vv-benefit" data-aos="fade-up" data-aos-delay="180">
+            <h4>Nazorg zonder gedoe</h4>
+            <p>Herplaatsing, onderhoud en tips voor thuis. We blijven bereikbaar voor vragen.</p>
+        </div>
+    </div>
+
+    <!-- STEPS -->
+    <section class="vv-steps" data-aos="fade-up">
+        <h2>Hoe werkt het?</h2>
+        <ol class="vv-steps-list">
+            <li>
+                <span class="nbr">1</span>
+                <div><strong>Gratis intake (30 min)</strong><br />We luisteren, meten en bespreken opties &amp; bevestiging.</div>
+            </li>
+            <li>
+                <span class="nbr">2</span>
+                <div><strong>Keuze &amp; kleurmatch</strong><br />Topper of volledige prothese, kleur/dichtheid exact op maat.</div>
+            </li>
+            <li>
+                <span class="nbr">3</span>
+                <div><strong>Plaatsing &amp; styling</strong><br />Rustig in een aparte ruimte; natuurlijke scheiding en kapsel.</div>
+            </li>
+            <li>
+                <span class="nbr">4</span>
+                <div><strong>Nazorg</strong><br />Advies, onderhoudsmomenten en altijd laagdrempelig contact.</div>
+            </li>
+        </ol>
+    </section>
+
+    <!-- KEUZEHULP -->
+    <section class="vv-grid3 vv-kz" data-aos="fade-up">
+        <article class="vv-card">
+            <h3>Chemo / medisch</h3>
+            <p class="muted">Zeer zachte bevestiging en ademende bases voor gevoelige huid.</p>
+            <ul class="vv-bullets">
+                <li>Lace of mono-bases</li>
+                <li>Huidvriendelijke lijm/tapes</li>
+                <li>Discreet passen met begeleiding</li>
+            </ul>
+            <a class="btn btn-secondary" asp-page="/Contact">Vraag medisch advies</a>
+        </article>
+        <article class="vv-card">
+            <h3>Dunner wordend haar</h3>
+            <p class="muted">Topper/partial voor volume op kruin zonder full cover.</p>
+            <ul class="vv-bullets">
+                <li>Lichtgewicht, ventilerend</li>
+                <li>Clip-in of semi-permanent</li>
+                <li>Blend met eigen haar</li>
+            </ul>
+            <a class="btn btn-secondary" asp-page="/Reserveren">Probeer in studio</a>
+        </article>
+        <article class="vv-card">
+            <h3>Volledige dekking</h3>
+            <p class="muted">Maatwerk look met natuurlijke haarlijn en scheiding.</p>
+            <ul class="vv-bullets">
+                <li>Lace front, eigen parting</li>
+                <li>Kleur/dichtheid op maat</li>
+                <li>Styling inbegrepen</li>
+            </ul>
+            <a class="btn btn-secondary" asp-page="/Reserveren">Gratis intake</a>
+        </article>
+    </section>
+
+    <!-- SMALL MOCKUPS -->
+    <div class="vv-thumbs">
+        <figure class="vv-thumb" data-aos="zoom-in">
+            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&auto=format&fit=crop&q=75"
+                 alt="Voorbeeld topper vrouwelijke haarlijn" loading="lazy" />
+            <figcaption>Topper – volume bij kruin</figcaption>
+        </figure>
+        <figure class="vv-thumb" data-aos="zoom-in" data-aos-delay="80">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=75"
+                 alt="Zachte lace front, natuurlijke scheiding" loading="lazy" />
+            <figcaption>Zachte lace front</figcaption>
+        </figure>
+        <figure class="vv-thumb" data-aos="zoom-in" data-aos-delay="160">
+            <img src="https://images.unsplash.com/photo-1487412912498-0447578fcca8?w=600&auto=format&fit=crop&q=75"
+                 alt="Comfortabele basis – licht en ademend" loading="lazy" />
+            <figcaption>Comfortabele basis</figcaption>
+        </figure>
+    </div>
+
+    <!-- CARE -->
+    <section class="vv-care" data-aos="fade-up">
+        <h2>Nazorg &amp; onderhoud</h2>
+        <div class="vv-care-grid">
+            <div class="vv-card">
+                <h4>Herplaatsing</h4>
+                <p class="muted">Reiniging, lijm/tape wissel en styling. Duur ±60–90 min.</p>
+            </div>
+            <div class="vv-card">
+                <h4>Thuisadvies</h4>
+                <p class="muted">Wassen, drogen en bescherming tegen hitte/styling uitgelegd.</p>
+            </div>
+            <div class="vv-card">
+                <h4>Snelle check</h4>
+                <p class="muted">Randen bijwerken of klein onderhoud tussen afspraken door.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSURANCE / PAPERWORK -->
+    <div class="vv-callout vv-insurance" data-aos="fade-up">
+        <div>
+            <strong>Vergoeding &amp; documentatie</strong><br />
+            In veel gevallen is (gedeeltelijke) vergoeding mogelijk. We helpen met foto’s, productinfo en offerte voor de zorgverzekeraar.
+        </div>
+        <div class="vv-callout-actions">
+            <a class="btn btn-primary" asp-page="/Contact">Hulp bij aanvraag</a>
+            <a class="btn btn-ghost" asp-page="/Prijzen">Prijzen bekijken</a>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="vv-faq" data-aos="fade-up">
+        <h2>Veelgestelde vragen</h2>
+        <details open>
+            <summary>Hoe lang gaat een haarwerk mee?</summary>
+            <p>Afhankelijk van type en draagwijze gemiddeld 6–12 maanden. Met zorgvuldig onderhoud vaak langer.</p>
+        </details>
+        <details>
+            <summary>Kan ik sporten of (voorzichtig) zwemmen?</summary>
+            <p>Ja. Bespreek je activiteiten; we adviseren geschikte bevestiging en nazorg om grip en comfort te behouden.</p>
+        </details>
+        <details>
+            <summary>Hoe snel na de intake kan ik starten?</summary>
+            <p>Vaak binnen 1–2 weken. Soms sneller, afhankelijk van voorraad/maatwerk en jouw agenda.</p>
+        </details>
+        <details>
+            <summary>Kan ik mijn eigen haar combineren met een topper?</summary>
+            <p>Absoluut. We blenden kleur, textuur en scheiding zodat het geheel natuurlijk oogt.</p>
+        </details>
+    </div>
+
+
+</section>

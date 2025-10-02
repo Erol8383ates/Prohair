@@ -1,0 +1,582 @@
+@page "/Reserveren"
+@model ProHair.NL.Pages.ReserverenModel
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Reserveren";
+}
+<style>
+:root { --kb: 0px; } /* keyboard-safe padding variable */
+
+/* ===== Page layout ===== */
+.resv-wrap{max-width:1200px;margin:48px auto;padding:0 20px;}
+.resv-hero h1{font-size:clamp(28px,3.2vw,42px);line-height:1.1;margin:0 0 8px;}
+.resv-hero p{opacity:.8;margin:0 0 22px;}
+.resv-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15);backdrop-filter:blur(6px);}
+.resv-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:18px;}
+.resv-field label{display:block;font-weight:600;font-size:14px;margin:0 0 6px;opacity:.95;}
+.resv-input,.resv-select{width:100%;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#f5f5f5;padding:0 12px;}
+.resv-select option{color:#111;}
+.resv-toolbar{display:flex;gap:12px;align-items:center;padding:0 18px 14px;}
+.resv-btn{height:44px;padding:0 16px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:linear-gradient(180deg,#FFE6A8,#E4C66B);color:#1a1a1a;font-weight:800;cursor:pointer;}
+.resv-btn:disabled{opacity:.6;cursor:default;}
+.resv-slots{padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+.resv-slot{padding:12px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.18);color:#111;font-weight:800;letter-spacing:.2px;cursor:pointer;text-align:center;transition:.2s transform,.2s background,.2s border-color,.2s box-shadow;box-shadow:0 6px 16px rgba(0,0,0,.15);}
+.resv-slot:hover{transform:translateY(-2px);background:rgba(255,255,255,.24);}
+.resv-slot:active{transform:translateY(0);box-shadow:none;}
+.resv-slot[disabled]{opacity:.45;cursor:default;}
+.resv-empty{padding:28px;text-align:center;opacity:.8;font-style:italic;}
+
+/* skeleton */
+.resv-skeleton{height:44px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.22),rgba(255,255,255,.10));animation:resv-shimmer 1.2s infinite;background-size:200px 100%;}
+@@keyframes resv-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+
+/* sticky drawer */
+.resv-drawer{position:fixed;left:0;right:0;bottom:0;background:rgba(18,18,18,.96);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -10px 30px rgba(0,0,0,.4);transform:translateY(110%);transition:.28s transform;z-index:9999;}
+.resv-drawer.open{transform:translateY(0);}
+.resv-drawer-inner{max-width:1200px;margin:0 auto;padding:18px 20px;display:grid;gap:14px;grid-template-columns:1.2fr 1fr auto;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px + var(--kb));}
+.resv-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);font-weight:700;}
+.resv-input-sm{height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#f5f5f5;padding:0 12px;width:100%;}
+.resv-btn-primary{height:42px;padding:0 16px;border-radius:10px;border:1px solid rgba(0,0,0,.25);background:linear-gradient(180deg,#A5F07C,#73DC52);color:#0f1b0f;font-weight:900;cursor:pointer;}
+.resv-btn-ghost{height:42px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.28);background:transparent;color:#f5f5f5;font-weight:800;cursor:pointer;}
+.resv-input-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* modal */
+.resv-modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9998;}
+.resv-modal-backdrop.open{display:flex;}
+.resv-modal{background:#0f1115;border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:20px;max-width:520px;width:calc(100% - 32px);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.resv-modal h3{margin:0 0 6px;font-size:22px;}
+.resv-modal p{opacity:.9;margin:0 0 14px;}
+
+/* toasts */
+.resv-toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:10px;z-index:99999;}
+.resv-toast{padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(4px);font-weight:700;}
+.resv-toast.err{background:rgba(255,60,60,.12);border-color:rgba(255,60,60,.28);}
+
+/* responsive */
+@@media (max-width:880px){
+  .resv-filters{grid-template-columns:1fr;}
+  .resv-drawer-inner{grid-template-columns:1fr;gap:10px;}
+  .resv-input-row{grid-template-columns:1fr;}
+}
+
+/* Mobile keyboard & iOS zoom helpers */
+.drawer-open { overflow:hidden; }
+input, select, textarea { font-size:16px; } /* iOS: prevent auto-zoom */
+</style>
+
+<div class="resv-wrap">
+    <section class="resv-hero">
+        <h1>Reserveren</h1>
+        <p>Kies een datum en behandeling. Tijdsloten worden realtime bijgewerkt.</p>
+    </section>
+
+    <section class="resv-card">
+        <div class="resv-filters">
+            <div class="resv-field">
+                <label>Datum</label>
+                <input id="date" type="text" class="resv-input" />
+            </div>
+            <div class="resv-field">
+                <label>Behandeling</label>
+                <select id="service" class="resv-select">
+                    <option value="" disabled selected>Laden…</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="resv-toolbar">
+            <button id="load" class="resv-btn">Toon beschikbare tijden</button>
+            <span id="meta" style="opacity:.75;font-size:14px;"></span>
+        </div>
+
+        <div id="slots" class="resv-slots"></div>
+    </section>
+</div>
+
+<!-- drawer -->
+<div id="drawer" class="resv-drawer">
+  <div class="resv-drawer-inner">
+    <div class="resv-chip">
+      <span id="selectedInfo">—</span>
+      <span id="holdCountdown" style="margin-left:8px;opacity:.85;"></span>
+    </div>
+    <div class="resv-input-row">
+      <input id="name" class="resv-input-sm" placeholder="Naam" />
+      <input id="email" class="resv-input-sm" placeholder="E-mail" />
+      <input id="phone" class="resv-input-sm" placeholder="Telefoon" />
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button id="cancelHold" class="resv-btn-ghost">Annuleer</button>
+      <button id="confirm" class="resv-btn-primary">Bevestig</button>
+    </div>
+  </div>
+</div>
+
+<!-- modal -->
+<div id="modal" class="resv-modal-backdrop">
+  <div class="resv-modal">
+    <h3 id="modalTitle">Reservering bevestigd</h3>
+    <p id="modalBody">Tot snel bij ProHair Studio!</p>
+    <button id="modalClose" class="resv-btn-primary" style="width:100%;">Oké</button>
+  </div>
+</div>
+
+<div id="toasts" class="resv-toasts"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+<script>
+(() => {
+  const byId = (id) => document.getElementById(id);
+  const tz = "Europe/Brussels";
+  const API = {
+    config: '/api/availability/config',
+    availability: '/api/availability',
+    hold: '/api/appointments/hold',
+    confirm: '/api/appointments/confirm',
+    release: '/api/appointments/release'
+  };
+
+  let cfg = null, connection = null, defaultStylistId = null;
+  let current = { date: null, serviceId: null, stylistId: null };
+  let hold = { token: null, expiresAtUtc: null, startLocal: null };
+  let activeIso = null;
+  let loadingSlotsCtrl = null, isLoadingSlots = false;
+  let fp = null;
+
+  // keeps last "disabled dates" config from server
+  let lastDisabledConf = { closedDows: [], blackouts: [] };
+
+  // Local Y-M-D (no UTC shift)
+  const yyyyMmDd = (d) => {
+    const dt = (d instanceof Date) ? d : new Date(d);
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, '0');
+    const day = String(dt.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  // Parse "YYYY-MM-DD" safely as local time (avoids mobile UTC shift)
+  const parseYmd = (s) => {
+    const [y,m,d] = s.split('-').map(n => parseInt(n, 10));
+    return new Date(y, (m || 1) - 1, d || 1);
+  };
+
+  // -------- NEW: track & remove slots locally (minimal change) --------
+  let currentSlots = [];
+
+  function removeSlotByIso(iso) {
+    if (!iso) return false;
+    const btn = document.querySelector(`#slots .resv-slot[data-iso="${iso}"]`);
+    if (btn) btn.remove();
+    currentSlots = currentSlots.filter(x => x !== iso);
+    const count = document.querySelectorAll('#slots .resv-slot').length;
+    byId('meta').textContent = count ? `${count} tijdsloten gevonden` : '';
+    if (!count) byId('slots').innerHTML = `<div class="resv-empty">Geen tijden beschikbaar voor deze selectie.</div>`;
+    return !!btn;
+  }
+
+  function getIsoFromMsg(msg) {
+    return msg?.startLocalIso || msg?.startLocal || msg?.startIso || msg?.startUTC || msg?.startUtc || msg?.start || null;
+  }
+  // --------------------------------------------------------------------
+
+  function toast(text, type = "ok") {
+    const box = byId('toasts');
+    const el = document.createElement('div');
+    el.className = `resv-toast ${type}`;
+    el.textContent = text;
+    box.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+
+  function showModal(title, body) {
+    byId('modalTitle').textContent = title;
+    byId('modalBody').textContent = body;
+    byId('modal').classList.add('open');
+  }
+  byId('modalClose').addEventListener('click', () => byId('modal').classList.remove('open'));
+
+  function setLoadingSlots(count = 12) {
+    const slotsEl = byId('slots');
+    slotsEl.innerHTML = "";
+    for (let i=0;i<count;i++){
+      const s = document.createElement('div');
+      s.className = 'resv-skeleton';
+      slotsEl.appendChild(s);
+    }
+    byId('meta').textContent = 'Laden…';
+  }
+
+  function styleActive(btn, isActive) {
+    if (isActive) {
+      btn.style.background = 'linear-gradient(180deg,#FFE6A8,#E4C66B)';
+      btn.style.color = '#111';
+      btn.style.borderColor = 'rgba(0,0,0,.15)';
+      btn.style.boxShadow = '0 8px 18px rgba(0,0,0,.18)';
+    } else {
+      btn.style.background = 'rgba(255,255,255,.18)';
+      btn.style.color = '#111';
+      btn.style.borderColor = 'rgba(255,255,255,.28)';
+      btn.style.boxShadow = '0 6px 16px rgba(0,0,0,.15)';
+    }
+  }
+
+  function renderSlots(list) {
+    currentSlots = Array.isArray(list) ? list.slice() : []; // NEW: remember what we drew
+    const slotsEl = byId('slots');
+    slotsEl.innerHTML = '';
+    if (!list || !list.length) {
+      slotsEl.innerHTML = `<div class="resv-empty">Geen tijden beschikbaar voor deze selectie.</div>`;
+      byId('meta').textContent = '';
+      return;
+    }
+    list.forEach(iso => {
+      const t = new Date(iso);
+      const label = t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const btn = document.createElement('button');
+      btn.className = 'resv-slot';
+      btn.textContent = label;
+      btn.dataset.iso = iso;
+      styleActive(btn, iso === activeIso);
+      btn.onclick = () => holdSlot(iso);
+      slotsEl.appendChild(btn);
+    });
+    byId('meta').textContent = `${list.length} tijdsloten gevonden`;
+  }
+
+  async function findNextAvailable(date, serviceId, stylistId, days = 21) {
+    let d = parseYmd(date);
+    for (let i = 1; i <= days; i++) {
+      d.setDate(d.getDate() + 1);
+      const ds = yyyyMmDd(d);
+      try {
+        const r = await fetch(`${API.availability}?date=${ds}&stylistId=${stylistId}&serviceId=${serviceId}&tz=${encodeURIComponent(tz)}&v=${Date.now()}`);
+        if (!r.ok) continue;
+        const slots = await r.json();
+        if (slots.length > 0) return { date: ds, slots };
+      } catch { }
+    }
+    return null;
+  }
+
+  // --- Disabled days helpers ---
+  function isDateClosedOrBlackout(d) {
+    const day = d.getDay(); // 0..6
+    if (lastDisabledConf.closedDows?.includes(day)) return true;
+    const iso = yyyyMmDd(d);
+    return (lastDisabledConf.blackouts || []).includes(iso);
+  }
+
+  async function refreshDisabledDates(y, m) {
+    try {
+      const res = await fetch(`?handler=DisabledDates&year=${y}&month=${m}&v=${Date.now()}`);
+      if (!res.ok) return; // safe no-op if handler not present
+      const conf = await res.json();
+      lastDisabledConf = {
+        closedDows: conf.closedDows || [],
+        blackouts: conf.blackouts || []
+      };
+      fp.set('disable', [
+        function (d) { return lastDisabledConf.closedDows.includes(d.getDay()); },
+        ...lastDisabledConf.blackouts
+      ]);
+    } catch { }
+  }
+
+  async function setupDatePicker() {
+    const today = new Date();
+    fp = flatpickr("#date", {
+      dateFormat: "Y-m-d",
+      defaultDate: yyyyMmDd(today),
+      minDate: yyyyMmDd(today),
+      disableMobile: true,  // use Flatpickr UI on phones so disabled days work
+      onMonthChange: function (_, __, instance) {
+        const m = instance.currentMonth + 1;
+        const y = instance.currentYear;
+        refreshDisabledDates(y, m);
+      },
+      onOpen: function (_, __, instance) {
+        const m = instance.currentMonth + 1;
+        const y = instance.currentYear;
+        refreshDisabledDates(y, m);
+      },
+      onChange: function () { debouncedLoadSlots(); }
+    });
+    await refreshDisabledDates(today.getFullYear(), today.getMonth()+1);
+  }
+
+  async function loadConfig() {
+    try {
+      const res = await fetch(`${API.config}?v=${Date.now()}`);
+      if (!res.ok) throw new Error(await res.text().catch(()=>"Config laden mislukt."));
+      cfg = await res.json();
+    } catch (err) {
+      console.error(err);
+      toast((err && err.message) || 'Config laden mislukt.', 'err');
+      return;
+    }
+
+    const svcSel = byId('service');
+    svcSel.innerHTML = '';
+
+    (cfg.services ?? [])
+      .sort((a,b)=> a.name.localeCompare(b.name))
+      .forEach(s => {
+        const mins = (Number(s.durationMinutes)||0) > 0 ? ` (${s.durationMinutes}m)` : '';
+        svcSel.insertAdjacentHTML('beforeend', `<option value="${s.id}">${s.name}${mins}</option>`);
+      });
+
+    if (cfg.stylists?.length) defaultStylistId = cfg.stylists[0].id;
+    else toast('Geen stylist in het systeem. Voeg er minstens één toe.', 'err');
+
+    await setupDatePicker();
+
+    // Ensure a service is selected (mobile sometimes keeps the placeholder)
+    if (!svcSel.value && (cfg.services?.length ?? 0) > 0) {
+      svcSel.value = String(cfg.services[0].id);
+    }
+
+    svcSel.addEventListener('change', debouncedLoadSlots);
+
+    // initial load
+    debouncedLoadSlots();
+  }
+
+  let loadTimer = null;
+  function debouncedLoadSlots(){ clearTimeout(loadTimer); loadTimer = setTimeout(loadSlots, 150); }
+
+  async function loadSlots() {
+    if (!defaultStylistId) return;
+
+    const date = byId('date').value;
+    const serviceId = byId('service').value;
+    const stylistId = defaultStylistId;
+    current = { date, serviceId, stylistId };
+
+    if (!date || !serviceId) return;
+
+    // Short-circuit if date is closed or blackout
+    const dLocal = parseYmd(date);
+    if (isDateClosedOrBlackout(dLocal)) {
+      byId('slots').innerHTML = `<div class="resv-empty">Deze dag is gesloten.</div>`;
+      byId('meta').textContent = '';
+      return;
+    }
+
+    if (loadingSlotsCtrl) loadingSlotsCtrl.abort();
+    loadingSlotsCtrl = new AbortController();
+    if (isLoadingSlots) return;
+    isLoadingSlots = true; setLoadingSlots();
+
+    try {
+      const url = `${API.availability}?date=${date}&stylistId=${stylistId}&serviceId=${serviceId}&tz=${encodeURIComponent(tz)}&v=${Date.now()}`;
+      const res = await fetch(url, { signal: loadingSlotsCtrl.signal });
+      if (!res.ok) throw new Error(await res.text().catch(()=>"Kon tijden niet laden."));
+      let list = await res.json();
+
+      // If today, hide past times using local clock
+      const todayStr = yyyyMmDd(new Date());
+      if (date === todayStr) {
+        const now = new Date();
+        list = list.filter(iso => new Date(iso) > now);
+      }
+
+      if (!list.length) {
+        const next = await findNextAvailable(date, serviceId, stylistId, 21);
+        if (next) {
+          byId('date').value = next.date;
+          fp.setDate(next.date, true);
+          toast(`Geen tijden voor gekozen datum. Volgende beschikbare: ${new Date(parseYmd(next.date)).toLocaleDateString()} (${next.slots.length} slots).`);
+          renderSlots(next.slots); isLoadingSlots = false; return;
+        }
+      }
+      renderSlots(list);
+    } catch (err) {
+      if (err?.name !== 'AbortError') {
+        console.error(err);
+        toast(err?.message || 'Tijden laden mislukt.', 'err');
+        byId('meta').textContent = '';
+        byId('slots').innerHTML = `<div class="resv-empty">Laden mislukt.</div>`;
+      }
+    } finally { isLoadingSlots = false; }
+  }
+
+  async function holdSlot(startLocalIso){
+    if (hold.token) {
+      try { await fetch(API.release, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ HoldToken: hold.token })}); } catch {}
+    }
+    const payload = { StylistId:+current.stylistId, ServiceId:+current.serviceId, StartLocal:startLocalIso, Tz:tz };
+
+    try {
+      const res = await fetch(API.hold, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      if (!res.ok) throw new Error(await res.text().catch(()=> 'Hold aanmaken mislukt.'));
+      const data = await res.json();
+      if (!data.ok) { toast(data.error || 'Niet gelukt.', 'err'); return; }
+
+      hold.token = data.holdToken; hold.expiresAtUtc = data.expiresAtUtc; hold.startLocal = startLocalIso;
+      activeIso = startLocalIso; highlightActiveButton();
+
+      // NEW: remove this time from the list immediately
+      removeSlotByIso(startLocalIso);
+
+      byId('selectedInfo').textContent = `Gekozen: ${new Date(startLocalIso).toLocaleDateString()} • ${new Date(startLocalIso).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
+
+      byId('drawer').classList.add('open');
+      document.body.classList.add('drawer-open');
+      startCountdown();
+    } catch (err) { console.error(err); toast(err?.message || 'Niet gelukt.', 'err'); }
+  }
+
+  function highlightActiveButton(){
+    document.querySelectorAll('#slots .resv-slot').forEach(btn => styleActive(btn, btn.dataset.iso === activeIso));
+  }
+
+  async function confirmBooking(){
+    const name = byId('name').value.trim();
+    const email = byId('email').value.trim();
+    const phone = byId('phone').value.trim();
+    if (!name || !email) { toast('Naam en e-mail zijn verplicht.', 'err'); return; }
+
+    const confirmBtn = byId('confirm'); confirmBtn.disabled = true;
+    try {
+      const res = await fetch(API.confirm, { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ HoldToken: hold.token, ClientName: name, ClientEmail: email, ClientPhone: phone })});
+      let data = null; try { data = await res.json(); } catch { data = { ok:false, error:'Server gaf geen geldige response.'}; }
+      if (!res.ok || !data.ok) { toast((data && data.error) ? data.error : 'Niet gelukt', 'err'); return; }
+
+      showModal('Reservering bevestigd',
+        `We zien je op ${new Date(hold.startLocal).toLocaleDateString()} om ${new Date(hold.startLocal).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}. Een bevestiging is naar je e-mail verzonden.`);
+
+      hold = { token:null, expiresAtUtc:null, startLocal:null };
+      activeIso = null;
+      byId('drawer').classList.remove('open');
+      document.body.classList.remove('drawer-open');
+      await loadSlots();
+    } catch (err) { console.error(err); toast(err?.message || 'Bevestigen mislukt.', 'err'); }
+    finally { confirmBtn.disabled = false; }
+  }
+
+  async function cancelHold(){
+    if (hold.token) {
+      try { await fetch(API.release, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ HoldToken: hold.token })}); } catch {}
+    }
+    hold = { token:null, expiresAtUtc:null, startLocal:null };
+    activeIso = null;
+    byId('drawer').classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    highlightActiveButton();
+  }
+
+  function startCountdown(){
+    const el = byId('holdCountdown');
+    function tick(){
+      if (!hold.expiresAtUtc) { el.textContent=''; return; }
+      const ms = new Date(hold.expiresAtUtc) - new Date();
+      if (ms <= 0) { el.textContent = 'Hold verlopen.'; cancelHold(); loadSlots(); return; }
+      const s = Math.max(0, Math.floor(ms/1000));
+      el.textContent = `• ${s}s gereserveerd`;
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  function bindHub(){
+    connection = new signalR.HubConnectionBuilder().withUrl('/hubs/booking').withAutomaticReconnect().build();
+
+    // NEW: remove the single slot if we can identify it; otherwise reload
+    connection.on('slotHeld', msg => {
+      if (!matchesCurrent(msg)) return;
+      const iso = getIsoFromMsg(msg);
+      if (!removeSlotByIso(iso)) loadSlots();
+    });
+    connection.on('slotBooked', msg => {
+      if (!matchesCurrent(msg)) return;
+      const iso = getIsoFromMsg(msg);
+      if (!removeSlotByIso(iso)) loadSlots();
+    });
+    connection.on('slotReleased', () => loadSlots());
+
+    connection.on('calendarChanged', async () => {
+      try {
+        if (fp) {
+          const m = fp.currentMonth + 1;
+          const y = fp.currentYear;
+          await refreshDisabledDates(y, m);
+        }
+        await loadSlots();
+      } catch {}
+    });
+
+    connection.start().catch(() => setTimeout(bindHub, 1500));
+  }
+  function matchesCurrent(msg){
+    return String(msg?.stylistId) === String(current.stylistId) &&
+           String(msg?.serviceId) === String(current.serviceId);
+  }
+
+  // events
+  byId('load').addEventListener('click', loadSlots);
+  byId('confirm').addEventListener('click', confirmBooking);
+  byId('cancelHold').addEventListener('click', cancelHold);
+  window.addEventListener('beforeunload', cancelHold);
+
+  // keep body class in sync if drawer toggles elsewhere
+  const drawerEl = document.getElementById('drawer');
+  const sync = () => document.body.classList.toggle('drawer-open', drawerEl.classList.contains('open'));
+  new MutationObserver(sync).observe(drawerEl, { attributes:true, attributeFilter:['class'] }); sync();
+
+  // ==== Keyboard-aware drawer support (iOS/Android) ====
+  (function keyboardAwareDrawer(){
+    const root = document.documentElement;
+    const drawer = document.getElementById('drawer');
+
+    function setKb(px){
+      const v = Math.max(0, Math.min(400, Math.round(px || 0)));
+      root.style.setProperty('--kb', v + 'px');
+    }
+
+    const vv = window.visualViewport;
+    if (vv) {
+      const onResize = () => {
+        const kb = window.innerHeight - vv.height;
+        setKb(drawer.classList.contains('open') ? kb : 0);
+      };
+      vv.addEventListener('resize', onResize);
+      vv.addEventListener('scroll', onResize);
+      window.addEventListener('orientationchange', onResize);
+    } else {
+      let base = window.innerHeight;
+      const onResize = () => {
+        const kb = Math.max(0, base - window.innerHeight);
+        setKb(drawer.classList.contains('open') ? kb : 0);
+      };
+      window.addEventListener('resize', onResize);
+      window.addEventListener('orientationchange', () => { base = window.innerHeight; onResize(); });
+    }
+
+    ['name','email','phone'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('focus', () => {
+        setTimeout(() => { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 150);
+      });
+    });
+
+    const syncKb = () => {
+      const vv2 = window.visualViewport;
+      if (!vv2) return;
+      const kb = window.innerHeight - vv2.height;
+      setKb(drawer.classList.contains('open') ? kb : 0);
+    };
+    new MutationObserver(syncKb).observe(drawer, { attributes:true, attributeFilter:['class'] });
+  })();
+
+  // boot
+  document.addEventListener('DOMContentLoaded', () => {
+    loadConfig().then(() => { bindHub(); /* loadSlots happens inside loadConfig */ });
+  });
+})();  /* <-- important: close the IIFE so JS actually runs */
+</script>

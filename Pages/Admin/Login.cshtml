@@ -1,0 +1,35 @@
+@page "/admin/login"
+@attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+@model ProHair.NL.Pages.Admin.LoginModel
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Admin login";
+    var error = ViewData["Error"] as string;
+    var returnUrl = Model.ReturnUrl ?? "/admin/afspraken";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+}
+
+<div class="auth-wrap">
+    <div class="auth-card">
+        <h1 class="auth-title">Admin login</h1>
+
+        @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="auth-alert">@error</div>
+    }
+        <form method="post" asp-antiforgery="true" class="auth-form">
+            <input type="hidden" name="ReturnUrl" value="@(Model.ReturnUrl ?? "/admin/afspraken")" />
+
+            <input asp-for="Username" class="resv-input-sm" placeholder="Gebruikersnaam" autocomplete="username" />
+            <input asp-for="Password" type="password" class="resv-input-sm" placeholder="Wachtwoord" autocomplete="current-password" />
+            <label class="auth-remember"><input asp-for="RememberMe" /> Ingelogd blijven</label>
+
+            <span asp-validation-summary="ModelOnly" class="auth-alert"></span>
+            <button type="submit" class="resv-btn-primary">Inloggen</button>
+        </form>
+
+
+    </div>
+</div>

@@ -1,0 +1,172 @@
+/* Scoped styles */
+.vv .btn { cursor: pointer; }
+
+/* Layout */
+.vv-hero { max-width: 900px; margin-bottom: 8px; }
+.vv-hero h1 { margin: 0 0 6px; }
+.vv-hero .vv-hero-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+
+/* Trust strip */
+.vv-trust{
+    display:grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 10px;
+    margin-top: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--muted);
+}
+.vv-trust > div{
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;
+    padding:10px 12px;
+    background:rgba(255,255,255,.04);
+}
+
+/* Solution cards */
+.vv-grid3{
+    display:grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap:14px;
+    margin-top: 18px;
+}
+.vv-card{
+    padding:16px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+    background: rgba(255,255,255,.05);
+}
+.vv-card p{ margin:8px 0 14px; }
+
+.vv-badge{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.06);
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+.vv-badge-gold{
+    background: linear-gradient(180deg,#FFE6A8,#E4C66B);
+    color:#1a1a1a;
+    border-color: rgba(0,0,0,.15);
+}
+
+/* Benefits */
+.vv-benefits{
+    display:grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap:12px;
+    margin-top: 22px;
+}
+.vv-benefit{
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    border-radius:14px;
+    padding:18px;
+}
+.vv-benefit h4{ margin:0 0 6px; }
+
+/* Steps */
+.vv-steps { margin-top: 24px; }
+.vv-steps h2{ margin:0 0 10px; }
+.vv-steps-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display:grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+}
+.vv-steps-list li{
+    display:flex; gap:10px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    border-radius: 12px;
+    padding: 12px;
+}
+.vv-steps-list .nbr{
+    width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center;
+    border-radius:999px; font-weight:900;
+    background: linear-gradient(180deg,#FFE6A8,#E4C66B);
+    color:#1a1a1a; border:1px solid rgba(0,0,0,.2);
+    flex: 0 0 28px;
+}
+
+/* Keuzehulp */
+.vv-kz .vv-bullets{ padding-left: 18px; margin: 8px 0 12px; }
+.vv-kz .vv-bullets li{ margin: 3px 0; }
+
+/* Thumbnails */
+.vv-thumbs{
+    display:grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap:10px;
+    margin-top: 14px;
+}
+.vv-thumb{
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:14px;
+    overflow:hidden;
+    background: rgba(255,255,255,.04);
+}
+.vv-thumb img{
+    display:block;
+    width:100%;
+    height:160px;
+    object-fit: cover;
+}
+.vv-thumb figcaption{
+    padding:8px 10px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* Care */
+.vv-care{ margin-top: 20px; }
+.vv-care h2{ margin:0 0 10px; }
+.vv-care-grid{
+    display:grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap:12px;
+}
+
+/* Callouts */
+.vv-callout{
+    margin-top:18px;
+    border:1px solid rgba(255,255,255,.16);
+    background: rgba(165, 240, 124, .09);
+    border-radius:16px;
+    padding:14px;
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:center;
+    gap:10px;
+}
+.vv-insurance{ background: rgba(255,255,255,.06); }
+.vv-callout-actions{ display:flex; gap:8px; }
+
+/* FAQ */
+.vv-faq{ margin-top:22px; max-width:900px; }
+.vv-faq details{
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.04);
+    border-radius:12px;
+    padding:10px 12px;
+    margin-top:10px;
+}
+.vv-faq summary{ cursor:pointer; font-weight:800; }
+
+/* Responsive */
+@media (max-width: 900px){
+    .vv-trust{ grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .vv-grid3{ grid-template-columns: 1fr; }
+    .vv-benefits{ grid-template-columns: 1fr; }
+    .vv-steps-list{ grid-template-columns: 1fr; }
+    .vv-thumbs { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .vv-thumb img{ height: 120px; }
+    .vv-care-grid{ grid-template-columns: 1fr; }
+    .vv-callout{ grid-template-columns: 1fr; }
+}

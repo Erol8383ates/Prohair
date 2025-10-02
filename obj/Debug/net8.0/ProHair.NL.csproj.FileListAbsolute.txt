@@ -143,6 +143,7 @@ C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.pdb
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ProHair.NL.genruntimeconfig.cache
 C:\Users\erol_\Documents\Aangepaste Office-sjablonen\ProHair.NL\obj\Debug\net8.0\ref\ProHair.NL.dll
+<<<<<<< HEAD
 C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\ProHair.NL.csproj.AssemblyReference.cache
 C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\ProHair.NL.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\ProHair.NL.AssemblyInfoInputs.cache
@@ -292,3 +293,5 @@ C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\refint\ProHa
 C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\ProHair.NL.pdb
 C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\ProHair.NL.genruntimeconfig.cache
 C:\Users\erol_\Downloads\Prohair-main\Prohair-main\obj\Debug\net8.0\ref\ProHair.NL.dll
+=======
+>>>>>>> origin/main

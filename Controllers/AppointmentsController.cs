@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 using Microsoft.Extensions.Logging;
+=======
+>>>>>>> origin/main
 using ProHair.NL.Hubs;
 using ProHair.NL.Services;
 using System;
@@ -15,11 +18,18 @@ namespace ProHair.NL.Controllers
         private readonly BookingService _booking;
         private readonly EmailService _email;
         private readonly IHubContext<BookingHub> _hub;
+<<<<<<< HEAD
         private readonly ILogger<AppointmentsController> _log;
 
         public AppointmentsController(BookingService booking, EmailService email, IHubContext<BookingHub> hub, ILogger<AppointmentsController> log)
         {
             _booking = booking; _email = email; _hub = hub; _log = log;
+=======
+
+        public AppointmentsController(BookingService booking, EmailService email, IHubContext<BookingHub> hub)
+        {
+            _booking = booking; _email = email; _hub = hub;
+>>>>>>> origin/main
         }
 
         public record HoldRequest(int StylistId, int ServiceId, DateTime StartLocal, string Tz);
@@ -42,6 +52,7 @@ namespace ProHair.NL.Controllers
         public async Task<ActionResult<SimpleResponse>> Confirm([FromBody] ConfirmRequest req)
         {
             var (ok, err, appt) = await _booking.ConfirmAsync(req.HoldToken, req.ClientName, req.ClientEmail, req.ClientPhone);
+<<<<<<< HEAD
             if (!ok || appt is null)
             {
                 _log.LogWarning("Booking confirm failed: {Err}", err);
@@ -58,6 +69,14 @@ namespace ProHair.NL.Controllers
                 try { await _email.SendBookingConfirmationAsync(appt); }
                 catch (Exception ex) { _log.LogError(ex, "Confirmation email send failed for appointment {Id}", appt.Id); }
             });
+=======
+            if (!ok || appt is null) return Ok(new SimpleResponse(false, err ?? "Niet gelukt."));
+
+            await _hub.Clients.All.SendAsync("slotBooked", new { stylistId = appt.StylistId, serviceId = appt.ServiceId, startUtc = appt.StartUtc });
+            await _hub.Clients.All.SendAsync("bookingCreated", new { appointmentId = appt.Id });
+
+            await _email.SendBookingConfirmationAsync(appt);
+>>>>>>> origin/main
 
             return Ok(new SimpleResponse(true, null));
         }
@@ -69,8 +88,11 @@ namespace ProHair.NL.Controllers
         {
             var (ok, err) = await _booking.ReleaseHoldAsync(req.HoldToken);
             if (ok) await _hub.Clients.All.SendAsync("slotReleased", new { holdToken = req.HoldToken });
+<<<<<<< HEAD
             else _log.LogWarning("ReleaseHold failed: {Err}", err);
 
+=======
+>>>>>>> origin/main
             return Ok(new SimpleResponse(ok, err));
         }
     }

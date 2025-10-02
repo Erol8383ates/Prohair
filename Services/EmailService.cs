@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+=======
+using System.Net;
+using System.Net.Mail;
+>>>>>>> origin/main
 using Microsoft.Extensions.Logging;
 using ProHair.NL.Models;
 using TimeZoneConverter;
@@ -20,6 +25,7 @@ namespace ProHair.NL.Services
             _log = log;
         }
 
+<<<<<<< HEAD
         private (SmtpClient client, string from) BuildClient()
         {
             var smtp = _cfg.GetSection("Smtp");
@@ -76,6 +82,35 @@ namespace ProHair.NL.Services
                     : DateTime.SpecifyKind(appt.StartUtc, DateTimeKind.Utc);
 
                 var whenLocal = TimeZoneInfo.ConvertTimeFromUtc(utc, tz);
+=======
+        public async Task SendBookingConfirmationAsync(Appointment appt, string tzId = "Europe/Brussels")
+        {
+            try
+            {
+                var smtp = _cfg.GetSection("Smtp");
+                var host = smtp["Host"];
+                var user = smtp["User"];
+                var pass = smtp["Pass"];
+                var from = string.IsNullOrWhiteSpace(smtp["From"]) ? user : smtp["From"];
+                var port = int.TryParse(smtp["Port"], out var p) ? p : 587;
+                var enableSsl = bool.TryParse(smtp["EnableSsl"], out var ssl) ? ssl : true;
+
+                if (string.IsNullOrWhiteSpace(host) ||
+                    string.IsNullOrWhiteSpace(user) ||
+                    string.IsNullOrWhiteSpace(pass) ||
+                    string.IsNullOrWhiteSpace(appt?.ClientEmail))
+                {
+                    _log.LogWarning("SMTP not configured or missing recipient. Skipping email.");
+                    return;
+                }
+
+                // Gmail requires From == Gmail user unless you've verified an alias in Gmail
+                if (host.Contains("gmail", StringComparison.OrdinalIgnoreCase))
+                    from = user;
+
+                var tz = TZConvert.GetTimeZoneInfo(tzId);
+                var whenLocal = TimeZoneInfo.ConvertTimeFromUtc(appt.StartUtc, tz);
+>>>>>>> origin/main
 
                 var subject = "Bevestiging afspraak – ProHair Studio";
                 var body =
@@ -96,6 +131,7 @@ Mocht je verhinderd zijn, laat het ons tijdig weten door te antwoorden op deze m
 Tot snel!
 ProHair Studio";
 
+<<<<<<< HEAD
                 using var msg = new MailMessage(from, appt.ClientEmail, subject, body)
                 {
                     From = new MailAddress(from, "ProHair Studio"),
@@ -104,12 +140,23 @@ ProHair Studio";
 
                 await client.SendMailAsync(msg);
                 client.Dispose();
+=======
+                using var client = new SmtpClient(host, port)
+                {
+                    EnableSsl = enableSsl,
+                    Credentials = new NetworkCredential(user, pass)
+                };
+
+                using var msg = new MailMessage(from!, appt.ClientEmail, subject, body);
+                await client.SendMailAsync(msg);
+>>>>>>> origin/main
 
                 _log.LogInformation("Confirmation email sent to {Email}", appt.ClientEmail);
             }
             catch (Exception ex)
             {
                 _log.LogError(ex, "Failed to send confirmation email to {Email}", appt?.ClientEmail);
+<<<<<<< HEAD
                 throw;
             }
         }
@@ -151,6 +198,8 @@ $@"<p><strong>Naam:</strong> {WebUtility.HtmlEncode(name)}</p>
             {
                 _log.LogError(ex, "Contact mail SMTP error");
                 throw;
+=======
+>>>>>>> origin/main
             }
         }
     }

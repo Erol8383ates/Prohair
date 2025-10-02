@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿using System;
+=======
+using System;
+>>>>>>> origin/main
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -99,4 +103,8 @@ namespace ProHair.NL.Controllers
             return Ok(slots);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/main

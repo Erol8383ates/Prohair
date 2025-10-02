@@ -61,11 +61,9 @@ namespace ProHair.NL.Controllers
                 return Ok(new SimpleResponse(false, err ?? "Niet gelukt."));
             }
 
-            // Notify UI
             await _hub.Clients.All.SendAsync("slotBooked", new { stylistId = appt.StylistId, serviceId = appt.ServiceId, startUtc = appt.StartUtc });
             await _hub.Clients.All.SendAsync("bookingCreated", new { appointmentId = appt.Id });
 
-            // Fire-and-forget email (don’t block endpoint)
             _ = Task.Run(async () =>
             {
                 try { await _email.SendBookingConfirmationAsync(appt); }

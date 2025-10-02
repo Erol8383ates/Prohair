@@ -79,4 +79,8 @@ namespace ProHair.NL.Services
             return true;
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/main

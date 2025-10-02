@@ -1,5 +1,13 @@
+<<<<<<< HEAD
+using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+=======
+using System.Net;
+using System.Net.Mail;
+>>>>>>> origin/main
 using Microsoft.Extensions.Logging;
 using ProHair.NL.Models;
 using TimeZoneConverter;
@@ -17,6 +25,64 @@ namespace ProHair.NL.Services
             _log = log;
         }
 
+<<<<<<< HEAD
+        private (SmtpClient client, string from) BuildClient()
+        {
+            var smtp = _cfg.GetSection("Smtp");
+            var host = smtp["Host"];
+            var user = smtp["User"];
+            var pass = smtp["Pass"];
+            var from = smtp["FromAddress"];
+            var port = int.TryParse(smtp["Port"], out var p) ? p : 587;
+            var enableSsl = bool.TryParse(smtp["EnableSsl"], out var ssl) ? ssl : true;
+
+            if (string.IsNullOrWhiteSpace(host) ||
+                string.IsNullOrWhiteSpace(user) ||
+                string.IsNullOrWhiteSpace(pass))
+            {
+                throw new InvalidOperationException("SMTP not configured correctly (Host/User/Pass).");
+            }
+
+            // Gmail: From should match the authenticated account (unless alias is verified).
+            if (string.IsNullOrWhiteSpace(from) ||
+                host.Contains("gmail", StringComparison.OrdinalIgnoreCase))
+            {
+                from = user;
+            }
+
+            var client = new SmtpClient(host, port)
+            {
+                EnableSsl = enableSsl,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(user, pass),
+                DeliveryMethod = SmtpDeliveryMethod.Network
+            };
+
+            return (client, from);
+        }
+
+        public async Task SendBookingConfirmationAsync(Appointment appt, string tzId = "Europe/Brussels")
+        {
+            if (appt == null || string.IsNullOrWhiteSpace(appt.ClientEmail))
+            {
+                _log.LogWarning("No client email provided, skipping confirmation email.");
+                return;
+            }
+
+            try
+            {
+                var (client, from) = BuildClient();
+
+                var tz = TZConvert.GetTimeZoneInfo(tzId);
+
+                // appt.StartUtc is a DateTime representing a UTC instant in DB.
+                // Ensure Kind=Utc to avoid ambiguous conversions.
+                var utc = appt.StartUtc.Kind == DateTimeKind.Utc
+                    ? appt.StartUtc
+                    : DateTime.SpecifyKind(appt.StartUtc, DateTimeKind.Utc);
+
+                var whenLocal = TimeZoneInfo.ConvertTimeFromUtc(utc, tz);
+=======
         public async Task SendBookingConfirmationAsync(Appointment appt, string tzId = "Europe/Brussels")
         {
             try
@@ -44,6 +110,7 @@ namespace ProHair.NL.Services
 
                 var tz = TZConvert.GetTimeZoneInfo(tzId);
                 var whenLocal = TimeZoneInfo.ConvertTimeFromUtc(appt.StartUtc, tz);
+>>>>>>> origin/main
 
                 var subject = "Bevestiging afspraak – ProHair Studio";
                 var body =
@@ -64,6 +131,16 @@ Mocht je verhinderd zijn, laat het ons tijdig weten door te antwoorden op deze m
 Tot snel!
 ProHair Studio";
 
+<<<<<<< HEAD
+                using var msg = new MailMessage(from, appt.ClientEmail, subject, body)
+                {
+                    From = new MailAddress(from, "ProHair Studio"),
+                    IsBodyHtml = false
+                };
+
+                await client.SendMailAsync(msg);
+                client.Dispose();
+=======
                 using var client = new SmtpClient(host, port)
                 {
                     EnableSsl = enableSsl,
@@ -72,12 +149,57 @@ ProHair Studio";
 
                 using var msg = new MailMessage(from!, appt.ClientEmail, subject, body);
                 await client.SendMailAsync(msg);
+>>>>>>> origin/main
 
                 _log.LogInformation("Confirmation email sent to {Email}", appt.ClientEmail);
             }
             catch (Exception ex)
             {
                 _log.LogError(ex, "Failed to send confirmation email to {Email}", appt?.ClientEmail);
+<<<<<<< HEAD
+                throw;
+            }
+        }
+
+        public async Task SendContactAsync(string toBusinessInbox, string name, string email, string subject, string message)
+        {
+            if (string.IsNullOrWhiteSpace(toBusinessInbox))
+                throw new ArgumentException("Business inbox address is required.", nameof(toBusinessInbox));
+
+            try
+            {
+                var (client, from) = BuildClient();
+
+                var html =
+$@"<p><strong>Naam:</strong> {WebUtility.HtmlEncode(name)}</p>
+<p><strong>Email:</strong> {WebUtility.HtmlEncode(email)}</p>
+<p><strong>Onderwerp:</strong> {WebUtility.HtmlEncode(subject)}</p>
+<p><strong>Bericht:</strong><br/>{WebUtility.HtmlEncode(message).Replace("\n", "<br/>")}</p>";
+
+                using var msg = new MailMessage
+                {
+                    From = new MailAddress(from, "ProHair Website"),
+                    Subject = $"Contactformulier: {subject}",
+                    Body = html,
+                    IsBodyHtml = true
+                };
+                msg.To.Add(toBusinessInbox);
+
+                // Allow replying directly to the sender from your inbox
+                if (!string.IsNullOrWhiteSpace(email))
+                    msg.ReplyToList.Add(new MailAddress(email, string.IsNullOrWhiteSpace(name) ? email : name));
+
+                await client.SendMailAsync(msg);
+                client.Dispose();
+
+                _log.LogInformation("Contact email delivered to business inbox {To}", toBusinessInbox);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "Contact mail SMTP error");
+                throw;
+=======
+>>>>>>> origin/main
             }
         }
     }

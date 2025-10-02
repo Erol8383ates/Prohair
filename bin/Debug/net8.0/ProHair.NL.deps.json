@@ -9,7 +9,13 @@
       "ProHair.NL/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+<<<<<<< HEAD
+          "Microsoft.AspNetCore.DataProtection.EntityFrameworkCore": "8.0.8",
           "Microsoft.AspNetCore.SignalR": "1.2.0",
+          "Microsoft.EntityFrameworkCore.Design": "9.0.8",
+=======
+          "Microsoft.AspNetCore.SignalR": "1.2.0",
+>>>>>>> origin/main
           "Microsoft.EntityFrameworkCore.Tools": "9.0.8",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
           "TimeZoneConverter": "7.0.0"
@@ -59,6 +65,54 @@
           "System.IO.Pipelines": "9.0.8"
         }
       },
+<<<<<<< HEAD
+      "Microsoft.AspNetCore.Cryptography.Internal/8.0.8": {
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.Cryptography.Internal.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.824.36908"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.DataProtection/8.0.8": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Cryptography.Internal": "8.0.8",
+          "Microsoft.AspNetCore.DataProtection.Abstractions": "8.0.8",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Hosting.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Options": "9.0.8",
+          "System.Security.Cryptography.Xml": "8.0.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.DataProtection.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.824.36908"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.DataProtection.Abstractions/8.0.8": {
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.DataProtection.Abstractions.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.824.36908"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.DataProtection.EntityFrameworkCore/8.0.8": {
+        "dependencies": {
+          "Microsoft.AspNetCore.DataProtection": "8.0.8",
+          "Microsoft.EntityFrameworkCore": "9.0.8"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.dll": {
+            "assemblyVersion": "8.0.8.0",
+            "fileVersion": "8.0.824.36908"
+          }
+        }
+      },
+=======
+>>>>>>> origin/main
       "Microsoft.AspNetCore.Hosting.Abstractions/2.3.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Hosting.Server.Abstractions": "2.3.0",
@@ -823,6 +877,10 @@
           }
         }
       },
+<<<<<<< HEAD
+      "System.Formats.Asn1/8.0.0": {},
+=======
+>>>>>>> origin/main
       "System.IO.Pipelines/9.0.8": {
         "runtime": {
           "lib/net8.0/System.IO.Pipelines.dll": {
@@ -846,6 +904,25 @@
         }
       },
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
+<<<<<<< HEAD
+      "System.Security.Cryptography.Pkcs/8.0.0": {
+        "dependencies": {
+          "System.Formats.Asn1": "8.0.0"
+        }
+      },
+      "System.Security.Cryptography.Xml/8.0.1": {
+        "dependencies": {
+          "System.Security.Cryptography.Pkcs": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/System.Security.Cryptography.Xml.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.524.21615"
+          }
+        }
+      },
+=======
+>>>>>>> origin/main
       "System.Text.Encodings.Web/9.0.8": {
         "runtime": {
           "lib/net8.0/System.Text.Encodings.Web.dll": {
@@ -933,6 +1010,37 @@
       "path": "microsoft.aspnetcore.connections.abstractions/2.3.0",
       "hashPath": "microsoft.aspnetcore.connections.abstractions.2.3.0.nupkg.sha512"
     },
+<<<<<<< HEAD
+    "Microsoft.AspNetCore.Cryptography.Internal/8.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VrfHrQwvj8p5W3z+PhHCkUMgpPnThJ9ZDeu+AJrFGWFvHSA6sI7iP/k9LjqkdFXsFezlOOZWNAgB6EH9gCCA4g==",
+      "path": "microsoft.aspnetcore.cryptography.internal/8.0.8",
+      "hashPath": "microsoft.aspnetcore.cryptography.internal.8.0.8.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.DataProtection/8.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OnckDbhZ4Jvcple1hPhjbXwb58cI48nRdtDKaOrzoOqHKT43edje33ckBnHzMfo61ALvD15brysqgNVHLoEC0g==",
+      "path": "microsoft.aspnetcore.dataprotection/8.0.8",
+      "hashPath": "microsoft.aspnetcore.dataprotection.8.0.8.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.DataProtection.Abstractions/8.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7VU0V3HoBWm341UFxtNXFdWBPXgp+oruaKPGtxuBOfy4pBV2HPk3oY80H6gjgzh+pMmFraa0hNmpEu9+Qp+UBg==",
+      "path": "microsoft.aspnetcore.dataprotection.abstractions/8.0.8",
+      "hashPath": "microsoft.aspnetcore.dataprotection.abstractions.8.0.8.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.DataProtection.EntityFrameworkCore/8.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xpmwHnqEjuyJJCvlxv/6L6FKqPU8YC0Pi6ehl/kRz1v/WZkQ8Kmu8oyh7gyWRVkOn8tMpeGY4y+2MkRT9IMFQg==",
+      "path": "microsoft.aspnetcore.dataprotection.entityframeworkcore/8.0.8",
+      "hashPath": "microsoft.aspnetcore.dataprotection.entityframeworkcore.8.0.8.nupkg.sha512"
+    },
+=======
+>>>>>>> origin/main
     "Microsoft.AspNetCore.Hosting.Abstractions/2.3.0": {
       "type": "package",
       "serviceable": true,
@@ -1353,6 +1461,16 @@
       "path": "system.diagnostics.diagnosticsource/9.0.8",
       "hashPath": "system.diagnostics.diagnosticsource.9.0.8.nupkg.sha512"
     },
+<<<<<<< HEAD
+    "System.Formats.Asn1/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AJukBuLoe3QeAF+mfaRKQb2dgyrvt340iMBHYv+VdBzCUM06IxGlvl0o/uPOS7lHnXPN6u8fFRHSHudx5aTi8w==",
+      "path": "system.formats.asn1/8.0.0",
+      "hashPath": "system.formats.asn1.8.0.0.nupkg.sha512"
+    },
+=======
+>>>>>>> origin/main
     "System.IO.Pipelines/9.0.8": {
       "type": "package",
       "serviceable": true,
@@ -1388,6 +1506,23 @@
       "path": "system.runtime.compilerservices.unsafe/6.0.0",
       "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
     },
+<<<<<<< HEAD
+    "System.Security.Cryptography.Pkcs/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ULmp3xoOwNYjOYp4JZ2NK/6NdTgiN1GQXzVVN1njQ7LOZ0d0B9vyMnhyqbIi9Qw4JXj1JgCsitkTShboHRx7Eg==",
+      "path": "system.security.cryptography.pkcs/8.0.0",
+      "hashPath": "system.security.cryptography.pkcs.8.0.0.nupkg.sha512"
+    },
+    "System.Security.Cryptography.Xml/8.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hqu2ztecOf3BYg5q1R7QcyliX9L7r3mfsWtaRitAxcezH8hyZMB7zCmhi186hsUZXk1KxsAHXwyPEW+xvUED6g==",
+      "path": "system.security.cryptography.xml/8.0.1",
+      "hashPath": "system.security.cryptography.xml.8.0.1.nupkg.sha512"
+    },
+=======
+>>>>>>> origin/main
     "System.Text.Encodings.Web/9.0.8": {
       "type": "package",
       "serviceable": true,

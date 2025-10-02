@@ -1,110 +1,92 @@
-<<<<<<< HEAD
-﻿using System;
-=======
 using System;
->>>>>>> origin/main
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProHair.NL.Data;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using ProHair.NL.Hubs;
 using ProHair.NL.Services;
 
 namespace ProHair.NL.Controllers
 {
     [ApiController]
-    [Route("api/availability")]
-    public class AvailabilityController : ControllerBase
+    [Route("api/appointments")]
+    public class AppointmentsController : ControllerBase
     {
-        private readonly AppDbContext _db;
-        private readonly IAvailabilityService _availability;
+        private readonly BookingService _booking;
+        private readonly EmailService _email;
+        private readonly IHubContext<BookingHub> _hub;
+        private readonly ILogger<AppointmentsController> _log;
 
-        public AvailabilityController(AppDbContext db, IAvailabilityService availability)
+        public AppointmentsController(
+            BookingService booking,
+            EmailService email,
+            IHubContext<BookingHub> hub,
+            ILogger<AppointmentsController> log)
         {
-            _db = db;
-            _availability = availability;
+            _booking = booking;
+            _email = email;
+            _hub = hub;
+            _log = log;
         }
 
-        // CONFIG: Services & Stylists
-        [HttpGet("config")]
-        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        public async Task<IActionResult> GetConfig()
+        public record HoldRequest(int StylistId, int ServiceId, DateTime StartLocal, string Tz);
+        public record HoldResponse(bool Ok, string? Error, string? HoldToken, DateTime? ExpiresAtUtc);
+
+        [HttpPost("hold")]
+        public async Task<ActionResult<HoldResponse>> Hold([FromBody] HoldRequest req)
         {
-            var services = await _db.Services
-                .AsNoTracking()
-                .Select(s => new { id = s.Id, name = s.Name, durationMinutes = s.DurationMinutes })
-                .ToListAsync();
+            var (ok, err, hold) = await _booking.CreateHoldAsync(req.StylistId, req.ServiceId, req.StartLocal, req.Tz);
+            if (!ok || hold == null) return Ok(new HoldResponse(false, err, null, null));
 
-            var stylists = await _db.Stylists
-                .AsNoTracking()
-                .Select(s => new { id = s.Id, name = s.Name })
-                .ToListAsync();
-
-            return Ok(new { services, stylists });
-        }
-
-        // SLOTS
-        // GET /api/availability?date=YYYY-MM-DD&stylistId=1&serviceId=2&tz=Europe%2FBrussels
-        [HttpGet]
-        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        public async Task<IActionResult> GetSlots(
-            [FromQuery] string date,
-            [FromQuery] int stylistId,
-            [FromQuery] int serviceId,
-            [FromQuery] string? tz = null)
-        {
-            if (!DateOnly.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var d))
-                return Ok(Array.Empty<string>());
-
-            var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync() ?? new BusinessSettings();
-
-            // Safe timezone resolution
-            TimeZoneInfo zone;
-            try { zone = TimeZoneInfo.FindSystemTimeZoneById(tz ?? settings.TimeZone ?? "UTC"); }
-            catch { zone = TimeZoneInfo.Utc; }
-
-            var wh = await _db.WeeklyOpenHours
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Day == d.DayOfWeek);
-
-            if (wh == null || wh.IsClosed || wh.Open is null || wh.Close is null)
-                return Ok(Array.Empty<string>());
-
-            var isBlackout = await _db.BlackoutDates
-                .AsNoTracking()
-                .AnyAsync(b => b.Date == d);
-
-            if (isBlackout)
-                return Ok(Array.Empty<string>());
-
-            var svc = await _db.Services.AsNoTracking().FirstOrDefaultAsync(x => x.Id == serviceId);
-            var durationMin = (svc?.DurationMinutes ?? 0) > 0 ? svc!.DurationMinutes : settings.SlotMinutes;
-            var stepMin = settings.SlotMinutes;
-
-            var openLocal = d.ToDateTime(wh.Open.Value);
-            var closeLocal = d.ToDateTime(wh.Close.Value);
-
-            var slots = new List<string>();
-            for (var t = openLocal; t.AddMinutes(durationMin) <= closeLocal; t = t.AddMinutes(stepMin))
+            await _hub.Clients.All.SendAsync("slotHeld", new
             {
-                var startUtc = TimeZoneInfo.ConvertTimeToUtc(t, zone);
-                var ok = await _availability.IsSlotBookable(new DateTimeOffset(startUtc, TimeSpan.Zero));
-                if (!ok) continue;
+                stylistId = req.StylistId,
+                serviceId = req.ServiceId,
+                startLocal = req.StartLocal.ToString("s")
+            });
 
-                slots.Add(t.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture));
+            return Ok(new HoldResponse(true, null, hold.HoldToken, hold.HoldUntilUtc));
+        }
+
+        public record ConfirmRequest(string HoldToken, string ClientName, string ClientEmail, string ClientPhone);
+        public record SimpleResponse(bool Ok, string? Error);
+
+        [HttpPost("confirm")]
+        public async Task<ActionResult<SimpleResponse>> Confirm([FromBody] ConfirmRequest req)
+        {
+            var (ok, err, appt) = await _booking.ConfirmAsync(req.HoldToken, req.ClientName, req.ClientEmail, req.ClientPhone);
+            if (!ok || appt is null)
+            {
+                _log.LogWarning("Booking confirm failed: {Err}", err);
+                return Ok(new SimpleResponse(false, err ?? "Niet gelukt."));
             }
 
-            Response.Headers.CacheControl = "no-store, no-cache, must-revalidate, max-age=0";
-            Response.Headers.Pragma = "no-cache";
-            Response.Headers.Expires = "0";
+            // Notify UI
+            await _hub.Clients.All.SendAsync("slotBooked", new { stylistId = appt.StylistId, serviceId = appt.ServiceId, startUtc = appt.StartUtc });
+            await _hub.Clients.All.SendAsync("bookingCreated", new { appointmentId = appt.Id });
 
-            return Ok(slots);
+            // Fire-and-forget email (don’t block endpoint)
+            _ = Task.Run(async () =>
+            {
+                try { await _email.SendBookingConfirmationAsync(appt); }
+                catch (Exception ex) { _log.LogError(ex, "Confirmation email send failed for appointment {Id}", appt.Id); }
+            });
+
+            return Ok(new SimpleResponse(true, null));
+        }
+
+        public record ReleaseRequest(string HoldToken);
+
+        [HttpPost("release")]
+        public async Task<ActionResult<SimpleResponse>> Release([FromBody] ReleaseRequest req)
+        {
+            var (ok, err) = await _booking.ReleaseHoldAsync(req.HoldToken);
+            if (ok)
+                await _hub.Clients.All.SendAsync("slotReleased", new { holdToken = req.HoldToken });
+            else
+                _log.LogWarning("ReleaseHold failed: {Err}", err);
+
+            return Ok(new SimpleResponse(ok, err));
         }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/main

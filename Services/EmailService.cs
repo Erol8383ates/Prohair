@@ -37,7 +37,6 @@ namespace ProHair.NL.Services
                 throw new InvalidOperationException("SMTP not configured correctly (Host/User/Pass).");
             }
 
-            // Gmail: From should match the authenticated account (unless alias is verified).
             if (string.IsNullOrWhiteSpace(from) ||
                 host.Contains("gmail", StringComparison.OrdinalIgnoreCase))
             {
@@ -69,7 +68,6 @@ namespace ProHair.NL.Services
 
                 var tz = TZConvert.GetTimeZoneInfo(tzId);
 
-                // appt.StartUtc stored as DateTime (UTC). Ensure Kind=Utc for safe conversion.
                 var utc = appt.StartUtc.Kind == DateTimeKind.Utc
                     ? appt.StartUtc
                     : DateTime.SpecifyKind(appt.StartUtc, DateTimeKind.Utc);
@@ -137,7 +135,6 @@ $@"<p><strong>Naam:</strong> {WebUtility.HtmlEncode(name)}</p>
                 };
                 msg.To.Add(toBusinessInbox);
 
-                // Reply-To so you can reply straight to the sender
                 if (!string.IsNullOrWhiteSpace(email))
                     msg.ReplyToList.Add(new MailAddress(email, string.IsNullOrWhiteSpace(name) ? email : name));
 

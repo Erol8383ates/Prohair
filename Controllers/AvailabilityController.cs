@@ -1,16 +1,15 @@
-<<<<<<< HEAD
-﻿using System;
-=======
 using System;
->>>>>>> origin/main
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProHair.NL.Data;
+using ProHair.NL.Models;
 using ProHair.NL.Services;
+using TimeZoneConverter;
 
 namespace ProHair.NL.Controllers
 {
@@ -58,11 +57,18 @@ namespace ProHair.NL.Controllers
             if (!DateOnly.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var d))
                 return Ok(Array.Empty<string>());
 
-            var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync() ?? new BusinessSettings();
+            var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync()
+                           ?? new BusinessSettings();
 
-            // Safe timezone resolution
+            // Safe timezone resolution (works on Windows/Linux)
             TimeZoneInfo zone;
-            try { zone = TimeZoneInfo.FindSystemTimeZoneById(tz ?? settings.TimeZone ?? "UTC"); }
+            try
+            {
+                var tzId = !string.IsNullOrWhiteSpace(tz) ? tz : settings.TimeZone;
+                zone = !string.IsNullOrWhiteSpace(tzId)
+                    ? TZConvert.GetTimeZoneInfo(tzId)
+                    : TZConvert.GetTimeZoneInfo("Europe/Brussels");
+            }
             catch { zone = TimeZoneInfo.Utc; }
 
             var wh = await _db.WeeklyOpenHours
@@ -80,8 +86,8 @@ namespace ProHair.NL.Controllers
                 return Ok(Array.Empty<string>());
 
             var svc = await _db.Services.AsNoTracking().FirstOrDefaultAsync(x => x.Id == serviceId);
-            var durationMin = (svc?.DurationMinutes ?? 0) > 0 ? svc!.DurationMinutes : settings.SlotMinutes;
-            var stepMin = settings.SlotMinutes;
+            var stepMin = settings.SlotMinutes > 0 ? settings.SlotMinutes : 45;
+            var durationMin = (svc?.DurationMinutes ?? 0) > 0 ? svc!.DurationMinutes : stepMin;
 
             var openLocal = d.ToDateTime(wh.Open.Value);
             var closeLocal = d.ToDateTime(wh.Close.Value);
@@ -93,6 +99,10 @@ namespace ProHair.NL.Controllers
                 var ok = await _availability.IsSlotBookable(new DateTimeOffset(startUtc, TimeSpan.Zero));
                 if (!ok) continue;
 
+                // stylist overlap check (service duration)
+                var free = await _availability.IsSlotFreeAsync(stylistId, new DateTimeOffset(startUtc, TimeSpan.Zero), durationMin);
+                if (!free) continue;
+
                 slots.Add(t.ToString("yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture));
             }
 
@@ -102,9 +112,22 @@ namespace ProHair.NL.Controllers
 
             return Ok(slots);
         }
+
+        // Quick check for a single slot
+        // GET /api/availability/slot-free?stylistId=1&start=2025-10-02T12:00:00Z&duration=45
+        [HttpGet("slot-free")]
+        public async Task<IActionResult> IsSlotFree(
+            [FromQuery] int stylistId,
+            [FromQuery] DateTimeOffset start,
+            [FromQuery] int duration = 45,
+            CancellationToken ct = default)
+        {
+            var bookable = await _availability.IsSlotBookable(start);
+            if (!bookable)
+                return Ok(new { ok = false, reason = "Not bookable by business rules." });
+
+            var free = await _availability.IsSlotFreeAsync(stylistId, start, duration, ct);
+            return Ok(new { ok = free, reason = free ? null : "Overlaps with existing appointment/hold." });
+        }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/main

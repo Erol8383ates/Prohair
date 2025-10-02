@@ -26,7 +26,6 @@ namespace ProHair.NL.Controllers
             _availability = availability;
         }
 
-        // CONFIG: Services & Stylists
         [HttpGet("config")]
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public async Task<IActionResult> GetConfig()
@@ -44,7 +43,6 @@ namespace ProHair.NL.Controllers
             return Ok(new { services, stylists });
         }
 
-        // SLOTS
         // GET /api/availability?date=YYYY-MM-DD&stylistId=1&serviceId=2&tz=Europe%2FBrussels
         [HttpGet]
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
@@ -60,7 +58,7 @@ namespace ProHair.NL.Controllers
             var settings = await _db.BusinessSettings.AsNoTracking().FirstOrDefaultAsync()
                            ?? new BusinessSettings();
 
-            // Time zone safe (Windows/Linux)
+            // Time zone (Windows/Linux safe)
             TimeZoneInfo zone;
             try
             {
@@ -71,14 +69,14 @@ namespace ProHair.NL.Controllers
             }
             catch { zone = TimeZoneInfo.Utc; }
 
-            var wh = await _db.WeeklyOpenHours.AsNoTracking()
+            var wh = await _db.WeeklyOpenHours
+                .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Day == d.DayOfWeek);
 
             if (wh is null || wh.IsClosed || wh.Open is null || wh.Close is null)
                 return Ok(Array.Empty<string>());
 
-            var isBlackout = await _db.BlackoutDates.AsNoTracking()
-                .AnyAsync(b => b.Date == d);
+            var isBlackout = await _db.BlackoutDates.AsNoTracking().AnyAsync(b => b.Date == d);
             if (isBlackout) return Ok(Array.Empty<string>());
 
             var svc = await _db.Services.AsNoTracking().FirstOrDefaultAsync(x => x.Id == serviceId);
@@ -93,11 +91,9 @@ namespace ProHair.NL.Controllers
             {
                 var startUtc = TimeZoneInfo.ConvertTimeToUtc(t, zone);
 
-                // Business rules
                 var bookable = await _availability.IsSlotBookable(new DateTimeOffset(startUtc, TimeSpan.Zero));
                 if (!bookable) continue;
 
-                // Overlap check for that stylist
                 var free = await _availability.IsSlotFreeAsync(stylistId, new DateTimeOffset(startUtc, TimeSpan.Zero), durationMin);
                 if (!free) continue;
 

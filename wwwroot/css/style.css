@@ -2048,7 +2048,7 @@ main {
     width: 100%;
     height: 100%;
     object-fit: cover; /* keep full-bleed effect */
-    object-position: var(--fx, 60%) var(--fy, 38%);
+    object-position: var(--fx, 60%) var(--fy, 48%);
     transform: scale(1.08); /* small zoom (8%) */
     transition: transform 3s ease-out; /* subtle smooth motion */
 }

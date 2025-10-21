@@ -2039,3 +2039,28 @@ main {
 @media (max-height: 700px) and (max-width: 980px) {
   .slider.fullbleed .caption { top: calc(16dvh + env(safe-area-inset-top, 0px)); }
 }
+
+
+
+
+/* === HERO SLIDER (slightly zoomed, not overcropped) === */
+.hero-slider .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* keep full-bleed effect */
+    object-position: var(--fx, 60%) var(--fy, 38%);
+    transform: scale(1.08); /* small zoom (8%) */
+    transition: transform 3s ease-out; /* subtle smooth motion */
+}
+
+/* on hover or during animation cycle, slightly adjust */
+.hero-slider .slide.active img {
+    transform: scale(1.1); /* gentle dynamic zoom-in */
+}
+
+/* fallback for small screens — avoid too much crop */
+@media (max-width: 640px), (max-height: 700px) {
+    .hero-slider .slide img {
+        transform: scale(1.02); /* smaller zoom on mobile */
+    }
+}

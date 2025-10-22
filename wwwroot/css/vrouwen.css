@@ -170,3 +170,78 @@
     .vv-care-grid{ grid-template-columns: 1fr; }
     .vv-callout{ grid-template-columns: 1fr; }
 }
+
+
+
+.vv-thumb img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+
+.vv-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+    margin-top: 14px;
+    align-items: start; /* 👈 stop stretching to tallest */
+}
+
+
+.vv-thumb {
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(255,255,255,.04);
+}
+
+    .vv-thumb img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3; /* consistent height across all cards */
+        object-fit: cover; /* fill without distortion */
+        object-position: center top; /* keep faces in view */
+    }
+
+    .vv-thumb figcaption {
+        padding: 8px 10px;
+        font-size: 13px;
+        color: var(--muted);
+        min-height: 36px; /* optional: align caption heights */
+    }
+
+
+
+
+
+
+.vv-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 10px;
+    margin-top: 14px;
+    align-items: start; /* prevent stretching */
+}
+
+.vv-thumb {
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 14px;
+    overflow: hidden;
+    background: rgba(255,255,255,.04);
+}
+
+    .vv-thumb img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 3 / 4; /* 👈 taller frame fits heads */
+        object-fit: cover;
+        object-position: center 20%; /* 👈 bias crop upward so hair isn’t cut */
+    }
+
+    .vv-thumb figcaption {
+        padding: 8px 10px;
+        font-size: 13px;
+        color: var(--muted);
+    }
